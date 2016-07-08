@@ -10,9 +10,11 @@ import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.Toast;
 
-import com.example.dantesrevelion.mipedido.utils.ConnectionUtils;
-import com.example.dantesrevelion.mipedido.utils.MyAnimationUtils;
-import com.example.dantesrevelion.mipedido.utils.SQLiteHelper;
+import com.example.dantesrevelion.mipedido.Utils.ConectionTask;
+import com.example.dantesrevelion.mipedido.Utils.ConnectionUtils;
+import com.example.dantesrevelion.mipedido.Utils.MyAnimationUtils;
+import com.example.dantesrevelion.mipedido.Utils.SQLiteHelper;
+
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -39,6 +41,14 @@ public class Login extends AppCompatActivity {
 
         SQLiteHelper sqlHelper=new SQLiteHelper(this, "miPedidoLite", null, 1);
         SQLiteDatabase db = sqlHelper.getWritableDatabase();
+
+        try {
+            String task=new ConectionTask().execute().get().toString();
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        } catch (ExecutionException e) {
+            e.printStackTrace();
+        }
         MyAnimationUtils.translateAnimation(layoutUser,800L,2.0f,1000,0,0,0);
     }
 
