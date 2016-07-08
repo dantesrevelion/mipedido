@@ -1,0 +1,105 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:paddingLeft="40dp"
+    android:paddingRight="40dp"
+    android:background="@drawable/backgroud_splash"
+    tools:context="com.example.dantesrevelion.mipedido.Login">
+
+    <LinearLayout
+        android:id="@+id/layoutPassword"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical" >
+
+        <Space
+            android:layout_width="20px"
+            android:layout_height="160px" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Password"
+            android:id="@+id/txtPassword"
+            android:layout_gravity="left"
+            android:textSize="@dimen/abc_action_button_min_width_overflow_material"
+            android:textColor="@color/white"
+            android:password="false" />
+
+        <EditText
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/inputPassword"
+            android:layout_gravity="center_horizontal"
+            android:textColor="@color/white"
+            android:text="testpass"
+            android:textSize="30dp"
+            android:password="true" />
+
+        <Space
+            android:layout_width="20px"
+            android:layout_height="25px" />
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:gravity="right">
+        <Button
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Volver"
+            android:id="@+id/botonVolverUser"
+            android:onClick="loadUser" />
+        <Button
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Aceptar"
+            android:id="@+id/botonPassword"
+            android:onClick="loadMenu" />
+        </LinearLayout>
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/layoutUser"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical" >
+
+        <Space
+            android:layout_width="20px"
+            android:layout_height="160px" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Username"
+            android:textColor="@color/white"
+            android:id="@+id/txtUser"
+            android:layout_gravity="left"
+            android:textSize="@dimen/abc_action_button_min_width_overflow_material" />
+
+        <EditText
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/inputUser"
+            android:textColor="@color/white"
+            android:text="testuser"
+            android:textSize="30dp" />
+
+        <Space
+            android:layout_width="20px"
+            android:layout_height="25px" />
+
+        <Button
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Aceptar"
+            android:id="@+id/botonUser"
+            android:layout_gravity="right"
+            android:onClick="nextStep" />
+
+    </LinearLayout>
+
+</RelativeLayout>
