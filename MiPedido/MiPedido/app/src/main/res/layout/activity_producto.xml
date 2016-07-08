@@ -1,0 +1,134 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/color4"
+    android:orientation="vertical"
+    tools:context="com.example.dantesrevelion.mipedido.Producto"
+    >
+
+    <LinearLayout
+        android:layout_width="fill_parent"
+        android:layout_height="30dp"
+        android:background="@color/color2"
+        android:gravity="center">
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Garrafones"
+            android:textColor="@color/white"
+            android:textStyle="bold"
+            android:textSize="22sp"/>
+    </LinearLayout>
+
+    <ScrollView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/scrollView" >
+
+        <RelativeLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content">
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical">
+
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Epura 20 L"
+            android:id="@+id/txtNombreProd"
+            android:textColor="@color/black"
+            android:paddingLeft="15dp"
+            android:paddingTop="10dp"
+            android:textStyle="bold"
+            android:textSize="22sp"/>
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/txtTipoProd"
+            android:paddingLeft="15dp"
+            android:paddingTop="5dp"
+            android:text="Garrafones"
+            android:textColor="@color/black"
+            android:textStyle="normal"
+            android:textSize="20sp"/>
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:paddingBottom="15dp"
+            android:paddingTop="15dp"
+            android:orientation="vertical"
+            android:gravity="center">
+            <LinearLayout
+                android:layout_width="350dp"
+                android:layout_height="280dp"
+                android:orientation="vertical"
+                android:gravity="center"
+                android:background="@color/white"
+                >
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:background="@drawable/drink"/>
+            </LinearLayout>
+            <RelativeLayout
+                android:layout_width="350dp"
+                android:layout_height="10dp"
+
+                android:background="@color/color4">
+
+            </RelativeLayout>
+
+            <LinearLayout
+                android:layout_width="350dp"
+                android:layout_height="100dp"
+                android:orientation="horizontal"
+
+                android:gravity="center"
+                android:background="@color/white"
+                >
+            <LinearLayout
+                android:layout_width="150dp"
+                android:layout_height="50dp"
+                android:gravity="center"
+                android:orientation="horizontal">
+                <Button
+                    android:layout_width="30dp"
+                    android:layout_height="30dp"
+                    android:id="@+id/minus"
+                    android:onClick="onclickMinus"
+                    android:background="@drawable/minusgrey"/>
+                <TextView
+                    android:layout_width="40dp"
+                    android:layout_height="40dp"
+                    android:gravity="center"
+                    android:text="1"
+                    android:id="@+id/cantidad"
+                    android:textStyle="bold"
+                    android:textSize="30sp"/>
+                <Button
+                    android:layout_width="30dp"
+                    android:id="@+id/addmore"
+                    android:onClick="onclickAddMore"
+                    android:layout_height="30dp"
+                    android:background="@drawable/plus"/>
+            </LinearLayout>
+                <Button
+                    android:layout_width="170dp"
+                    android:layout_height="50dp"
+                    android:text="AÑADIR AL CARRITO"
+                    android:singleLine="false" />
+            </LinearLayout>
+
+        </LinearLayout>
+        </LinearLayout>
+
+    </RelativeLayout>
+    </ScrollView>
+
+</LinearLayout>
