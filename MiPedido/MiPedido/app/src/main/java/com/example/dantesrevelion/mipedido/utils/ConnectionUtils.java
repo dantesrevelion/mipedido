@@ -1,4 +1,4 @@
-package com.example.dantesrevelion.mipedido.utils;
+package com.example.dantesrevelion.mipedido.Utils;
 
 import org.json.JSONArray;
 import org.json.JSONException;

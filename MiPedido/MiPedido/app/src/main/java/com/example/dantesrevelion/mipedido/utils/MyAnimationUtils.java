@@ -1,11 +1,8 @@
-package com.example.dantesrevelion.mipedido.utils;
+package com.example.dantesrevelion.mipedido.Utils;
 
 import android.view.View;
 import android.view.animation.AnticipateOvershootInterpolator;
 import android.view.animation.TranslateAnimation;
-import android.widget.LinearLayout;
-
-import com.example.dantesrevelion.mipedido.R;
 
 /**
  * Created by Dantes Revelion on 07/07/2016.

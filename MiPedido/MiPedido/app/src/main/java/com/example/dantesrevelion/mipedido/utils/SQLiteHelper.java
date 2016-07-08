@@ -1,4 +1,4 @@
-package com.example.dantesrevelion.mipedido.utils;
+package com.example.dantesrevelion.mipedido.Utils;
 
 import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
