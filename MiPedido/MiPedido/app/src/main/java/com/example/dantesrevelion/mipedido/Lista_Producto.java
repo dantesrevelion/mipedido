@@ -9,7 +9,7 @@ import android.widget.AdapterView;
 import android.widget.ListView;
 
 import com.example.dantesrevelion.mipedido.Adapters.VysorAdapterProducto;
-import com.example.dantesrevelion.mipedido.utils.ConnectionUtils;
+import com.example.dantesrevelion.mipedido.Utils.ConnectionUtils;
 
 import org.json.JSONArray;
 import org.json.JSONException;

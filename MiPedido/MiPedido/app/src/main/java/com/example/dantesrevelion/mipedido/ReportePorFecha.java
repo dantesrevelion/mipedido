@@ -11,15 +11,12 @@ import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.example.dantesrevelion.mipedido.Adapters.VysorAdapterProducto;
 import com.example.dantesrevelion.mipedido.Adapters.VysorAdapterReporte;
-import com.example.dantesrevelion.mipedido.utils.ConnectionUtils;
+import com.example.dantesrevelion.mipedido.Utils.ConnectionUtils;
 
 import org.json.JSONArray;
 import org.json.JSONException;
-import org.json.JSONObject;
 
-import java.sql.Connection;
 import java.util.concurrent.ExecutionException;
 
 public class ReportePorFecha extends AppCompatActivity {
