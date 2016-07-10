@@ -1,7 +1,15 @@
 package com.example.dantesrevelion.mipedido.Utils;
 
+import android.content.Context;
+import android.database.Cursor;
+import android.database.sqlite.SQLiteDatabase;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
+
 import org.json.JSONArray;
 import org.json.JSONException;
+import org.json.JSONObject;
+
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
@@ -59,6 +67,8 @@ public class ConnectionUtils {
         String VENTA_BYFECHA="http://"+DOMAIN+"/mipedido/res/ventasbyusuario.php?idv="+idv;
         return VENTA_BYFECHA;
     }
+
+
     HttpURLConnection urlConnection;
     InputStream is;
 
@@ -131,4 +141,88 @@ public class ConnectionUtils {
 
         return response;
     }
+
+    public static boolean conectadoWifi(Context context){
+
+        ConnectivityManager connectivity = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
+        if (connectivity != null) {
+            NetworkInfo info = connectivity.getNetworkInfo(ConnectivityManager.TYPE_WIFI);
+            if (info != null) {
+                if (info.isConnected()) {
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
+
+
+    public static boolean conectadoRedMovil(Context context){
+        ConnectivityManager connectivity = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
+        if (connectivity != null) {
+            NetworkInfo info = connectivity.getNetworkInfo(ConnectivityManager.TYPE_MOBILE);
+            if (info != null) {
+                if (info.isConnected()) {
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
+    public static void consultaSQLite(Context context,String query){
+        SQLiteHelper sqlHelper=new SQLiteHelper(context, "miPedidoLite", null, 1);
+        SQLiteDatabase db = sqlHelper.getWritableDatabase();
+        Cursor c=db.rawQuery(query,null);
+        cursorToJsonArray(c);
+    }
+
+    public static JSONArray cursorToJsonArray(Cursor c){
+
+
+        JSONArray resultSet 	= new JSONArray();
+        JSONObject returnObj 	= new JSONObject();
+
+        c.moveToFirst();
+        while (c.isAfterLast() == false) {
+
+            int totalColumn = c.getColumnCount();
+            JSONObject rowObject = new JSONObject();
+
+            for( int i=0 ;  i< totalColumn ; i++ )
+            {
+                if( c.getColumnName(i) != null )
+                {
+
+                    try
+                    {
+
+                        if( c.getString(i) != null )
+                        {
+
+                            rowObject.put(c.getColumnName(i) ,  c.getString(i) );
+                        }
+                        else
+                        {
+                            rowObject.put( c.getColumnName(i) ,  "" );
+                        }
+                    }
+                    catch( Exception e )
+                    {
+                       e.printStackTrace();
+                    }
+                }
+
+            }
+
+            resultSet.put(rowObject);
+            c.moveToNext();
+        }
+
+        c.close();
+        System.out.println("CONVERTED-------------------------->"+resultSet);
+        return resultSet;
+
+
+    }
+
 }

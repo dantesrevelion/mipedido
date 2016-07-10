@@ -10,6 +10,7 @@ import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.Toast;
 
+import com.example.dantesrevelion.mipedido.Utils.CheckIn;
 import com.example.dantesrevelion.mipedido.Utils.ConectionTask;
 import com.example.dantesrevelion.mipedido.Utils.ConnectionUtils;
 import com.example.dantesrevelion.mipedido.Utils.MyAnimationUtils;
@@ -31,25 +32,25 @@ public class Login extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
-        layoutUser=(LinearLayout)findViewById(R.id.layoutUser);
-        layoutPass=(LinearLayout)findViewById(R.id.layoutPassword);
-        inputTextUser=(EditText) findViewById(R.id.inputUser);
-        inputTextPsw=(EditText) findViewById(R.id.inputPassword);
-        layoutPass.setVisibility(View.INVISIBLE);
 
-        SQLiteHelper sqlHelper=new SQLiteHelper(this, "miPedidoLite", null, 1);
-        SQLiteDatabase db = sqlHelper.getWritableDatabase();
+        if(ConnectionUtils.conectadoWifi(this) || ConnectionUtils.conectadoRedMovil(this)) {
+            CheckIn.checkInProcess(this);
 
-        try {
-            String task=new ConectionTask().execute().get().toString();
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        } catch (ExecutionException e) {
-            e.printStackTrace();
+        }else{
+            Toast toast1 = Toast.makeText(getApplicationContext(),
+                    "Modo Offline", Toast.LENGTH_SHORT);
+            toast1.show();
         }
-        MyAnimationUtils.translateAnimation(layoutUser,800L,2.0f,1000,0,0,0);
+        layoutUser = (LinearLayout) findViewById(R.id.layoutUser);
+        layoutPass = (LinearLayout) findViewById(R.id.layoutPassword);
+        inputTextUser = (EditText) findViewById(R.id.inputUser);
+        inputTextPsw = (EditText) findViewById(R.id.inputPassword);
+        layoutPass.setVisibility(View.INVISIBLE);
+        ConnectionUtils.consultaSQLite(this,"select * from usuarios");
+        MyAnimationUtils.translateAnimation(layoutUser, 800L, 2.0f, 1000, 0, 0, 0);
     }
 
     public void nextStep(View view){
@@ -146,4 +147,5 @@ public class Login extends AppCompatActivity {
         }
 
     }
+
 }

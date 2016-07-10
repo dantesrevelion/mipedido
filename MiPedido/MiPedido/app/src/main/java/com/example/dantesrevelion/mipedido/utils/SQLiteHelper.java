@@ -38,7 +38,10 @@ public class SQLiteHelper extends SQLiteOpenHelper {
                 "  `monto` double NOT NULL" +
                 ");");
 
+
+
         System.out.println("SQLite CREATED-");
+
     }
 
     @Override
