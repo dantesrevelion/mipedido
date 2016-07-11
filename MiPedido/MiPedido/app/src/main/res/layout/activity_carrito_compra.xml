@@ -40,7 +40,7 @@
         <Button
             android:layout_width="160dp"
             android:layout_height="60dp"
-            android:text="Elimar Seleccion"
+            android:text="Eliminar Seleccion"
             android:textSize="16sp"/>
 
     </LinearLayout>
