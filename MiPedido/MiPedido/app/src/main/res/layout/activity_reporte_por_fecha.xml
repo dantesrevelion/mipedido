@@ -37,8 +37,10 @@
                 android:layout_weight="1" />
             <Button
                 android:layout_width="60dp"
-                android:layout_height="match_parent"
+                android:layout_height="30dp"
                 android:onClick="OnClickFillVentas"
+                android:background="@color/color5"
+                android:textColor="@color/white"
                 android:text="Go"/>
         </LinearLayout>
 

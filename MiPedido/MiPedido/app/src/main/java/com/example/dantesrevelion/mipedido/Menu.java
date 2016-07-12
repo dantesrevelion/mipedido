@@ -15,7 +15,7 @@ public class Menu extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_menu);
         final ListView lista = (ListView) findViewById(R.id.listaMenu);
-        final String[] items ={"Productos","Mi Perfil","Reporte por Fecha","Lista de Ventas"};
+        final String[] items ={"Productos","Mi Perfil","Reporte por Fecha","Lista de Ventas","Registro de Tickets"};
         VysorAdapterMenu adapter = new VysorAdapterMenu(Menu.this, R.layout.item_list, items);
 
 
@@ -40,8 +40,8 @@ public class Menu extends AppCompatActivity {
                     startActivity(new Intent(Menu.this, ReportePorFecha.class));
                 } else if(position == 3) {
                     startActivity(new Intent(Menu.this, ListaDeVentas.class));
-                }else {
-
+                }else if(position==4){
+                    startActivity(new Intent(Menu.this, RegistroTickets.class));
                 }
 
 

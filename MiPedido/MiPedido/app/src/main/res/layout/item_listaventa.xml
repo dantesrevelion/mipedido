@@ -120,9 +120,9 @@
 
                     android:text="01/01/2015"
                     android:textStyle="bold"
-                    android:textSize="15sp"
+                    android:textSize="12sp"
                     android:id="@+id/txtfecha"
-                    android:gravity="center"
+                    android:gravity="left"
                     />
 
 

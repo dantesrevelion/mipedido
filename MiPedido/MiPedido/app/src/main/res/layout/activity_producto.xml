@@ -9,7 +9,7 @@
     tools:context="com.example.dantesrevelion.mipedido.Producto"
     >
 
-    <LinearLayout
+    <!--LinearLayout
         android:layout_width="fill_parent"
         android:layout_height="30dp"
         android:background="@color/color2"
@@ -21,7 +21,7 @@
             android:textColor="@color/white"
             android:textStyle="bold"
             android:textSize="22sp"/>
-    </LinearLayout>
+    </LinearLayout-->
 
     <ScrollView
         android:layout_width="wrap_content"
@@ -122,6 +122,8 @@
                     android:layout_width="170dp"
                     android:layout_height="50dp"
                     android:text="AÑADIR AL CARRITO"
+                    android:background="@color/color5"
+                    android:textColor="@color/white"
                     android:singleLine="false" />
             </LinearLayout>
 
