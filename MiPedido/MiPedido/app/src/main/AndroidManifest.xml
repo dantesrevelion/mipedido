@@ -48,7 +48,9 @@
         <activity android:name=".Vendedor" />
         <activity android:name=".ReportePorFecha" />
         <activity android:name=".ListaDeVentas" />
-        <activity android:name=".Perfil"></activity>
+        <activity android:name=".Perfil" />
+        <activity android:name=".CarritoCompra" />
+        <activity android:name=".RegistroTickets"></activity>
     </application>
 
 </manifest>

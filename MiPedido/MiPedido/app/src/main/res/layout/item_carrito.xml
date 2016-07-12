@@ -31,7 +31,6 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:orientation="vertical"
-
             android:id="@+id/mylayout"
             android:background="@color/white"
 
@@ -57,7 +56,7 @@
                     />
                 <TextView
 
-                    android:layout_width="match_parent"
+                    android:layout_width="150dp"
                     android:layout_height="wrap_content"
                     android:textColor="@color/black"
                     android:text="@string/app_name"
@@ -66,55 +65,57 @@
                     android:textSize="13sp"
                     android:id="@+id/txtName"
                     />
-
+                <CheckBox
+                    android:layout_width="25dp"
+                    android:layout_height="25dp" />
             </LinearLayout>
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:gravity="center"
+                android:gravity="center|left"
                 android:orientation="horizontal">
                 <LinearLayout
                     android:layout_width="120dp"
                     android:layout_height="wrap_content">
 
 
-                <TextView
+                    <TextView
 
-                    android:layout_width="50dp"
-                    android:layout_height="wrap_content"
-                    android:gravity="center"
-                    android:textColor="@color/black"
-                    android:text="00$"
-                    android:textStyle="bold"
-                    android:textSize="13sp"
-                    android:id="@+id/txtcantidadLista"
-                    />
-                <TextView
+                        android:layout_width="50dp"
+                        android:layout_height="wrap_content"
+                        android:gravity="center"
+                        android:textColor="@color/black"
+                        android:text="00$"
+                        android:textStyle="bold"
+                        android:textSize="13sp"
+                        android:id="@+id/txtcantidadLista"
+                        />
+                    <TextView
 
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:gravity="left"
-                    android:textColor="@color/black"
-                    android:text="x"
-                    android:textStyle="bold"
-                    android:textSize="14sp"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:gravity="left"
+                        android:textColor="@color/black"
+                        android:text="x"
+                        android:textStyle="bold"
+                        android:textSize="14sp"
 
-                    />
-                <TextView
+                        />
+                    <TextView
 
-                    android:layout_width="50dp"
-                    android:layout_height="wrap_content"
-                    android:gravity="center"
-                    android:textColor="@color/black"
-                    android:text="00"
-                    android:textStyle="bold"
-                    android:textSize="13sp"
-                    android:id="@+id/cantidad"
-                    />
+                        android:layout_width="50dp"
+                        android:layout_height="wrap_content"
+                        android:gravity="center"
+                        android:textColor="@color/black"
+                        android:text="00"
+                        android:textStyle="bold"
+                        android:textSize="13sp"
+                        android:id="@+id/cantidad"
+                        />
                 </LinearLayout>
                 <TextView
 
-                    android:layout_width="match_parent"
+                    android:layout_width="150dp"
                     android:layout_height="wrap_content"
                     android:textColor="@color/black"
 
@@ -124,6 +125,9 @@
                     android:id="@+id/txtfecha"
                     android:gravity="center"
                     />
+                <Space
+                    android:layout_width="25dp"
+                    android:layout_height="25dp" />
 
 
 
