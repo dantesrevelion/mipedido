@@ -28,16 +28,12 @@ public class ListaDeVentas extends AppCompatActivity {
         String [] array=null;
 
         try {
-            taskResult= (JSONArray) new ConnectionAllUsuarios().execute().get();
+            taskResult= ConnectionUtils.consultaSQLite(this,ConnectionUtils.queryAllUsuarios());
 
             array=new String[taskResult.length()];
             for(int i=0;i<taskResult.length();i++){
                 array[i]=taskResult.getJSONObject(i).get("usuario").toString();
             }
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        } catch (ExecutionException e) {
-            e.printStackTrace();
         } catch (JSONException e) {
             e.printStackTrace();
         }
@@ -58,13 +54,9 @@ public class ListaDeVentas extends AppCompatActivity {
             final ListView listaVendidos = (ListView) findViewById(R.id.listaDeVentas);
 
 
-            try {
-                taskResult2= (JSONArray) new ConnectionVentasByUsuario().execute((idvendedor+1)).get();
-            } catch (InterruptedException e) {
-                e.printStackTrace();
-            } catch (ExecutionException e) {
-                e.printStackTrace();
-            }
+
+                taskResult2= ConnectionUtils.consultaSQLite(getBaseContext(),ConnectionUtils.queryVentasByUsuario(""+(idvendedor+1)));
+
             VysorAdapterVentaUsuario adapterVendidos = new VysorAdapterVentaUsuario(ListaDeVentas.this,
                     R.layout.item_listaventa,ConnectionUtils.jsonToArray(taskResult2,"nombre"), taskResult2);
             listaVendidos.setAdapter(adapterVendidos);
@@ -76,6 +68,7 @@ public class ListaDeVentas extends AppCompatActivity {
         }
     };
 
+    /*
     private class ConnectionAllUsuarios extends AsyncTask {
 
         @Override
@@ -103,4 +96,5 @@ public class ListaDeVentas extends AppCompatActivity {
         }
 
     }
+    */
 }

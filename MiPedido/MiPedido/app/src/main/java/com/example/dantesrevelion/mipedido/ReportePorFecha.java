@@ -38,16 +38,12 @@ public class ReportePorFecha extends AppCompatActivity {
         String [] array=null;
 
         try {
-            taskResult= (JSONArray) new ConnectionAllUsuarios().execute().get();
+            taskResult= ConnectionUtils.consultaSQLite(this,ConnectionUtils.queryAllUsuarios());
 
             array=new String[taskResult.length()];
             for(int i=0;i<taskResult.length();i++){
                 array[i]=taskResult.getJSONObject(i).get("usuario").toString();
             }
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        } catch (ExecutionException e) {
-            e.printStackTrace();
         } catch (JSONException e) {
             e.printStackTrace();
         }
@@ -86,7 +82,7 @@ public class ReportePorFecha extends AppCompatActivity {
         }
 
     }
-
+/*
     private class ConnectionAllUsuarios extends AsyncTask {
 
         @Override
@@ -114,7 +110,7 @@ public class ReportePorFecha extends AppCompatActivity {
         }
 
     }
-
+*/
     public void OnClickFillVentas(View v){
 
         Toast toast1 = Toast.makeText(getApplicationContext(),
@@ -129,13 +125,9 @@ public class ReportePorFecha extends AppCompatActivity {
 
                 final ListView listaVendidos = (ListView) findViewById(R.id.listaVentaPorFecha);
 
-                try {
-                    taskResult2 = (JSONArray) new ConnectionVentasByUsuarioFecha().execute(f1, f2, (idvendedor+1)).get();
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
-                } catch (ExecutionException e) {
-                    e.printStackTrace();
-                }
+
+                    taskResult2 = taskResult= ConnectionUtils.consultaSQLite(this,ConnectionUtils.queryVentasByUsuarioFecha(f1,f2,""+(idvendedor+1)));
+
                 VysorAdapterReporte adapterVendidos = new VysorAdapterReporte(ReportePorFecha.this,
                         R.layout.item_producto, ConnectionUtils.jsonToArray(taskResult2, "nombre"), taskResult2);
                 listaVendidos.setAdapter(adapterVendidos);
@@ -148,6 +140,7 @@ public class ReportePorFecha extends AppCompatActivity {
         }else{
             toast1.show();
         }
+        fecha1=fecha2="";
     }
 
     public void calculaTotal(){

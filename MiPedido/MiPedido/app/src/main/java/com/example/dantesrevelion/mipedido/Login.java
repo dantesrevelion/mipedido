@@ -55,24 +55,19 @@ public class Login extends AppCompatActivity {
 
     public void nextStep(View view){
 
-        try {
-            String entry=inputTextUser.getText().toString();
-            JSONArray taskResult= (JSONArray) new Connection().execute(entry).get();
+        String entry=inputTextUser.getText().toString();
+        //  JSONArray taskResult= (JSONArray) new Connection().execute(entry).get();
+        JSONArray taskResult=ConnectionUtils.consultaSQLite(this,ConnectionUtils.querySearchUsuario(entry));
 
-            if(taskResult.length()!=0) {
-                MyAnimationUtils.translateAnimation(layoutUser,800L,2.0f,0,-900,0,0);
-                layoutUser.setVisibility(View.INVISIBLE);
-                layoutPass.setVisibility(View.VISIBLE);
-                MyAnimationUtils.translateAnimation(layoutPass,800L,2.0f,900,0,0,0);
-            }else{
-                Toast toast1 = Toast.makeText(getApplicationContext(),
-                                "El usuario no existe", Toast.LENGTH_SHORT);
-                toast1.show();
-            }
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        } catch (ExecutionException e) {
-            e.printStackTrace();
+        if(taskResult.length()!=0) {
+            MyAnimationUtils.translateAnimation(layoutUser,800L,2.0f,0,-900,0,0);
+            layoutUser.setVisibility(View.INVISIBLE);
+            layoutPass.setVisibility(View.VISIBLE);
+            MyAnimationUtils.translateAnimation(layoutPass,800L,2.0f,900,0,0,0);
+        }else{
+            Toast toast1 = Toast.makeText(getApplicationContext(),
+                            "El usuario no existe", Toast.LENGTH_SHORT);
+            toast1.show();
         }
 
 
@@ -82,7 +77,7 @@ public class Login extends AppCompatActivity {
             String entryUser=inputTextUser.getText().toString();
             String entryPass=inputTextPsw.getText().toString();
             System.out.println(entryUser+"---"+entryPass);
-            JSONArray taskResult= (JSONArray) new ConnectionUserPass().execute(entryUser,entryPass).get();
+            JSONArray taskResult= ConnectionUtils.consultaSQLite(this,ConnectionUtils.queryIdentifyUsuario(entryUser,entryPass));
             System.out.println("JSON "+taskResult);
             if(taskResult.length()!=0) {
                 Intent intent=new Intent(Login.this,Menu.class);
@@ -94,10 +89,6 @@ public class Login extends AppCompatActivity {
                         "Contraseña Incorrecta", Toast.LENGTH_SHORT);
                 toast1.show();
             }
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        } catch (ExecutionException e) {
-            e.printStackTrace();
         } catch (JSONException e) {
             e.printStackTrace();
         }
@@ -111,6 +102,7 @@ public class Login extends AppCompatActivity {
         MyAnimationUtils.translateAnimation(layoutUser,800L,2.0f,-900,0,0,0);
     }
 
+    /*
     private class Connection extends AsyncTask {
 
         @Override
@@ -147,5 +139,6 @@ public class Login extends AppCompatActivity {
         }
 
     }
+    */
 
 }

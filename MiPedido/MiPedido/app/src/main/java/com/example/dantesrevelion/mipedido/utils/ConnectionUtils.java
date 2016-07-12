@@ -67,8 +67,30 @@ public class ConnectionUtils {
         String VENTA_BYFECHA="http://"+DOMAIN+"/mipedido/res/ventasbyusuario.php?idv="+idv;
         return VENTA_BYFECHA;
     }
-
-
+    public static String querySearchUsuario(String usuario){
+        String response = "select usuario from usuarios where usuario='"+usuario+"'";
+        return response;
+    }
+    public static String queryIdentifyUsuario(String usuario,String pass ){
+        String response = "SELECT usuario,correo from usuarios where usuario='"+usuario+"' and password='"+pass+"'";
+        return response;
+    }
+    public static String queryAllUsuarios(){
+        String response = "SELECT * from usuarios ";
+        return response;
+    }
+    public static String queryAllProd(){
+        String response = "select * from productos";
+        return response;
+    }
+    public static String queryVentasByUsuario(String idv){
+        String response = "select * from ventas JOIN productos,usuarios where ventas.id_producto=productos.id and ventas.id_vendedor="+idv;
+        return response;
+    }
+    public static String queryVentasByUsuarioFecha(String fini,String ffin,String idv){
+        String response = "select * from ventas JOIN productos,usuarios where ventas.id_producto=productos.id and fecha between '"+fini+"' and '"+ffin+"' and ventas.id_vendedor="+idv;
+        return response;
+    }
     HttpURLConnection urlConnection;
     InputStream is;
 
@@ -169,11 +191,12 @@ public class ConnectionUtils {
         }
         return false;
     }
-    public static void consultaSQLite(Context context,String query){
+    public static JSONArray consultaSQLite(Context context,String query){
         SQLiteHelper sqlHelper=new SQLiteHelper(context, "miPedidoLite", null, 1);
         SQLiteDatabase db = sqlHelper.getWritableDatabase();
         Cursor c=db.rawQuery(query,null);
-        cursorToJsonArray(c);
+        JSONArray response=cursorToJsonArray(c);
+        return response;
     }
 
     public static JSONArray cursorToJsonArray(Cursor c){

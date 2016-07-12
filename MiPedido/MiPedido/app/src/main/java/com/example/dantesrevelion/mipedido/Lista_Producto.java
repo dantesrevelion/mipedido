@@ -33,13 +33,9 @@ public class Lista_Producto extends AppCompatActivity  {
         }
         */
 
-        try {
-            taskResult= (JSONArray) new ConnectionProd().execute().get();
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        } catch (ExecutionException e) {
-            e.printStackTrace();
-        }
+
+            taskResult= ConnectionUtils.consultaSQLite(this,ConnectionUtils.queryAllProd());
+
         VysorAdapterProducto adapter = new VysorAdapterProducto(Lista_Producto.this,
                 R.layout.item_producto,ConnectionUtils.jsonToArray(taskResult,"nombre"), taskResult);
         lista.setAdapter(adapter);
@@ -64,6 +60,7 @@ public class Lista_Producto extends AppCompatActivity  {
 
     }
 
+    /*
     private class ConnectionProd extends AsyncTask {
 
         @Override
@@ -78,4 +75,5 @@ public class Lista_Producto extends AppCompatActivity  {
         }
 
     }
+    */
 }
