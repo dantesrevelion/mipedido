@@ -10,15 +10,15 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ListView;
 
-public class Menu extends AppCompatActivity {
+public class Menu extends BaseActivity {
   //  JSONArray jsonArray;
-  private Toolbar toolbar;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_menu);
-        toolbar = (Toolbar) findViewById(R.id.tool_bar); // Attaching the layout to the toolbar object
-        setSupportActionBar(toolbar);                   // Setting toolbar as the ActionBar with setSupportActionBar() call
+        toolbar = (Toolbar) findViewById(R.id.tool_bar);
+        setSupportActionBar(toolbar);
         final ListView lista = (ListView) findViewById(R.id.listaMenu);
         final String[] items ={"Productos","Mi Perfil","Reporte por Fecha","Lista de Ventas","Registro de Tickets"};
         VysorAdapterMenu adapter = new VysorAdapterMenu(Menu.this, R.layout.item_list, items);
@@ -60,6 +60,7 @@ public class Menu extends AppCompatActivity {
     }
 
 
+    /*
     @Override
     public boolean onCreateOptionsMenu(android.view.Menu menu) {
         getMenuInflater().inflate(R.menu.mipedido_menu, menu);
@@ -84,7 +85,6 @@ public class Menu extends AppCompatActivity {
         return super.onOptionsItemSelected(item);
     }
 
-    /*
     private class Connection extends AsyncTask {
 
         @Override

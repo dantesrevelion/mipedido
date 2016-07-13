@@ -3,6 +3,7 @@ package com.example.dantesrevelion.mipedido;
 import android.os.AsyncTask;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.widget.Toolbar;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
@@ -17,7 +18,7 @@ import org.json.JSONException;
 
 import java.util.concurrent.ExecutionException;
 
-public class ListaDeVentas extends AppCompatActivity {
+public class ListaDeVentas extends BaseActivity {
     Spinner spinervendedores=null;
     JSONArray taskResult=null;
     JSONArray taskResult2=null;
@@ -26,7 +27,8 @@ public class ListaDeVentas extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_lista_de_ventas);
         String [] array=null;
-
+        toolbar = (Toolbar) findViewById(R.id.tool_bar);
+        setSupportActionBar(toolbar);
         try {
             taskResult= ConnectionUtils.consultaSQLite(this,ConnectionUtils.queryAllUsuarios());
 

@@ -4,6 +4,8 @@ import android.content.Intent;
 import android.os.AsyncTask;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.widget.Toolbar;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ListView;
@@ -16,7 +18,7 @@ import org.json.JSONException;
 
 import java.util.concurrent.ExecutionException;
 
-public class Lista_Producto extends AppCompatActivity  {
+public class Lista_Producto extends BaseActivity  {
 
     JSONArray taskResult=null;
     @Override
@@ -24,6 +26,8 @@ public class Lista_Producto extends AppCompatActivity  {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_lista__producto);
         final ListView lista = (ListView) findViewById(R.id.listaProductos);
+        toolbar = (Toolbar) findViewById(R.id.tool_bar); // Attaching the layout to the toolbar object
+        setSupportActionBar(toolbar);
         // final String[] items ={"1","2","3","4","5","6","7","8"};
 
         /*
@@ -59,6 +63,7 @@ public class Lista_Producto extends AppCompatActivity  {
         });
 
     }
+
 
     /*
     private class ConnectionProd extends AsyncTask {

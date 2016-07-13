@@ -7,8 +7,9 @@
     tools:context="com.example.dantesrevelion.mipedido.Menu">
     <include
         android:id="@+id/tool_bar"
-        layout="@layout/toolbar"
-        ></include>
+        layout="@layout/toolbar">
+
+    </include>
     <!--LinearLayout
         android:layout_width="fill_parent"
         android:layout_height="30dp"

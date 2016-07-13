@@ -4,6 +4,7 @@ import android.os.AsyncTask;
 import android.support.v4.app.DialogFragment;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.widget.Toolbar;
 import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
@@ -19,7 +20,7 @@ import org.json.JSONException;
 
 import java.util.concurrent.ExecutionException;
 
-public class ReportePorFecha extends AppCompatActivity {
+public class ReportePorFecha extends BaseActivity {
 
     private static int idfecha=0;
     private static TextView fechaini=null;
@@ -31,6 +32,8 @@ public class ReportePorFecha extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        toolbar = (Toolbar) findViewById(R.id.tool_bar);
+        setSupportActionBar(toolbar);
         setContentView(R.layout.activity_reporte_por_fecha);
         fechaini=(TextView) findViewById(R.id.txtInicio);
         fechafin=(TextView) findViewById(R.id.txtFin);

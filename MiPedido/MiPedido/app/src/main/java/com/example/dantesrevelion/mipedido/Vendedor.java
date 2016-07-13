@@ -2,15 +2,18 @@ package com.example.dantesrevelion.mipedido;
 
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.widget.Toolbar;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.Spinner;
 
-public class Vendedor extends AppCompatActivity {
+public class Vendedor extends BaseActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        toolbar = (Toolbar) findViewById(R.id.tool_bar);
+        setSupportActionBar(toolbar);
         setContentView(R.layout.activity_vendedor);
         String array[]=new String[]{"vendedor 1","vendedor 2","vendedor 3"};
         Spinner vendedores=(Spinner) findViewById( R.id.spinnerVendedores);

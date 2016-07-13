@@ -11,7 +11,7 @@ import android.view.MenuItem;
  * Created by Dantes Revelion on 13/07/2016.
  */
 public class BaseActivity extends AppCompatActivity {
-/*
+
     public Toolbar toolbar;
 
     @Override
@@ -20,9 +20,11 @@ public class BaseActivity extends AppCompatActivity {
 
         toolbar = (Toolbar) findViewById(R.id.tool_bar); // Attaching the layout to the toolbar object
         setSupportActionBar(toolbar);
+        System.out.println("------------------DEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEERP");
     }
     @Override
     public boolean onCreateOptionsMenu(android.view.Menu menu) {
+        System.out.println("ON CREATE OPTION MENU");
         getMenuInflater().inflate(R.menu.mipedido_menu, menu);
         //return super.onCreateOptionsMenu(menu);
         return true;
@@ -30,6 +32,7 @@ public class BaseActivity extends AppCompatActivity {
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
+        System.out.println("ON OPTION ITEM SELECTED ");
         int id = item.getItemId();
 
         //noinspection SimplifiableIfStatement
@@ -44,5 +47,5 @@ public class BaseActivity extends AppCompatActivity {
 
         return super.onOptionsItemSelected(item);
     }
-    */
+
 }

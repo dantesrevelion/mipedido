@@ -3,11 +3,12 @@ package com.example.dantesrevelion.mipedido;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 
+import android.support.v7.widget.Toolbar;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
 
-public class Producto extends AppCompatActivity {
+public class Producto extends BaseActivity {
 
 
     Button minus=null;
@@ -16,6 +17,8 @@ public class Producto extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        toolbar = (Toolbar) findViewById(R.id.tool_bar);
+        setSupportActionBar(toolbar);
         setContentView(R.layout.activity_producto);
         TextView txttitulo1=(TextView) findViewById(R.id.txtNombreProd);
         TextView txttitulo2=(TextView) findViewById(R.id.txtTipoProd);
