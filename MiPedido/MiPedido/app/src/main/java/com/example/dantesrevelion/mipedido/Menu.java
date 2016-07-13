@@ -12,7 +12,7 @@ import android.widget.ListView;
 
 public class Menu extends AppCompatActivity {
   //  JSONArray jsonArray;
-    private Toolbar toolbar;
+  private Toolbar toolbar;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -59,6 +59,7 @@ public class Menu extends AppCompatActivity {
 
     }
 
+
     @Override
     public boolean onCreateOptionsMenu(android.view.Menu menu) {
         getMenuInflater().inflate(R.menu.mipedido_menu, menu);
@@ -68,8 +69,21 @@ public class Menu extends AppCompatActivity {
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        return true;
+        int id = item.getItemId();
+
+        //noinspection SimplifiableIfStatement
+        if (id == R.id.cart) {
+            System.out.println("clicked cartttt");
+
+            Intent intent=new Intent(Menu.this,CarritoCompra.class);
+            startActivity(intent);
+
+            return true;
+        }
+
+        return super.onOptionsItemSelected(item);
     }
+
     /*
     private class Connection extends AsyncTask {
 

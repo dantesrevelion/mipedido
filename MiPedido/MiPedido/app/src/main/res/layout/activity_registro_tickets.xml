@@ -6,10 +6,7 @@
     tools:context="com.example.dantesrevelion.mipedido.RegistroTickets"
     android:background="@color/color4"
     android:orientation="vertical">
-    <include
-        android:id="@+id/tool_bar"
-        layout="@layout/toolbar"
-        ></include>
+
 <TableLayout
     android:layout_width="match_parent"
     android:layout_height="300dp"
