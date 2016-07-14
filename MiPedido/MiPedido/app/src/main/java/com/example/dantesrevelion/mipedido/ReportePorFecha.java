@@ -32,9 +32,9 @@ public class ReportePorFecha extends BaseActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_reporte_por_fecha);
         toolbar = (Toolbar) findViewById(R.id.tool_bar);
         setSupportActionBar(toolbar);
-        setContentView(R.layout.activity_reporte_por_fecha);
         fechaini=(TextView) findViewById(R.id.txtInicio);
         fechafin=(TextView) findViewById(R.id.txtFin);
 
