@@ -7,6 +7,13 @@ import android.support.v7.widget.Toolbar;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
+import android.widget.Toast;
+
+import com.example.dantesrevelion.mipedido.Utils.ConnectionUtils;
+
+import org.json.JSONArray;
+
+import java.util.Calendar;
 
 public class Producto extends BaseActivity {
 
@@ -14,6 +21,7 @@ public class Producto extends BaseActivity {
     Button minus=null;
     Button addmore=null;
     int n=1;
+    String idu="",idp="",c="";
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -22,8 +30,10 @@ public class Producto extends BaseActivity {
         setSupportActionBar(toolbar);
         TextView txttitulo1=(TextView) findViewById(R.id.txtNombreProd);
         TextView txttitulo2=(TextView) findViewById(R.id.txtTipoProd);
+        idu=getIntent().getExtras().getString("id_usuario");
+        idp=getIntent().getExtras().getString("id_producto");
         String n=getIntent().getExtras().getString("nombre");
-        String c=getIntent().getExtras().getString("costo");
+        c=getIntent().getExtras().getString("costo");
         String d=getIntent().getExtras().getString("denominacion");
         txttitulo1.setText(n+" ");
         txttitulo2.setText(d+" "+c+"$");
@@ -50,4 +60,15 @@ public class Producto extends BaseActivity {
         txtCant.setText(""+n);
     //    micontador.setText(n);
     }
+
+    public void addtoCarrito(View v){
+
+        String monto=""+(n*Double.parseDouble(c));
+        JSONArray taskResult= ConnectionUtils.consultaSQLite(this,ConnectionUtils.insertCarrito(idp,idu,""+n,monto,"P"));
+        Toast toast1 = Toast.makeText(getApplicationContext(),
+                "Añadidos al Carrito", Toast.LENGTH_SHORT);
+        toast1.show();
+    }
+
+
 }

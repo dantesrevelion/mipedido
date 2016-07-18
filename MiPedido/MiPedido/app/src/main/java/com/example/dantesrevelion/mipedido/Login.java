@@ -81,6 +81,7 @@ public class Login extends AppCompatActivity {
             System.out.println("JSON "+taskResult);
             if(taskResult.length()!=0) {
                 Intent intent=new Intent(Login.this,Menu.class);
+                intent.putExtra("id",taskResult.getJSONObject(0).get("id").toString());
                 intent.putExtra("usuario",taskResult.getJSONObject(0).get("usuario").toString());
                 intent.putExtra("correo",taskResult.getJSONObject(0).get("correo").toString());
                 startActivity(intent);

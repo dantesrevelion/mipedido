@@ -48,6 +48,8 @@ public class Lista_Producto extends BaseActivity  {
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 Intent intent=new Intent(Lista_Producto.this, Producto.class);
                 try {
+                    intent.putExtra("id_usuario",getIntent().getExtras().getString("id_usuario"));
+                    intent.putExtra("id_producto",taskResult.getJSONObject(position).get("id").toString());
                     intent.putExtra("nombre",taskResult.getJSONObject(position).get("nombre").toString());
                     intent.putExtra("costo",taskResult.getJSONObject(position).get("costo").toString());
                     intent.putExtra("denominacion",taskResult.getJSONObject(position).get("denominacion").toString());

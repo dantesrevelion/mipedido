@@ -3,7 +3,8 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="com.example.dantesrevelion.mipedido.ReportePorFecha"
+    tools:context=".ReportePorFecha"
+    android:background="@color/color4"
     android:orientation="vertical">
     <include
         android:id="@+id/tool_bar"
@@ -39,9 +40,10 @@
                 android:layout_weight="1" />
             <Button
                 android:layout_width="60dp"
-                android:layout_height="30dp"
+                android:layout_height="40dp"
                 android:onClick="OnClickFillVentas"
-                android:background="@color/color5"
+                android:backgroundTint="@color/color5"
+                android:drawableTintMode="multiply"
                 android:textColor="@color/white"
                 android:text="Go"/>
         </LinearLayout>
@@ -68,7 +70,7 @@
                 android:layout_height="wrap_content"
                 android:paddingLeft="20dp"
                 android:id="@+id/txtInicio"
-                android:textSize="20sp"
+                android:textSize="16sp"
                 android:text="Fecha Inicio"
                 android:textStyle="bold"/>
 
@@ -86,7 +88,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:paddingLeft="20dp"
-                android:textSize="20sp"
+                android:textSize="16sp"
                 android:id="@+id/txtFin"
                 android:text="Fecha Fin"
                 android:textStyle="bold"/>
@@ -138,8 +140,8 @@
                 >
                 <TextView
                     android:layout_width="240dp"
-                    android:layout_height="70dp"
-                    android:textSize="25sp"
+                    android:layout_height="50dp"
+                    android:textSize="20sp"
                     android:gravity="right|center"
                     android:textColor="@color/black"
 
@@ -147,7 +149,7 @@
                 <TextView
                     android:layout_width="100dp"
                     android:layout_height="match_parent"
-                    android:textSize="27sp"
+                    android:textSize="20sp"
                     android:gravity="right|center"
                     android:textColor="@color/black"
                     android:text="0$"/>
@@ -162,14 +164,14 @@
                 <TextView
                     android:layout_width="240dp"
                     android:layout_height="50dp"
-                    android:textSize="25sp"
+                    android:textSize="20sp"
                     android:gravity="right"
                     android:textColor="@color/black"
                     android:text="Corte Total :"/>
                 <TextView
                     android:layout_width="100dp"
                     android:layout_height="50dp"
-                    android:textSize="27sp"
+                    android:textSize="20sp"
                     android:gravity="right"
                     android:textColor="@color/black"
                     android:text="0$"/>

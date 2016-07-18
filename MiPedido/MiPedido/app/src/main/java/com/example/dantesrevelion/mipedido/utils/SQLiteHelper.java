@@ -40,6 +40,18 @@ public class SQLiteHelper extends SQLiteOpenHelper {
 
 
 
+        sqLiteDatabase.execSQL("CREATE TABLE IF NOT EXISTS `carrito` (" +
+                "  `id_venta` INTEGER PRIMARY KEY AUTOINCREMENT," +
+                "  `id_producto` int(11) NOT NULL," +
+                "  `id_vendedor` int(11) NOT NULL," +
+                "  `fecha` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP," +
+                "  `cantidad` int(11) NOT NULL," +
+                "  `monto` double NOT NULL," +
+                "  `estatus` varchar(1) NOT NULL"+
+                ");");
+
+
+
         System.out.println("SQLite CREATED-");
 
     }

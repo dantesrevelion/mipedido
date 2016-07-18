@@ -126,7 +126,9 @@
                     android:layout_width="170dp"
                     android:layout_height="50dp"
                     android:text="AÑADIR AL CARRITO"
-                    android:background="@color/color5"
+                    android:backgroundTint="@color/color5"
+                    android:onClick="addtoCarrito"
+                    android:drawableTintMode="multiply"
                     android:textColor="@color/white"
                     android:singleLine="false" />
             </LinearLayout>

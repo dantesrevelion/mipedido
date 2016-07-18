@@ -1,5 +1,6 @@
 package com.example.dantesrevelion.mipedido.Utils;
 
+import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
@@ -72,7 +73,7 @@ public class ConnectionUtils {
         return response;
     }
     public static String queryIdentifyUsuario(String usuario,String pass ){
-        String response = "SELECT usuario,correo from usuarios where usuario='"+usuario+"' and password='"+pass+"'";
+        String response = "SELECT id,usuario,correo from usuarios where usuario='"+usuario+"' and password='"+pass+"'";
         return response;
     }
     public static String queryAllUsuarios(){
@@ -89,6 +90,25 @@ public class ConnectionUtils {
     }
     public static String queryVentasByUsuarioFecha(String fini,String ffin,String idv){
         String response = "select * from ventas JOIN productos,usuarios where ventas.id_producto=productos.id and fecha between '"+fini+"' and '"+ffin+"' and ventas.id_vendedor="+idv;
+        return response;
+    }
+
+    public static String insertCarrito(String idp,String idv,String cant,String monto,String estatus){
+        String response = "INSERT INTO carrito ( id_producto, id_vendedor,cantidad,monto,estatus)" +
+                "VALUES ("+idp+","+idv+","+cant+","+monto+",'"+estatus+"'); ";
+        return response;
+    }
+    public static String queryCarrito(){
+        String response = "select * from carrito where estatus='P'";
+        return response;
+    }
+    public static String updateEstadoVentatoP(String id){
+        String response = "update carrito SET estatus='V' where id_venta="+id;
+        return response;
+    }
+
+    public static String insertVentas(String idp,String idv,String cantidad,String monto){
+        String response = "http://"+DOMAIN+"/mipedido/res/ventasinsert.php?idp="+idp+"&idv="+idv+"&c="+cantidad+"&m="+monto;
         return response;
     }
     HttpURLConnection urlConnection;

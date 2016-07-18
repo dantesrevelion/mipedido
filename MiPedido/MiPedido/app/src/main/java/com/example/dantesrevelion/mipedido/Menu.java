@@ -20,7 +20,7 @@ public class Menu extends BaseActivity {
         toolbar = (Toolbar) findViewById(R.id.tool_bar);
         setSupportActionBar(toolbar);
         final ListView lista = (ListView) findViewById(R.id.listaMenu);
-        final String[] items ={"Productos","Mi Perfil","Reporte por Fecha","Lista de Ventas","Registro de Tickets"};
+        final String[] items ={"Productos","Lista de Ventas","Registro de Tickets","Reporte por Fecha","Mi Perfil"};
         VysorAdapterMenu adapter = new VysorAdapterMenu(Menu.this, R.layout.item_list, items);
 
 
@@ -32,21 +32,22 @@ public class Menu extends BaseActivity {
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
 
                 if (position == 0) {
-                    startActivity(new Intent(Menu.this, Lista_Producto.class));
+                    Intent intent=new Intent(Menu.this, Lista_Producto.class);
+                    intent.putExtra("id_usuario",getIntent().getExtras().getString("id"));
+                    startActivity(intent);
                 } else if(position == 1) {
+                    startActivity(new Intent(Menu.this, ListaDeVentas.class));
 
+                } else if(position == 2) {
+                    startActivity(new Intent(Menu.this, RegistroTickets.class));
+
+                } else if(position == 3) {
+                    startActivity(new Intent(Menu.this, ReportePorFecha.class));
+                }else if(position==4){
                     Intent intent=new Intent(Menu.this, Perfil.class);
                     intent.putExtra("usuario",getIntent().getExtras().getString("usuario"));
                     intent.putExtra("correo",getIntent().getExtras().getString("correo"));
                     startActivity(intent);
-
-
-                } else if(position == 2) {
-                    startActivity(new Intent(Menu.this, ReportePorFecha.class));
-                } else if(position == 3) {
-                    startActivity(new Intent(Menu.this, ListaDeVentas.class));
-                }else if(position==4){
-                    startActivity(new Intent(Menu.this, RegistroTickets.class));
                 }
 
 
