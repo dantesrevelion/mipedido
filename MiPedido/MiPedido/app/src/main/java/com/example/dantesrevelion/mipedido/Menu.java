@@ -2,6 +2,8 @@ package com.example.dantesrevelion.mipedido;
 
 import android.content.Intent;
 
+import android.content.IntentFilter;
+import android.net.ConnectivityManager;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
@@ -22,7 +24,6 @@ public class Menu extends BaseActivity {
         final ListView lista = (ListView) findViewById(R.id.listaMenu);
         final String[] items ={"Productos","Lista de Ventas","Registro de Tickets","Reporte por Fecha","Mi Perfil"};
         VysorAdapterMenu adapter = new VysorAdapterMenu(Menu.this, R.layout.item_list, items);
-
 
       //  new Connection().execute();
 

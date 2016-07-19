@@ -1,7 +1,9 @@
 package com.example.dantesrevelion.mipedido;
 
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.database.sqlite.SQLiteDatabase;
+import android.net.ConnectivityManager;
 import android.os.AsyncTask;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -36,6 +38,13 @@ public class Login extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
 
+
+        NetworkState receiver;
+        IntentFilter filter = new IntentFilter(ConnectivityManager.CONNECTIVITY_ACTION);
+        receiver = new NetworkState();
+        registerReceiver(receiver, filter);
+
+        /*
         if(ConnectionUtils.conectadoWifi(this) || ConnectionUtils.conectadoRedMovil(this)) {
             CheckIn.checkInProcess(this);
 
@@ -44,6 +53,7 @@ public class Login extends AppCompatActivity {
                     "Modo Offline", Toast.LENGTH_SHORT);
             toast1.show();
         }
+        */
         layoutUser = (LinearLayout) findViewById(R.id.layoutUser);
         layoutPass = (LinearLayout) findViewById(R.id.layoutPassword);
         inputTextUser = (EditText) findViewById(R.id.inputUser);

@@ -1,6 +1,8 @@
 package com.example.dantesrevelion.mipedido;
 
 import android.content.Intent;
+import android.content.IntentFilter;
+import android.net.ConnectivityManager;
 import android.os.Bundle;
 import android.os.PersistableBundle;
 import android.support.v7.app.AppCompatActivity;
@@ -20,7 +22,9 @@ public class BaseActivity extends AppCompatActivity {
 
         toolbar = (Toolbar) findViewById(R.id.tool_bar); // Attaching the layout to the toolbar object
         setSupportActionBar(toolbar);
-        System.out.println("------------------DEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEERP");
+
+
+
     }
     @Override
     public boolean onCreateOptionsMenu(android.view.Menu menu) {
@@ -47,5 +51,6 @@ public class BaseActivity extends AppCompatActivity {
 
         return super.onOptionsItemSelected(item);
     }
+
 
 }
