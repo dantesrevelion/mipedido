@@ -169,6 +169,7 @@
                     android:textColor="@color/black"
                     android:text="Corte Total :"/>
                 <TextView
+                    android:id="@+id/total_reporte_fecha"
                     android:layout_width="100dp"
                     android:layout_height="50dp"
                     android:textSize="20sp"

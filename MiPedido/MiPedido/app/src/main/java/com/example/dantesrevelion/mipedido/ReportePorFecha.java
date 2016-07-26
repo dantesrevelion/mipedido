@@ -27,10 +27,12 @@ public class ReportePorFecha extends BaseActivity {
     private static int idfecha=0;
     private static TextView fechaini=null;
     private static TextView fechafin=null;
+    private static TextView total=null;
     public static String fecha1,fecha2;
     public Spinner spinervendedores;
     JSONArray taskResult=null;
     JSONArray taskResult2 = null;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -39,7 +41,7 @@ public class ReportePorFecha extends BaseActivity {
         setSupportActionBar(toolbar);
         fechaini=(TextView) findViewById(R.id.txtInicio);
         fechafin=(TextView) findViewById(R.id.txtFin);
-
+        total=(TextView) findViewById(R.id.total_reporte_fecha);
         String [] array=null;
 
         try {
@@ -133,6 +135,8 @@ public class ReportePorFecha extends BaseActivity {
 
         Toast toast1 = Toast.makeText(getApplicationContext(),
                 "Seleccione fechas", Toast.LENGTH_SHORT);
+        Toast toastNoData = Toast.makeText(getApplicationContext(),
+                "No hay registros", Toast.LENGTH_SHORT);
         int idvendedor=spinervendedores.getSelectedItemPosition();
         System.out.println("id vendedor ------------->"+idvendedor);
 
@@ -149,7 +153,7 @@ public class ReportePorFecha extends BaseActivity {
                 VysorAdapterReporte adapterVendidos = new VysorAdapterReporte(ReportePorFecha.this,
                         R.layout.item_producto, ConnectionUtils.jsonToArray(taskResult2, "nombre"), taskResult2);
                 listaVendidos.setAdapter(adapterVendidos);
-
+                if(taskResult.length()==0){toastNoData.show();}
                 calculaTotal();
             } else {
 
@@ -173,6 +177,9 @@ public class ReportePorFecha extends BaseActivity {
            }
 
        }
+        fechafin.setText("Fecha Inicio");
+        fechaini.setText("Fecha Fin");
+        total.setText(monto+"$");
         System.out.println("TOTAL------------->"+monto);
     }
 }
