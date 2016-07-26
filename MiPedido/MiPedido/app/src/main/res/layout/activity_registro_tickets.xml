@@ -107,6 +107,9 @@
         <Button
             android:layout_width="180dp"
             android:layout_height="60dp"
+            android:backgroundTint="@color/color5"
+            android:drawableTintMode="multiply"
+            android:textColor="@color/white"
             android:text="Registrar Ticket"
             android:textSize="16sp"/>
 

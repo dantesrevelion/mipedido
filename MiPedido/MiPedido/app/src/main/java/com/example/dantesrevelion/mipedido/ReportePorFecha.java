@@ -18,6 +18,8 @@ import com.example.dantesrevelion.mipedido.Utils.ConnectionUtils;
 import org.json.JSONArray;
 import org.json.JSONException;
 
+import java.util.Calendar;
+import java.util.Date;
 import java.util.concurrent.ExecutionException;
 
 public class ReportePorFecha extends BaseActivity {
@@ -32,9 +34,9 @@ public class ReportePorFecha extends BaseActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_reporte_por_fecha);
         toolbar = (Toolbar) findViewById(R.id.tool_bar);
         setSupportActionBar(toolbar);
-        setContentView(R.layout.activity_reporte_por_fecha);
         fechaini=(TextView) findViewById(R.id.txtInicio);
         fechafin=(TextView) findViewById(R.id.txtFin);
 
@@ -73,16 +75,29 @@ public class ReportePorFecha extends BaseActivity {
         newFragment.show(getSupportFragmentManager(), "Fecha Fin");
     }
 
-    public static void setDate(String fecha){
-        System.out.println("MI FECHA PICKEADA "+fecha);
+    public static void setDate(Date d){
+        Calendar c = Calendar.getInstance();
+        c.setTime(d);
+        c.add(Calendar.MONTH, 1);
+        d = c.getTime();
+        String fecha="";
+
+
         if(ReportePorFecha.idfecha==R.id.fechaInicio){
+             fecha=d.getYear()+"-"+d.getMonth()+"-"+d.getDate();
              ReportePorFecha.fechaini.setText(""+fecha);
              fecha1=fecha;
         }
         if(ReportePorFecha.idfecha==R.id.fechaFin){
+            c.setTime(d);
+            c.add(Calendar.DATE, 1);
+            d = c.getTime();
+            fecha=d.getYear()+"-"+d.getMonth()+"-"+d.getDate();
             ReportePorFecha.fechafin.setText(""+fecha);
             fecha2=fecha;
         }
+        System.out.println("MI FECHA PICKEADA "+fecha);
+
 
     }
 /*
