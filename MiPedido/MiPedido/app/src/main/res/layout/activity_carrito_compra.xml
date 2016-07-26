@@ -67,6 +67,7 @@
             android:drawableTintMode="multiply"
             android:textColor="@color/white"
             android:text="Eliminar Seleccion"
+            android:onClick="eliminarSeleccion"
             android:textSize="16sp"/>
 
     </LinearLayout>

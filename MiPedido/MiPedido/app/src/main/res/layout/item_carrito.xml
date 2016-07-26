@@ -66,6 +66,7 @@
                     android:id="@+id/txtnamecarrito"
                     />
                 <CheckBox
+                    android:id="@+id/check"
                     android:layout_width="25dp"
                     android:layout_height="25dp" />
             </LinearLayout>

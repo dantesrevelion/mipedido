@@ -102,8 +102,21 @@ public class ConnectionUtils {
         String response = "select * from carrito where estatus='P'";
         return response;
     }
+    public static String queryCarritoUp(){
+        String response = "select * from carrito where estatus='V'";
+        return response;
+    }
+
     public static String updateEstadoVentatoP(String id){
         String response = "update carrito SET estatus='V' where id_venta="+id;
+        return response;
+    }
+    public static String updateEstadoVentatoS(String id){
+        String response = "update carrito SET estatus='S' where id_venta="+id;
+        return response;
+    }
+    public static String deleteCarrito(String id){
+        String response = "delete from carrito where id_venta="+id;
         return response;
     }
 

@@ -8,6 +8,7 @@ import android.support.v7.widget.Toolbar;
 import android.view.*;
 import android.view.Menu;
 import android.widget.AdapterView;
+import android.widget.CheckBox;
 import android.widget.ListView;
 import android.widget.Toast;
 
@@ -25,6 +26,8 @@ public class CarritoCompra extends BaseActivity {
     private Toolbar toolbar;
     JSONArray taskResult=null;
     ListView lista;
+    VysorAdapterCarrito adapter;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -40,39 +43,18 @@ public class CarritoCompra extends BaseActivity {
 
         lista= (ListView) findViewById(R.id.listaCarrito);
 
-        VysorAdapterCarrito adapter = new VysorAdapterCarrito(CarritoCompra.this, R.layout.item_carrito,
+        adapter= new VysorAdapterCarrito(CarritoCompra.this, R.layout.item_carrito,
                 ConnectionUtils.jsonToArray(taskResult,"id_venta"), taskResult);
 
 
-
-        //  new Connection().execute();
-
         lista.setAdapter(adapter);
-        lista.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
 
-
-
-            }
-        });
     }
     public void generarVenta(View v) throws JSONException {
         for(int i=0;i<taskResult.length();i++){
             ConnectionUtils.consultaSQLite(getBaseContext(),ConnectionUtils.updateEstadoVentatoP(taskResult.getJSONObject(i).getString("id_venta")));
-            String idp=taskResult.getJSONObject(i).getString("id_producto");
-            String idv=taskResult.getJSONObject(i).getString("id_vendedor");
-            String cantidad=taskResult.getJSONObject(i).getString("cantidad");
-            String monto=taskResult.getJSONObject(i).getString("monto");
-            try {
-                String s= new InsertIntoVentas().execute(idp,idv,cantidad,monto).get().toString();
-            } catch (InterruptedException e) {
-                e.printStackTrace();
-            } catch (ExecutionException e) {
-                e.printStackTrace();
-            }
-
         }
+
         consultaCarrito();
 
 
@@ -90,24 +72,33 @@ public class CarritoCompra extends BaseActivity {
 
     }
 
-    private class InsertIntoVentas extends AsyncTask {
 
-        @Override
-        protected Object doInBackground(Object... param) {
-
-            JSONArray response=null;
-            ConnectionUtils cn=new ConnectionUtils();
-
-                //    response=cn.connect(ConnectionUtils.insertVentas(idp,idv,cantidad,monto));
-            response=cn.connect(ConnectionUtils.insertVentas((String)param[0],(String)param[1],(String)param[2],(String)param[3]));
-
-            return response;
-        }
-
-    }
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
+
         return true;
+    }
+
+    public void eliminarSeleccion(View v){
+
+
+        for (int i=0;i<adapter.getCount();i++){
+            CheckBox cb=(CheckBox) lista.getChildAt(i).findViewById(R.id.check);
+
+            if(cb.isChecked()){
+
+                try {
+                    ConnectionUtils.consultaSQLite(getBaseContext(),ConnectionUtils.deleteCarrito( taskResult.getJSONObject(i).get("id_venta").toString()));
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+            }
+
+            System.out.println("checked "+cb.isChecked());
+
+        }
+         consultaCarrito();
+
     }
 
 

@@ -2,7 +2,11 @@ package com.example.dantesrevelion.mipedido.Utils;
 
 import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
+import android.os.AsyncTask;
 import android.widget.Toast;
+
+import org.json.JSONArray;
+import org.json.JSONException;
 
 import java.util.concurrent.ExecutionException;
 
@@ -14,8 +18,20 @@ public class CheckIn {
     public static void checkInProcess(Context context){
         SQLiteHelper sqlHelper=new SQLiteHelper(context, "miPedidoLite", null, 1);
         SQLiteDatabase db = sqlHelper.getWritableDatabase();
+        JSONArray taskResult= ConnectionUtils.consultaSQLite(context,ConnectionUtils.queryCarritoUp());
 
         try {
+            for(int i=0;i<taskResult.length();i++){
+                String idp=taskResult.getJSONObject(i).getString("id_producto");
+                String idv=taskResult.getJSONObject(i).getString("id_vendedor");
+                String cantidad=taskResult.getJSONObject(i).getString("cantidad");
+                String monto=taskResult.getJSONObject(i).getString("monto");
+                String s=new InsertIntoVentas().execute(idp,idv,cantidad,monto).get().toString();
+                ConnectionUtils.consultaSQLite(context,ConnectionUtils.updateEstadoVentatoS(taskResult.getJSONObject(i).getString("id_venta")));
+            }
+
+
+
             Toast toast1 = Toast.makeText(context.getApplicationContext(),
                     "Actualizando base de datos", Toast.LENGTH_SHORT);
             toast1.show();
@@ -28,8 +44,26 @@ public class CheckIn {
             e.printStackTrace();
         } catch (ExecutionException e) {
             e.printStackTrace();
+        } catch (JSONException e) {
+            e.printStackTrace();
         }
         System.out.println("check In End");
+    }
+
+    public static class InsertIntoVentas extends AsyncTask {
+
+        @Override
+        protected Object doInBackground(Object... param) {
+
+            JSONArray response=null;
+            ConnectionUtils cn=new ConnectionUtils();
+
+            //    response=cn.connect(ConnectionUtils.insertVentas(idp,idv,cantidad,monto));
+            response=cn.connect(ConnectionUtils.insertVentas((String)param[0],(String)param[1],(String)param[2],(String)param[3]));
+
+            return response;
+        }
+
     }
 
 

@@ -7,6 +7,7 @@ import android.support.v4.app.DialogFragment;
 import android.widget.DatePicker;
 
 import java.util.Calendar;
+import java.util.Date;
 
 /**
  * Created by Dantes Revelion on 08/05/2016.
@@ -29,7 +30,9 @@ public class DatePickerFragment extends DialogFragment
 
     public void onDateSet(DatePicker view, int year, int month, int day) {
 
-        String fecha=year+"-"+(month+1)+"-"+day;
-        ReportePorFecha.setDate(fecha);
+
+        Date d=new Date(year,month,day);
+
+        ReportePorFecha.setDate(d);
     }
 }

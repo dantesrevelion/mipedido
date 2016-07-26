@@ -5,6 +5,8 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
+import android.widget.CheckBox;
+import android.widget.CompoundButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -21,6 +23,8 @@ public class VysorAdapterCarrito extends ArrayAdapter<String> {
     private final Context context;
     private final JSONArray values;
     int item_vysor;
+    CheckBox check;
+
 
     public VysorAdapterCarrito(Context context, int item_vysor, String [] values, JSONArray jsonArray) {
         super(context, -1,values);
@@ -60,6 +64,9 @@ public class VysorAdapterCarrito extends ArrayAdapter<String> {
         } catch (JSONException e) {
             e.printStackTrace();
         }
+
+
+
 
         return rowView;
     }
