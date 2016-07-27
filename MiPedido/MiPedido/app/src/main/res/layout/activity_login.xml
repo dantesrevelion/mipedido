@@ -101,5 +101,11 @@
             android:onClick="nextStep" />
 
     </LinearLayout>
-
+    <ImageView
+        style="@style/configuracion"
+        android:layout_width="35dp"
+        android:layout_height="30dp"
+        android:onClick="openConfig"
+        android:layout_marginBottom="40dp"
+        android:src="@drawable/settings"/>
 </RelativeLayout>

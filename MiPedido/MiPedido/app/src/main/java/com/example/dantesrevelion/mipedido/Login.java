@@ -112,6 +112,10 @@ public class Login extends AppCompatActivity {
         layoutPass.setVisibility(View.INVISIBLE);
         MyAnimationUtils.translateAnimation(layoutUser,800L,2.0f,-900,0,0,0);
     }
+    public void openConfig(View v){
+        Intent intent=new Intent(Login.this,Configuracion.class);
+        startActivity(intent);
+    }
 
     /*
     private class Connection extends AsyncTask {

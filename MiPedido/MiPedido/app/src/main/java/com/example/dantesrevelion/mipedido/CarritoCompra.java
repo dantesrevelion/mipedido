@@ -64,7 +64,7 @@ public class CarritoCompra extends BaseActivity {
 
         }else{
             Toast toast1 = Toast.makeText(getApplicationContext(),
-                    "Modo Offline", Toast.LENGTH_SHORT);
+                    "Venta offline", Toast.LENGTH_SHORT);
             toast1.show();
         }
 

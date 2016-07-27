@@ -1,11 +1,12 @@
 package com.example.dantesrevelion.mipedido.Utils;
 
-import android.content.ContentValues;
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
+import android.preference.PreferenceManager;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -28,44 +29,52 @@ import java.util.Date;
  */
 public class ConnectionUtils {
 
-    public static String DOMAIN="mipedidoapp.esy.es";
+   // private static String DOMAIN="mipedidoapp.esy.es";
+   private static String DOMAIN="";
 
 
     public ConnectionUtils(){
 
     }
+    public static void createConection(Context context){
+        System.out.println("GETTING PREFERENCES ");
+        SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(context);
+        String host=preferences.getString("config_host","");
+        setDOMAIN(host);
+
+    }
     public static String getUserParameter(String usuario){
-        String COMP_USER="http://"+DOMAIN+"/mipedido/res/usuario.php?usuario="+usuario;
+        String COMP_USER="http://"+ getDOMAIN() +"/mipedido/res/usuario.php?usuario="+usuario;
         return COMP_USER;
     }
     public static String getIdentUserPassParameter(String usuario, String password){
-        String IDENT_USERPASS="http://"+DOMAIN+"/mipedido/res/password.php?user="+usuario+"&identify="+password;
+        String IDENT_USERPASS="http://"+ getDOMAIN() +"/mipedido/res/password.php?user="+usuario+"&identify="+password;
         return IDENT_USERPASS;
     }
 
     public static String getAllProdParameter(){
-        String ALL_PROD="http://"+DOMAIN+"/mipedido/res/allprod.php";
+        String ALL_PROD="http://"+ getDOMAIN() +"/mipedido/res/allprod.php";
         return ALL_PROD;
     }
     public static String getAllVentasParameter(){
-        String ALL_VENTAS="http://"+DOMAIN+"/mipedido/res/allventas.php";
+        String ALL_VENTAS="http://"+ getDOMAIN() +"/mipedido/res/allventas.php";
         return ALL_VENTAS;
     }
     public static String getVentaByfechaParameter(String ini,String fin){
-        String VENTA_BYFECHA="http://"+DOMAIN+"/mipedido/res/ventabydaterange.php?di="+ini+"&df="+fin;
+        String VENTA_BYFECHA="http://"+ getDOMAIN() +"/mipedido/res/ventabydaterange.php?di="+ini+"&df="+fin;
         return VENTA_BYFECHA;
     }
 
     public static String getAllUsuariosParameter(){
-        String VENTA_BYFECHA="http://"+DOMAIN+"/mipedido/res/allusuarios.php";
+        String VENTA_BYFECHA="http://"+ getDOMAIN() +"/mipedido/res/allusuarios.php";
         return VENTA_BYFECHA;
     }
     public static String getVentasByUsuarioFechaParameter(String ini,String fin,String idv){
-        String VENTA_BYFECHA="http://"+DOMAIN+"/mipedido/res/ventasbyusuariofecha.php?di="+ini+"&df="+fin+"&idv="+idv;
+        String VENTA_BYFECHA="http://"+ getDOMAIN() +"/mipedido/res/ventasbyusuariofecha.php?di="+ini+"&df="+fin+"&idv="+idv;
         return VENTA_BYFECHA;
     }
     public static String getVentasByUsuarioParameter(String idv){
-        String VENTA_BYFECHA="http://"+DOMAIN+"/mipedido/res/ventasbyusuario.php?idv="+idv;
+        String VENTA_BYFECHA="http://"+ getDOMAIN() +"/mipedido/res/ventasbyusuario.php?idv="+idv;
         return VENTA_BYFECHA;
     }
     public static String querySearchUsuario(String usuario){
@@ -121,11 +130,19 @@ public class ConnectionUtils {
     }
 
     public static String insertVentas(String idp,String idv,String cantidad,String monto){
-        String response = "http://"+DOMAIN+"/mipedido/res/ventasinsert.php?idp="+idp+"&idv="+idv+"&c="+cantidad+"&m="+monto;
+        String response = "http://"+ getDOMAIN() +"/mipedido/res/ventasinsert.php?idp="+idp+"&idv="+idv+"&c="+cantidad+"&m="+monto;
         return response;
     }
     HttpURLConnection urlConnection;
     InputStream is;
+
+    public static String getDOMAIN() {
+        return DOMAIN;
+    }
+
+    public static void setDOMAIN(String DOMAIN) {
+        ConnectionUtils.DOMAIN = DOMAIN;
+    }
 
     public JSONArray connect(String urlParameter) {
         JSONArray response=null;

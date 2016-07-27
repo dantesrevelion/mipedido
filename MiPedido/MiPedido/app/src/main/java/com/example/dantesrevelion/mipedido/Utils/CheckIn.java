@@ -19,6 +19,8 @@ public class CheckIn {
         SQLiteHelper sqlHelper=new SQLiteHelper(context, "miPedidoLite", null, 1);
         SQLiteDatabase db = sqlHelper.getWritableDatabase();
         JSONArray taskResult= ConnectionUtils.consultaSQLite(context,ConnectionUtils.queryCarritoUp());
+        Toast toastError = Toast.makeText(context.getApplicationContext(),
+                "Error al actualizar", Toast.LENGTH_SHORT);
 
         try {
             for(int i=0;i<taskResult.length();i++){
@@ -41,10 +43,14 @@ public class CheckIn {
                     "Base de datos Actualizada", Toast.LENGTH_SHORT);
             toast2.show();
         } catch (InterruptedException e) {
+
+            toastError.show();
             e.printStackTrace();
         } catch (ExecutionException e) {
+            toastError.show();
             e.printStackTrace();
         } catch (JSONException e) {
+            toastError.show();
             e.printStackTrace();
         }
         System.out.println("check In End");

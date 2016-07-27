@@ -23,9 +23,12 @@ import java.util.concurrent.ExecutionException;
  * Created by Dantes Revelion on 18/07/2016.
  */
 public class NetworkState extends BroadcastReceiver {
+
     @Override
     public void onReceive(Context context, Intent intent) {
         NetworkInfo ni=(NetworkInfo) intent.getExtras().get(ConnectivityManager.EXTRA_NETWORK_INFO);
+        Toast toastError = Toast.makeText(context.getApplicationContext(),
+                "Error al actualizar", Toast.LENGTH_SHORT);
         if(ni!=null && ni.getState()==NetworkInfo.State.CONNECTED ) {
             Toast toast1 = Toast.makeText(context,
                     "Conectado", Toast.LENGTH_SHORT);
@@ -42,6 +45,8 @@ public class NetworkState extends BroadcastReceiver {
                     e.printStackTrace();
                 } catch (ExecutionException e) {
                     e.printStackTrace();
+                }catch (NullPointerException ex){
+                    toastError.show();
                 }
 
             }
