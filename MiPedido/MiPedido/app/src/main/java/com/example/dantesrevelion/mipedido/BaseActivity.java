@@ -50,7 +50,8 @@ public class BaseActivity extends AppCompatActivity {
             return true;
         }else if (id==R.id.config){
             System.out.println("Configuracion clicked");
-
+            Intent intent=new Intent(BaseActivity.this,Configuracion.class);
+            startActivity(intent);
         }
 
         return super.onOptionsItemSelected(item);

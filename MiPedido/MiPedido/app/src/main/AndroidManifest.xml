@@ -16,7 +16,6 @@
         android:label="@string/app_name"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-
         <activity
             android:name=".MainActivity"
             android:screenOrientation="portrait"
@@ -51,7 +50,8 @@
         <activity android:name=".ListaDeVentas" />
         <activity android:name=".Perfil" />
         <activity android:name=".CarritoCompra" />
-        <activity android:name=".RegistroTickets"></activity>
+        <activity android:name=".RegistroTickets" />
+        <activity android:name=".Configuracion"></activity>
     </application>
 
 </manifest>
