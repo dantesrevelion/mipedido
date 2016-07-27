@@ -6,8 +6,10 @@ import android.net.ConnectivityManager;
 import android.os.Bundle;
 import android.os.PersistableBundle;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.PopupMenu;
 import android.support.v7.widget.Toolbar;
-import android.view.MenuItem;
+import android.view.*;
+import android.view.Menu;
 
 /**
  * Created by Dantes Revelion on 13/07/2016.
@@ -42,11 +44,13 @@ public class BaseActivity extends AppCompatActivity {
         //noinspection SimplifiableIfStatement
         if (id == R.id.cart) {
             System.out.println("clicked cartttt");
-
             Intent intent=new Intent(BaseActivity.this,CarritoCompra.class);
             startActivity(intent);
 
             return true;
+        }else if (id==R.id.config){
+            System.out.println("Configuracion clicked");
+
         }
 
         return super.onOptionsItemSelected(item);
