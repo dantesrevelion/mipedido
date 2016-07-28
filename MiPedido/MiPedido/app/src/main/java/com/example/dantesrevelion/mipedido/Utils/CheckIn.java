@@ -8,6 +8,7 @@ import android.widget.Toast;
 import org.json.JSONArray;
 import org.json.JSONException;
 
+import java.net.UnknownHostException;
 import java.util.concurrent.ExecutionException;
 
 /**
@@ -37,10 +38,11 @@ public class CheckIn {
             Toast toast1 = Toast.makeText(context.getApplicationContext(),
                     "Actualizando base de datos", Toast.LENGTH_SHORT);
             toast1.show();
-            String task=new ConectionTask().execute(db).get().toString();
+
+                String task=new ConectionTask().execute(db,context).get().toString();
 
             Toast toast2 = Toast.makeText(context.getApplicationContext(),
-                    "Base de datos Actualizada", Toast.LENGTH_SHORT);
+                   task, Toast.LENGTH_SHORT);
             toast2.show();
         } catch (InterruptedException e) {
 

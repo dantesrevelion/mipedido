@@ -5,8 +5,10 @@
 
     <PreferenceCategory
         android:title="Configuración del servidor">
+        <EditTextPreference android:key="config_domain"
+            android:title="Dominio" />
         <EditTextPreference android:key="config_host"
-            android:title="Host" />
+            android:title="Host de Datos" />
         <EditTextPreference android:key="config_user"
             android:title="Usuario"/>
         <EditTextPreference android:key="config_pass"
