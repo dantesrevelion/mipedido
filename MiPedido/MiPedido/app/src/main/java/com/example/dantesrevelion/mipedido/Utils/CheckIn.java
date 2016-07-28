@@ -17,6 +17,7 @@ import java.util.concurrent.ExecutionException;
 public class CheckIn {
 
     public static void checkInProcess(Context context){
+        System.out.println("CHECK IN PROCESS------------->");
         SQLiteHelper sqlHelper=new SQLiteHelper(context, "miPedidoLite", null, 1);
         SQLiteDatabase db = sqlHelper.getWritableDatabase();
         JSONArray taskResult= ConnectionUtils.consultaSQLite(context,ConnectionUtils.queryCarritoUp());
@@ -39,11 +40,11 @@ public class CheckIn {
                     "Actualizando base de datos", Toast.LENGTH_SHORT);
             toast1.show();
 
-                String task=new ConectionTask().execute(db,context).get().toString();
+          //      String task=new ConectionTask().execute(db,context).get().toString();
+            new ConectionTask().execute(db,context);
 
-            Toast toast2 = Toast.makeText(context.getApplicationContext(),
-                   task, Toast.LENGTH_SHORT);
-            toast2.show();
+            //Toast toast2 = Toast.makeText(context.getApplicationContext(), task, Toast.LENGTH_SHORT);
+            //toast2.show();
         } catch (InterruptedException e) {
 
             toastError.show();
@@ -67,7 +68,9 @@ public class CheckIn {
             ConnectionUtils cn=new ConnectionUtils();
 
             //    response=cn.connect(ConnectionUtils.insertVentas(idp,idv,cantidad,monto));
+            cn.connect(ConnectionUtils.iniciarSesion());
             response=cn.connect(ConnectionUtils.insertVentas((String)param[0],(String)param[1],(String)param[2],(String)param[3]));
+            cn.connect(ConnectionUtils.cerrarSesion());
 
             return response;
         }

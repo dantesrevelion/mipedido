@@ -51,6 +51,7 @@ public class CarritoCompra extends BaseActivity {
 
     }
     public void generarVenta(View v) throws JSONException {
+        System.out.println("GENERAR VENTA------------->");
         for(int i=0;i<taskResult.length();i++){
             ConnectionUtils.consultaSQLite(getBaseContext(),ConnectionUtils.updateEstadoVentatoP(taskResult.getJSONObject(i).getString("id_venta")));
         }

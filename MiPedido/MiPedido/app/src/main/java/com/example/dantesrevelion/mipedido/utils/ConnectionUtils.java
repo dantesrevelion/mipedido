@@ -17,6 +17,8 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.net.CookieHandler;
+import java.net.CookieManager;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
@@ -31,11 +33,11 @@ import java.util.Date;
  */
 public class ConnectionUtils {
 
-   /* private static String DOMAIN="mipedidoapp.esy.es";
-        $host="mysql.hostinger.mx";
-	    $user="u152348074_ma12m";
-	    $password="mipedido123";
-	    $db="u152348074_mpdb";
+   /*   dominio=mipedidoapp.esy.es
+        $host=mysql.hostinger.mx
+	    $user=u152348074_ma12m
+	    $password=mipedido123
+	    $db=u152348074_mpdb
     */
     private static String DOMAIN="";
     private static String HOST="";
@@ -207,10 +209,11 @@ public class ConnectionUtils {
     public JSONArray connect(String urlParameter) {
         JSONArray response=null;
         try {
+            System.out.println("CREAR CONECCION CON------------->"+urlParameter);
+
             URL url= new URL(urlParameter);
             urlConnection=(HttpURLConnection)url.openConnection();
             urlConnection.connect();
-            System.out.println("------>SESSION "+urlConnection.getRequestProperty("JSESSIONID"));
             is=urlConnection.getInputStream();
             BufferedReader reader = new BufferedReader(new InputStreamReader(is, "UTF-8"), 8);
             StringBuilder sb = new StringBuilder();
