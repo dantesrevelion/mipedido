@@ -8,6 +8,9 @@ import android.widget.LinearLayout;
 
 import com.example.dantesrevelion.mipedido.Utils.MyAnimationUtils;
 
+import java.net.CookieHandler;
+import java.net.CookieManager;
+
 public class MainActivity extends AppCompatActivity {
     private final int SPLASH_DISPLAY_LENGTH = 1800;
     private Handler mHandler = new Handler();
@@ -18,6 +21,8 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        CookieManager cookieManager = new CookieManager();
+        CookieHandler.setDefault(cookieManager);
         setContentView(R.layout.activity_main);
         layoutLogo=(LinearLayout) findViewById(R.id.layoutLogo);
         MyAnimationUtils.translateAnimation(layoutLogo,1000L,2.0f,0,0,300,0);
@@ -27,6 +32,8 @@ public class MainActivity extends AppCompatActivity {
 
             }
         },SPLASH_DISPLAY_LENGTH);
+
+
         /*
         layoutLogo=(LinearLayout) findViewById(R.id.layoutLogo);
 

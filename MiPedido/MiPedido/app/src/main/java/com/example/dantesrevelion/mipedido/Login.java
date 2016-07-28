@@ -22,6 +22,8 @@ import com.example.dantesrevelion.mipedido.Utils.SQLiteHelper;
 import org.json.JSONArray;
 import org.json.JSONException;
 
+import java.net.CookieHandler;
+import java.net.CookieManager;
 import java.util.concurrent.ExecutionException;
 
 public class Login extends AppCompatActivity {

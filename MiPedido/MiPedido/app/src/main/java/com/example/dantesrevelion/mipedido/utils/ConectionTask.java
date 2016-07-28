@@ -24,7 +24,6 @@ public class ConectionTask extends AsyncTask{
         ConnectionUtils cn=new ConnectionUtils();
         //obtiene tabla de usuarios
         response=cn.connect(ConnectionUtils.iniciarSesion());
-
         response = cn.connect(ConnectionUtils.getAllUsuariosParameter());
         responses.setResponseUsuarios(response);
         //obtiene tabla de ventas
@@ -83,7 +82,7 @@ public class ConectionTask extends AsyncTask{
                 }
 
             }
-
+            cn.connect(ConnectionUtils.cerrarSesion());
             db.close();
         }catch (NullPointerException ex){
             return "Error de configuracion";

@@ -35,16 +35,11 @@ public class NetworkState extends BroadcastReceiver {
             toast1.show();
             if(ConnectionUtils.conectadoWifi(context)) {
                 try {
-                    String task=new CheckInternet().execute().get().toString();
 
-                    if (task!=null) {
+
                         CheckIn.checkInProcess(context);
 
-                    }
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
-                } catch (ExecutionException e) {
-                    e.printStackTrace();
+
                 }catch (NullPointerException ex){
                     toastError.show();
                 }
@@ -66,7 +61,7 @@ public class NetworkState extends BroadcastReceiver {
             JSONArray response=null;
             ConnectionUtils cn=new ConnectionUtils();
 
-
+            cn.connect(ConnectionUtils.iniciarSesion());
             response=cn.connect(ConnectionUtils.getAllUsuariosParameter());
 
             return response;
