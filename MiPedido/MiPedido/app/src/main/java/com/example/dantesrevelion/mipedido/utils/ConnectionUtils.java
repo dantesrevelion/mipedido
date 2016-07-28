@@ -7,6 +7,7 @@ import android.database.sqlite.SQLiteDatabase;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.preference.PreferenceManager;
+import android.widget.Toast;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -19,6 +20,7 @@ import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.net.UnknownHostException;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -29,8 +31,17 @@ import java.util.Date;
  */
 public class ConnectionUtils {
 
-   // private static String DOMAIN="mipedidoapp.esy.es";
-   private static String DOMAIN="";
+   /* private static String DOMAIN="mipedidoapp.esy.es";
+        $host="mysql.hostinger.mx";
+	    $user="u152348074_ma12m";
+	    $password="mipedido123";
+	    $db="u152348074_mpdb";
+    */
+    private static String DOMAIN="";
+    private static String HOST="";
+    private static String USUARIO="";
+    private static String PASS="";
+    private static String BD="";
 
 
     public ConnectionUtils(){
@@ -39,9 +50,26 @@ public class ConnectionUtils {
     public static void createConection(Context context){
         System.out.println("GETTING PREFERENCES ");
         SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(context);
+        String domain=preferences.getString("config_domain","");
         String host=preferences.getString("config_host","");
-        setDOMAIN(host);
+        String user=preferences.getString("config_user","");
+        String pass=preferences.getString("config_pass","");
+        String bd=preferences.getString("config_db","");
+        setDOMAIN(domain);
+        setHOST(host);
+        setUSUARIO(user);
+        setPASS(pass);
+        setBD(bd);
 
+
+    }
+    public static String iniciarSesion(){
+        String COMP_USER="http://"+ getDOMAIN() +"/mipedido/res/iniciarSesion.php?h="+getHOST()+"&u="+getUSUARIO()+"&p="+getPASS()+"&b="+getBD();
+        return COMP_USER;
+    }
+    public static String cerrarSesion(){
+        String COMP_USER="http://"+ getDOMAIN() +"/mipedido/res/cerrarSesion.php";
+        return COMP_USER;
     }
     public static String getUserParameter(String usuario){
         String COMP_USER="http://"+ getDOMAIN() +"/mipedido/res/usuario.php?usuario="+usuario;
@@ -144,12 +172,45 @@ public class ConnectionUtils {
         ConnectionUtils.DOMAIN = DOMAIN;
     }
 
+    public static String getUSUARIO() {
+        return USUARIO;
+    }
+
+    public static void setUSUARIO(String USUARIO) {
+        ConnectionUtils.USUARIO = USUARIO;
+    }
+
+    public static String getPASS() {
+        return PASS;
+    }
+
+    public static void setPASS(String PASS) {
+        ConnectionUtils.PASS = PASS;
+    }
+
+    public static String getBD() {
+        return BD;
+    }
+
+    public static void setBD(String BD) {
+        ConnectionUtils.BD = BD;
+    }
+
+    public static String getHOST() {
+        return HOST;
+    }
+
+    public static void setHOST(String HOST) {
+        ConnectionUtils.HOST = HOST;
+    }
+
     public JSONArray connect(String urlParameter) {
         JSONArray response=null;
         try {
             URL url= new URL(urlParameter);
             urlConnection=(HttpURLConnection)url.openConnection();
             urlConnection.connect();
+            System.out.println("------>SESSION "+urlConnection.getRequestProperty("JSESSIONID"));
             is=urlConnection.getInputStream();
             BufferedReader reader = new BufferedReader(new InputStreamReader(is, "UTF-8"), 8);
             StringBuilder sb = new StringBuilder();
@@ -165,6 +226,8 @@ public class ConnectionUtils {
 
         } catch (MalformedURLException e) {
             e.printStackTrace();
+
+
         } catch (IOException e) {
             e.printStackTrace();
         }
