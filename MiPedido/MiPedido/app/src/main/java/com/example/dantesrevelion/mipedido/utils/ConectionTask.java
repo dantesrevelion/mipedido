@@ -1,11 +1,15 @@
 package com.example.dantesrevelion.mipedido.Utils;
 
+import android.app.NotificationManager;
 import android.content.Context;
+import android.content.Intent;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.AsyncTask;
+import android.support.v4.app.NotificationCompat;
 import android.widget.Toast;
 
 import com.example.dantesrevelion.mipedido.Beans.BeanResponses;
+import com.example.dantesrevelion.mipedido.R;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -19,19 +23,29 @@ public class ConectionTask extends AsyncTask{
 
     @Override
     protected Object doInBackground(Object[] objects) {
+        Context c=(Context)objects[1];
+        ConnectionUtils.showNotificacion(c);
+
+
+
+
 
         JSONArray response;
         ConnectionUtils cn=new ConnectionUtils();
         //obtiene tabla de usuarios
         response=cn.connect(ConnectionUtils.iniciarSesion());
+        ConnectionUtils.setprogress(10,c);
         response = cn.connect(ConnectionUtils.getAllUsuariosParameter());
         responses.setResponseUsuarios(response);
+        ConnectionUtils.setprogress(20,c);
         //obtiene tabla de ventas
         response = cn.connect(ConnectionUtils.getAllVentasParameter());
         responses.setResponseVenta(response);
+        ConnectionUtils.setprogress(30,c);
         //obtiene tabla de productos
         response = cn.connect(ConnectionUtils.getAllProdParameter());
         responses.setResponseProductos(response);
+        ConnectionUtils.setprogress(40,c);
         try {
             SQLiteDatabase db = (SQLiteDatabase) objects[0];
             db.execSQL("delete from usuarios");
@@ -48,7 +62,7 @@ public class ConectionTask extends AsyncTask{
                 }
 
             }
-
+            ConnectionUtils.setprogress(50,c);
 
             db.execSQL("delete from productos");
             db.execSQL("VACUUM");
@@ -66,7 +80,7 @@ public class ConectionTask extends AsyncTask{
                 }
 
             }
-
+            ConnectionUtils.setprogress(60,c);
             db.execSQL("delete from ventas");
             db.execSQL("VACUUM");
             JSONArray ventas = responses.getResponseVenta();
@@ -82,9 +96,18 @@ public class ConectionTask extends AsyncTask{
                 }
 
             }
+            ConnectionUtils.setprogress(70,c);
+
             cn.connect(ConnectionUtils.cerrarSesion());
+
+
+
+
+
+            ConnectionUtils.setprogress(80,c);
             db.close();
         }catch (NullPointerException ex){
+            ConnectionUtils.notificateError(c);
             return "Error de configuracion";
         }
 

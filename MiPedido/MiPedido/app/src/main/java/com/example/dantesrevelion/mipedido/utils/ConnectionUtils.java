@@ -1,13 +1,21 @@
 package com.example.dantesrevelion.mipedido.Utils;
 
+import android.app.NotificationManager;
+import android.app.PendingIntent;
 import android.content.Context;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
+import android.graphics.drawable.BitmapDrawable;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.preference.PreferenceManager;
+import android.support.v4.app.NotificationCompat;
 import android.widget.Toast;
+
+import com.example.dantesrevelion.mipedido.MainActivity;
+import com.example.dantesrevelion.mipedido.R;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -208,6 +216,7 @@ public class ConnectionUtils {
 
     public JSONArray connect(String urlParameter) {
         JSONArray response=null;
+
         try {
             System.out.println("CREAR CONECCION CON------------->"+urlParameter);
 
@@ -228,11 +237,9 @@ public class ConnectionUtils {
 
 
         } catch (MalformedURLException e) {
-            e.printStackTrace();
-
-
+            System.out.println("Error 1");
         } catch (IOException e) {
-            e.printStackTrace();
+            System.out.println("Error 2");
         }
         return  response;
     }
@@ -362,6 +369,43 @@ public class ConnectionUtils {
         return resultSet;
 
 
+    }
+    private static NotificationCompat.Builder mBuilder;
+    private static NotificationManager mNotificationManager;
+    private static PendingIntent contIntent;
+    public static void showNotificacion (Context c){
+
+       mBuilder =new NotificationCompat.Builder(c)
+                        .setSmallIcon(R.drawable.download)
+                        .setLargeIcon((((BitmapDrawable)c.getResources()
+                                .getDrawable(R.drawable.download)).getBitmap()))
+                        .setContentTitle("Base de Datos Actualizada")
+                        .setTicker("BD Actualizada");
+        Intent notIntent =
+                new Intent(c, MainActivity.class);
+
+         contIntent = PendingIntent.getActivity(c, 0, notIntent, 0);
+         mNotificationManager =
+                (NotificationManager) c.getSystemService(Context.NOTIFICATION_SERVICE);
+
+        mNotificationManager.notify(01, mBuilder.build());
+
+        mBuilder.setContentIntent(contIntent);
+    }
+    public static void setprogress(int n,Context c){
+        mBuilder.setProgress(80,n,false);
+        mNotificationManager.notify(01, mBuilder.build());
+
+    }
+
+    public static void notificateError(Context c){
+        mBuilder =new NotificationCompat.Builder(c)
+                .setSmallIcon(R.drawable.download)
+                .setLargeIcon((((BitmapDrawable)c.getResources()
+                        .getDrawable(R.drawable.download)).getBitmap()))
+                .setContentTitle("Error al Actualizar la BD")
+                .setTicker("Error al Actualizar");
+        mNotificationManager.notify(01, mBuilder.build());
     }
 
 }

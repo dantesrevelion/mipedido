@@ -43,6 +43,7 @@ public class CheckIn {
           //      String task=new ConectionTask().execute(db,context).get().toString();
             new ConectionTask().execute(db,context);
 
+
             //Toast toast2 = Toast.makeText(context.getApplicationContext(), task, Toast.LENGTH_SHORT);
             //toast2.show();
         } catch (InterruptedException e) {
