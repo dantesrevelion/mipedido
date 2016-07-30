@@ -38,6 +38,8 @@ public class VysorAdapterVentaUsuario extends ArrayAdapter<String> {
         TextView precio = (TextView) rowView.findViewById(R.id.txtcantidadLista);
         TextView ide = (TextView) rowView.findViewById(R.id.txtide);
         TextView fecha = (TextView) rowView.findViewById(R.id.txtfecha);
+        TextView cantidad = (TextView) rowView.findViewById(R.id.cantidad);
+        TextView total = (TextView) rowView.findViewById(R.id.total);
         ImageView imageView = (ImageView) rowView.findViewById(R.id.backgroundList);
 
         System.out.println("        ----------VALUES "+values);
@@ -45,9 +47,14 @@ public class VysorAdapterVentaUsuario extends ArrayAdapter<String> {
         try {
             name.setText(values.getJSONObject(position).getString("nombre"));
            // tipo.setText(values.getJSONObject(position).getString("denominacion"));
+            cantidad.setText(values.getJSONObject(position).getString("cantidad"));
             precio.setText(values.getJSONObject(position).getString("costo")+"$");
             ide.setText(values.getJSONObject(position).getString("id_venta"));
             fecha.setText(values.getJSONObject(position).getString("fecha"));
+            int cant=Integer.parseInt(values.getJSONObject(position).getString("cantidad"));
+            double costo=Integer.parseInt(values.getJSONObject(position).getString("costo"));
+
+            total.setText(cant*costo+"$");
         } catch (JSONException e) {
             e.printStackTrace();
         }

@@ -379,8 +379,8 @@ public class ConnectionUtils {
                         .setSmallIcon(R.drawable.download)
                         .setLargeIcon((((BitmapDrawable)c.getResources()
                                 .getDrawable(R.drawable.download)).getBitmap()))
-                        .setContentTitle("Base de Datos Actualizada")
-                        .setTicker("BD Actualizada");
+                        .setContentTitle("Actualizando BD")
+                        .setTicker("Actualizando BD");
         Intent notIntent =
                 new Intent(c, MainActivity.class);
 

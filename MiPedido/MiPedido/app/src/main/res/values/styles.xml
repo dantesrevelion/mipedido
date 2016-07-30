@@ -24,4 +24,11 @@
         <item name="android:layout_alignParentRight">true</item>
     </style>
 
+    <style name="alinea_derecha_listaventa">
+        <item name="android:layout_alignParentRight">true</item>
+    </style>
+    <style name="alinea_izq_listaventa">
+        <item name="android:layout_alignParentLeft">true</item>
+    </style>
+
 </resources>
