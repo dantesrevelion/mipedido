@@ -31,4 +31,9 @@
         <item name="android:layout_alignParentLeft">true</item>
     </style>
 
+    <style name="alinea_abajo_reportefecha">
+        <item name="android:layout_alignParentBottom">true</item>
+    </style>
+
+
 </resources>

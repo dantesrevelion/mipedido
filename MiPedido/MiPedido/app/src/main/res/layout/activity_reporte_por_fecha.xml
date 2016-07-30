@@ -11,7 +11,7 @@
         layout="@layout/toolbar">
 
     </include>
-    <LinearLayout
+    <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_margin="16dp"
@@ -48,13 +48,11 @@
                 android:text="Go"/>
         </LinearLayout>
 
-        <Space
-            android:layout_width="match_parent"
-            android:layout_height="15dp" />
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:gravity="center"
+            android:layout_marginTop="70dp"
             android:paddingLeft="15dp"
             android:paddingRight="15dp"
             android:background="@color/white">
@@ -94,20 +92,15 @@
                 android:textStyle="bold"/>
         </LinearLayout>
 
-        <Space
-            android:layout_width="match_parent"
-            android:layout_height="15dp" />
-
-
-
 
 
 
         <LinearLayout
             android:layout_width="wrap_content"
-            android:layout_height="230dp"
+            android:layout_height="310dp"
             android:orientation="vertical"
-
+            style="@style/alinea_abajo_reportefecha"
+            android:layout_marginBottom="113dp"
             android:background="@color/white">
 
             <ListView
@@ -122,12 +115,12 @@
         </LinearLayout>
 
 
-        <Space
-            android:layout_width="match_parent"
-            android:layout_height="15dp" />
+
         <LinearLayout
+            style="@style/alinea_abajo_reportefecha"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+
             android:orientation="vertical"
             android:paddingLeft="15dp"
             android:paddingRight="15dp"
@@ -156,6 +149,7 @@
             </LinearLayout>
 
             <LinearLayout
+
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="horizontal"
@@ -179,6 +173,6 @@
             </LinearLayout>
             ¡
         </LinearLayout>
-    </LinearLayout>
+    </RelativeLayout>
 
 </LinearLayout>
