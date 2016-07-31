@@ -151,7 +151,7 @@ public class ReportePorFecha extends BaseActivity {
                     taskResult2 = taskResult= ConnectionUtils.consultaSQLite(this,ConnectionUtils.queryVentasByUsuarioFecha(f1,f2,""+(idvendedor+1)));
 
                 VysorAdapterReporte adapterVendidos = new VysorAdapterReporte(ReportePorFecha.this,
-                        R.layout.item_producto, ConnectionUtils.jsonToArray(taskResult2, "nombre"), taskResult2);
+                        R.layout.item_reportefecha, ConnectionUtils.jsonToArray(taskResult2, "nombre"), taskResult2);
                 listaVendidos.setAdapter(adapterVendidos);
                 if(taskResult.length()==0){toastNoData.show();}
                 calculaTotal();

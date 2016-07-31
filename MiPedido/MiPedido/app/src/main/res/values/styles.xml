@@ -33,6 +33,7 @@
 
     <style name="alinea_abajo_reportefecha">
         <item name="android:layout_alignParentBottom">true</item>
+        <item name="android:layout_centerInParent">true</item>
     </style>
 
 

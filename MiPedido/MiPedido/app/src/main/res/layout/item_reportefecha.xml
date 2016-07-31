@@ -73,7 +73,7 @@
                     android:textColor="@color/black"
                     android:text="20"
                     android:textStyle="bold"
-                    android:textSize="26sp"
+                    android:textSize="16sp"
                     android:id="@+id/txtPrecio"
 
                     />
@@ -91,12 +91,45 @@
                     />
 
 
+                <TextView
 
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:gravity="left"
+                    android:textColor="@color/black"
+                    android:text="x"
+
+                    android:textStyle="bold"
+                    android:textSize="16sp"
+
+                    />
+                <TextView
+
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:gravity="center"
+                    android:textColor="@color/black"
+                    android:text="00"
+
+                    android:textStyle="bold"
+                    android:textSize="16sp"
+                    android:id="@+id/txtcantidadprodfecha"
+                    />
 
 
             </LinearLayout>
 
+                <TextView
+                    android:paddingLeft="20dp"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textColor="@color/black"
+                    android:text="20$"
+                    android:textStyle="bold"
+                    android:textSize="16sp"
+                    android:id="@+id/total_prod_fecha"
 
+                    />
 
             </LinearLayout>
 
