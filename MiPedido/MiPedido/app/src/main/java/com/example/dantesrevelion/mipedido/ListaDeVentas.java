@@ -51,8 +51,9 @@ public class ListaDeVentas extends BaseActivity {
     Spinner.OnItemSelectedListener itemselected= new Spinner.OnItemSelectedListener() {
         @Override
         public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
-            System.out.println("SELECTED--------------------------->");
+
             int idvendedor=spinervendedores.getSelectedItemPosition();
+            System.out.println("SELECTED--------------------------->"+idvendedor);
             final ListView listaVendidos = (ListView) findViewById(R.id.listaDeVentas);
 
 

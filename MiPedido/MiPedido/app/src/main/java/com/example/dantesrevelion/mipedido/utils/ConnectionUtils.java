@@ -132,11 +132,11 @@ public class ConnectionUtils {
         return response;
     }
     public static String queryVentasByUsuario(String idv){
-        String response = "select * from ventas JOIN productos,usuarios where ventas.id_producto=productos.id and ventas.id_vendedor="+idv;
+        String response = "select * from ventas JOIN productos,usuarios where ventas.id_producto=productos.id and ventas.id_vendedor="+idv+" AND usuarios.id ="+idv;
         return response;
     }
     public static String queryVentasByUsuarioFecha(String fini,String ffin,String idv){
-        String response = "select * from ventas JOIN productos,usuarios where ventas.id_producto=productos.id and fecha between '"+fini+"' and '"+ffin+"' and ventas.id_vendedor="+idv;
+        String response = "select * from ventas JOIN productos,usuarios where ventas.id_producto=productos.id and fecha between '"+fini+"' and '"+ffin+"' and ventas.id_vendedor="+idv+" AND usuarios.id ="+idv;
         return response;
     }
 
