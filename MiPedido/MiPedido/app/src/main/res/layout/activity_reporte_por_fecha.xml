@@ -1,23 +1,28 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
+
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".ReportePorFecha"
-    android:background="@color/color4"
-    android:orientation="vertical">
-    <include
-        android:id="@+id/tool_bar"
-        layout="@layout/toolbar">
+    android:background="@color/color4">
 
-    </include>
-    <RelativeLayout
+
+    <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_margin="16dp"
-        android:gravity="center">
+        android:orientation="vertical"
+
+        android:layout_height="match_parent">
+        <include
+            android:id="@+id/tool_bar"
+            layout="@layout/toolbar">
+
+        </include>
+
+
 
         <LinearLayout
+            style="@style/alinea_margin_reportefecha"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:gravity="center"
@@ -47,14 +52,24 @@
                 android:text="Go"/>
         </LinearLayout>
 
+
+
+
+
+
+
+
+
+
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            style="@style/alinea_margin_reportefecha"
             android:gravity="center"
-            android:layout_marginTop="70dp"
             android:paddingLeft="15dp"
             android:paddingRight="15dp"
             android:background="@color/white">
+
             <ImageView
                 android:layout_width="20dp"
                 android:layout_height="20dp"
@@ -96,10 +111,20 @@
 
         <LinearLayout
             android:layout_width="wrap_content"
-            android:layout_height="310dp"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+
+
+
+
+        <LinearLayout
+            android:id="@+id/layout_lista"
+            android:layout_width="wrap_content"
+            android:layout_height="290dp"
             android:orientation="vertical"
-            style="@style/alinea_abajo_reportefecha"
-            android:layout_marginBottom="113dp"
+            android:layout_alignTop="@+id/resultado_total"
+            style="@style/alinea_margin_reportefecha"
             android:background="@color/white">
 
             <ListView
@@ -116,36 +141,40 @@
 
 
         <LinearLayout
-            style="@style/alinea_abajo_reportefecha"
+            style="@style/alinea_margin_reportefecha"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-
+            android:layout_height="fill_parent"
             android:orientation="vertical"
             android:paddingLeft="15dp"
             android:paddingRight="15dp"
-            android:background="@color/white">
+            android:background="@color/white"
+          >
             <LinearLayout
+                android:id="@+id/resultado_total"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
+                android:layout_height="50dp"
+
                 android:orientation="horizontal"
                 android:gravity="right"
                 >
                 <TextView
                     android:layout_width="240dp"
-                    android:layout_height="50dp"
-                    android:textSize="20sp"
+                    android:layout_height="40dp"
+                    android:textSize="20dp"
                     android:gravity="right|center"
                     android:textColor="@color/black"
 
                     android:text="Gasolina :"/>
                 <TextView
                     android:layout_width="100dp"
-                    android:layout_height="match_parent"
-                    android:textSize="20sp"
+                    android:layout_height="40dp"
+                    android:textSize="20dp"
                     android:gravity="right|center"
                     android:textColor="@color/black"
                     android:text="0$"/>
             </LinearLayout>
+
+
 
             <LinearLayout
 
@@ -156,7 +185,7 @@
                 >
                 <TextView
                     android:layout_width="240dp"
-                    android:layout_height="50dp"
+                    android:layout_height="40dp"
                     android:textSize="20sp"
                     android:gravity="right"
                     android:textColor="@color/black"
@@ -164,14 +193,28 @@
                 <TextView
                     android:id="@+id/total_reporte_fecha"
                     android:layout_width="100dp"
-                    android:layout_height="50dp"
+                    android:layout_height="40dp"
                     android:textSize="20sp"
                     android:gravity="right"
                     android:textColor="@color/black"
                     android:text="0$"/>
             </LinearLayout>
-            ¡
-        </LinearLayout>
-    </RelativeLayout>
 
-</LinearLayout>
+        </LinearLayout>
+
+
+
+
+
+
+
+
+
+        </LinearLayout>
+
+
+
+    </LinearLayout>
+
+
+</FrameLayout>

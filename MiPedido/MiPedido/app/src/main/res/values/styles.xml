@@ -33,7 +33,17 @@
 
     <style name="alinea_abajo_reportefecha">
         <item name="android:layout_alignParentBottom">true</item>
+
+    </style>
+
+    <style name="alinea_center_reportefecha">
         <item name="android:layout_centerInParent">true</item>
+    </style>
+
+    <style name="alinea_margin_reportefecha">
+        <item name="android:layout_marginLeft">10dp</item>
+        <item name="android:layout_marginRight">10dp</item>
+        <item name="android:layout_marginBottom">10dp</item>
     </style>
 
 
