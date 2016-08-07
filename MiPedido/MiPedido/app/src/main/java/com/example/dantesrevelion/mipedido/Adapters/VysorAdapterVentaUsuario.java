@@ -48,13 +48,13 @@ public class VysorAdapterVentaUsuario extends ArrayAdapter<String> {
             name.setText(values.getJSONObject(position).getString("nombre"));
            // tipo.setText(values.getJSONObject(position).getString("denominacion"));
             cantidad.setText(values.getJSONObject(position).getString("cantidad"));
-            precio.setText(values.getJSONObject(position).getString("costo")+"$");
+            precio.setText("$"+values.getJSONObject(position).getString("costo"));
             ide.setText(values.getJSONObject(position).getString("id_venta"));
             fecha.setText(values.getJSONObject(position).getString("fecha"));
             int cant=Integer.parseInt(values.getJSONObject(position).getString("cantidad"));
             double costo=Integer.parseInt(values.getJSONObject(position).getString("costo"));
 
-            total.setText(cant*costo+"$");
+            total.setText("$"+cant*costo);
         } catch (JSONException e) {
             e.printStackTrace();
         }

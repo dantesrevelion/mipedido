@@ -162,7 +162,7 @@
                     android:gravity="right|center"
                     android:textColor="@color/black"
 
-                    android:text="Gasolina :"/>
+                    android:text="Gastos Operativos :"/>
                 <TextView
                     android:layout_width="100dp"
                     android:layout_height="40dp"

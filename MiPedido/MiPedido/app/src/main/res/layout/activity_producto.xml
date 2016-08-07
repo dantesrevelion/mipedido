@@ -77,9 +77,9 @@
                 android:background="@color/white"
                 >
                 <ImageView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:background="@drawable/drink"/>
+                    android:layout_width="180dp"
+                    android:layout_height="180dp"
+                    android:background="@drawable/drink_blak"/>
             </LinearLayout>
             <RelativeLayout
                 android:layout_width="350dp"

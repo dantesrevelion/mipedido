@@ -28,7 +28,7 @@
                 android:layout_width="60dp"
                 android:layout_height="60dp"
                 android:scaleType="centerCrop"
-                android:background="@drawable/drink"
+                android:background="@drawable/drink_blak"
                 android:id="@+id/backgroundList"
                 />
             <LinearLayout
@@ -70,6 +70,17 @@
                     android:paddingLeft="20dp"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+
+                    android:textColor="@color/black"
+                    android:text="$"
+                    android:textStyle="bold"
+                    android:textSize="15sp"
+                    android:id="@+id/pesos"
+                    />
+                <TextView
+
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
                     android:textColor="@color/black"
                     android:text="20"
                     android:textStyle="bold"
@@ -78,17 +89,7 @@
 
                     />
 
-                <TextView
 
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-
-                    android:textColor="@color/black"
-                    android:text="$"
-                    android:textStyle="bold"
-                    android:textSize="15sp"
-                    android:id="@+id/pesos"
-                    />
 
 
                 <TextView

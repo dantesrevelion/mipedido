@@ -49,7 +49,7 @@ public class VysorAdapterReporte extends ArrayAdapter<String> {
             precio.setText(values.getJSONObject(position).getString("costo"));
             cantidad.setText(values.getJSONObject(position).getString("cantidad"));
             double totald=Integer.parseInt(values.getJSONObject(position).getString("cantidad")) * Double.parseDouble(values.getJSONObject(position).getString("costo")) ;
-            total.setText(totald+"$");
+            total.setText("$"+totald);
 
         } catch (JSONException e) {
             e.printStackTrace();

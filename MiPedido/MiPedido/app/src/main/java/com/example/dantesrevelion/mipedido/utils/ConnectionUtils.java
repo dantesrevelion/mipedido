@@ -65,6 +65,7 @@ public class ConnectionUtils {
         String user=preferences.getString("config_user","");
         String pass=preferences.getString("config_pass","");
         String bd=preferences.getString("config_db","");
+        System.out.println("DATOS DE CONFIGURACION: "+domain+" "+host+" "+user+" "+pass+" "+bd);
         setDOMAIN(domain);
         setHOST(host);
         setUSUARIO(user);
@@ -395,7 +396,6 @@ public class ConnectionUtils {
     public static void setprogress(int n,Context c){
         mBuilder.setProgress(80,n,false);
         mNotificationManager.notify(01, mBuilder.build());
-
     }
 
     public static void notificateError(Context c){
@@ -405,6 +405,16 @@ public class ConnectionUtils {
                         .getDrawable(R.drawable.download)).getBitmap()))
                 .setContentTitle("Error al Actualizar la BD")
                 .setTicker("Error al Actualizar");
+        mNotificationManager.notify(01, mBuilder.build());
+    }
+
+    public static void notificateOK(Context c){
+        mBuilder =new NotificationCompat.Builder(c)
+                .setSmallIcon(R.drawable.download)
+                .setLargeIcon((((BitmapDrawable)c.getResources()
+                        .getDrawable(R.drawable.download)).getBitmap()))
+                .setContentTitle("BD Actualizada")
+                .setTicker("BD Actualizada");
         mNotificationManager.notify(01, mBuilder.build());
     }
 

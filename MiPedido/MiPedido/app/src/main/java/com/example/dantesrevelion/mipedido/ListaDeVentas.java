@@ -46,6 +46,15 @@ public class ListaDeVentas extends BaseActivity {
         spinervendedores.setOnItemSelectedListener(itemselected);
 
 
+        for(int i=0;i<array.length;i++){
+            if(array[i].equals(getIntent().getExtras().getString("usuario"))){
+                spinervendedores.setSelection(i);
+                break;
+            }
+
+        }
+
+
     }
 
     Spinner.OnItemSelectedListener itemselected= new Spinner.OnItemSelectedListener() {

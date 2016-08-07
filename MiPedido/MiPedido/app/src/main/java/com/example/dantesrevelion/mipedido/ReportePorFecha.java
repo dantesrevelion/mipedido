@@ -60,6 +60,14 @@ public class ReportePorFecha extends BaseActivity {
                 android.R.layout.simple_spinner_item, array);
         spinervendedores.setAdapter(adapter);
 
+        for(int i=0;i<array.length;i++){
+            if(array[i].equals(getIntent().getExtras().getString("usuario"))){
+                spinervendedores.setSelection(i);
+                break;
+            }
+
+        }
+
 
 
     }

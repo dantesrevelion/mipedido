@@ -97,7 +97,7 @@ public class ConectionTask extends AsyncTask{
 
             }
             ConnectionUtils.setprogress(70,c);
-
+            ConnectionUtils.notificateOK(c);
             cn.connect(ConnectionUtils.cerrarSesion());
 
 

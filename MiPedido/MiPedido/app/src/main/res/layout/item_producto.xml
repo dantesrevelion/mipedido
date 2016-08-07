@@ -28,7 +28,7 @@
                 android:layout_width="60dp"
                 android:layout_height="60dp"
                 android:scaleType="centerCrop"
-                android:background="@drawable/drink"
+                android:background="@drawable/drink_blak"
                 android:id="@+id/backgroundList"
                 />
             <LinearLayout
@@ -63,49 +63,55 @@
                 android:layout_height="wrap_content">
 
 
-            <LinearLayout
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content">
-                <TextView
-                    android:paddingLeft="20dp"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:textColor="@color/black"
-                    android:text="20"
-                    android:textStyle="bold"
-                    android:textSize="26sp"
-                    android:id="@+id/txtPrecio"
 
-                    />
-
-                <TextView
-
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-
-                    android:textColor="@color/black"
-                    android:text="$"
-                    android:textStyle="bold"
-                    android:textSize="15sp"
-                    android:id="@+id/pesos"
-                    />
-
-
-
-
-
-            </LinearLayout>
 
 
 
             </LinearLayout>
 
             <RelativeLayout
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:paddingLeft="50dp">
-                <ImageView
+                android:layout_width="match_parent"
+                style="@style/alinea_derecha_listaventa"
+                android:layout_height="match_parent">
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_centerInParent="true"
+                    android:layout_alignParentLeft="true"
+                    android:layout_marginLeft="20dp"
+                    android:layout_height="wrap_content">
+                    <TextView
 
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:textColor="@color/black"
+                        android:text="$"
+                        android:textStyle="bold"
+                        android:textSize="15sp"
+                        android:id="@+id/pesos"
+                        />
+                    <TextView
+
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:textColor="@color/black"
+                        android:text="20"
+                        android:textStyle="bold"
+                        android:textSize="26sp"
+                        android:id="@+id/txtPrecio"
+
+                        />
+
+
+
+
+
+
+
+                </LinearLayout>
+                <ImageView
+                    android:layout_centerInParent="true"
+                    android:layout_alignParentLeft="true"
+                    android:layout_marginLeft="70dp"
                     android:layout_width="20dp"
                     android:layout_height="20dp"
 

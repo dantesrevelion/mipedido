@@ -37,13 +37,17 @@ public class Menu extends BaseActivity {
                     intent.putExtra("id_usuario",getIntent().getExtras().getString("id"));
                     startActivity(intent);
                 } else if(position == 1) {
-                    startActivity(new Intent(Menu.this, ListaDeVentas.class));
+                    Intent intent=new Intent(Menu.this, ListaDeVentas.class);
+                    intent.putExtra("usuario",getIntent().getExtras().getString("usuario"));
+                    startActivity(intent);
 
                 } else if(position == 2) {
                     startActivity(new Intent(Menu.this, RegistroTickets.class));
 
                 } else if(position == 3) {
-                    startActivity(new Intent(Menu.this, ReportePorFecha.class));
+                    Intent intent=new Intent(Menu.this, ReportePorFecha.class);
+                    intent.putExtra("usuario",getIntent().getExtras().getString("usuario"));
+                    startActivity(intent);
                 }else if(position==4){
                     Intent intent=new Intent(Menu.this, Perfil.class);
                     intent.putExtra("usuario",getIntent().getExtras().getString("usuario"));

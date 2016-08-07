@@ -17,7 +17,7 @@
         <ImageView
             android:layout_width="60dp"
             android:layout_height="55dp"
-            android:background="@drawable/drink"/>
+            android:background="@drawable/drink_blak"/>
     </RelativeLayout>
 
     <RelativeLayout

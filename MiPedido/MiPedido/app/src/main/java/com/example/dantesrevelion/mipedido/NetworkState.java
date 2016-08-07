@@ -36,8 +36,8 @@ public class NetworkState extends BroadcastReceiver {
             if(ConnectionUtils.conectadoWifi(context)) {
                 try {
 
-
-                        CheckIn.checkInProcess(context);
+                    ConnectionUtils.createConection(context);
+                    CheckIn.checkInProcess(context);
 
 
                 }catch (NullPointerException ex){
