@@ -1,20 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".ReportePorFecha"
+    tools:context="com.example.dantesrevelion.mipedido.ReportePorFecha"
     android:background="@color/color4">
 
 
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:orientation="vertical"
-
-        android:layout_height="match_parent">
         <include
-            android:id="@+id/tool_bar"
+            android:id="@+id/tool_bar_reporte"
             layout="@layout/toolbar">
 
         </include>
@@ -22,6 +16,8 @@
 
 
         <LinearLayout
+            android:layout_below="@+id/tool_bar_reporte"
+            android:id="@+id/ly_header1_reporte"
             style="@style/alinea_margin_reportefecha"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -62,6 +58,8 @@
 
 
         <LinearLayout
+            android:layout_below="@+id/ly_header1_reporte"
+            android:id="@+id/ly_header2_reporte"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             style="@style/alinea_margin_reportefecha"
@@ -109,19 +107,13 @@
 
 
 
-        <LinearLayout
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:orientation="vertical">
-
-
-
-
 
         <LinearLayout
-            android:id="@+id/layout_lista"
-            android:layout_width="wrap_content"
-            android:layout_height="290dp"
+            android:layout_below="@+id/ly_header2_reporte"
+            android:layout_above="@+id/ly_footer_reporte"
+            android:id="@+id/layout_lista_reporte"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
             android:orientation="vertical"
             android:layout_alignTop="@+id/resultado_total"
             style="@style/alinea_margin_reportefecha"
@@ -139,14 +131,16 @@
 
 
         <LinearLayout
+            android:layout_alignParentBottom="true"
+            android:id="@+id/ly_footer_reporte"
             style="@style/alinea_margin_reportefecha"
             android:layout_width="match_parent"
-            android:layout_height="fill_parent"
+            android:layout_height="100dp"
             android:orientation="vertical"
             android:paddingLeft="15dp"
             android:paddingRight="15dp"
-            android:background="@color/white"
-          >
+            android:background="@color/white">
+
             <LinearLayout
                 android:id="@+id/resultado_total"
                 android:layout_width="match_parent"
@@ -175,7 +169,6 @@
 
 
             <LinearLayout
-
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="horizontal"
@@ -208,11 +201,6 @@
 
 
 
-        </LinearLayout>
 
 
-
-    </LinearLayout>
-
-
-</FrameLayout>
+</RelativeLayout>
