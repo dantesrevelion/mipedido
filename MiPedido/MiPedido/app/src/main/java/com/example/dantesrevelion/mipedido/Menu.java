@@ -22,7 +22,7 @@ public class Menu extends BaseActivity {
         toolbar = (Toolbar) findViewById(R.id.tool_bar);
         setSupportActionBar(toolbar);
         final ListView lista = (ListView) findViewById(R.id.listaMenu);
-        final String[] items ={"Productos","Lista de Ventas","Registro de Tickets","Reporte por Fecha","Mi Perfil"};
+        final String[] items ={"Productos","Lista de Ventas","Gastos Operativos","Reporte por Fecha","Mi Perfil"};
         VysorAdapterMenu adapter = new VysorAdapterMenu(Menu.this, R.layout.item_list, items);
 
       //  new Connection().execute();

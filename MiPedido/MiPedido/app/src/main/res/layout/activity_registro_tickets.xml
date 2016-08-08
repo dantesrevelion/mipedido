@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
@@ -7,105 +7,132 @@
     android:background="@color/color4"
     android:orientation="vertical">
     <include
-        android:id="@+id/tool_bar"
+        android:id="@+id/tool_bar_registro"
         layout="@layout/toolbar">
 
     </include>
-<TableLayout
-    android:layout_width="match_parent"
-    android:layout_height="300dp"
-    android:layout_marginLeft="20dp"
-    android:layout_marginRight="20dp"
-    android:layout_marginTop="20dp"
-    android:gravity="center"
-    android:background="@color/white">
-    <TableRow
+    <RelativeLayout
+        android:layout_below="@+id/tool_bar_registro"
+        android:id="@+id/ly_body_registro"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:gravity="center"
-        >
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:textSize="18sp"
-            android:text="Inporte"/>
-        <EditText
-            android:layout_width="250dp"
-            android:layout_height="wrap_content" />
-    </TableRow>
-    <TableRow
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:gravity="center"
-        >
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:textSize="18sp"
-            android:text="Inporte"/>
-        <EditText
-            android:layout_width="250dp"
-            android:layout_height="wrap_content" />
-    </TableRow>
-    <TableRow
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:gravity="center"
-        >
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:textSize="18sp"
-            android:text="Inporte"/>
-        <EditText
-            android:layout_width="250dp"
-            android:layout_height="wrap_content" />
-    </TableRow>
-    <TableRow
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:gravity="center"
-        >
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:textSize="18sp"
-            android:text="Inporte"/>
-        <EditText
-            android:layout_width="250dp"
-            android:layout_height="wrap_content" />
-    </TableRow>
-    <TableRow
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:gravity="center"
-        >
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:textSize="18sp"
-            android:text="Inporte"/>
-        <EditText
-            android:layout_width="250dp"
-            android:layout_height="wrap_content" />
-    </TableRow>
-
-
-
-
-</TableLayout>
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="100dp"
         android:layout_marginLeft="20dp"
         android:layout_marginRight="20dp"
         android:layout_marginTop="20dp"
+        android:layout_marginBottom="20dp"
+        android:padding="10dp"
         android:layout_gravity="bottom"
         android:background="@color/white"
-        android:gravity="center">
+        android:orientation="vertical"
+        android:gravity="center|top">
 
+
+        <LinearLayout
+            android:layout_above="@+id/inputs_registro"
+            android:id="@+id/inputs_registro"
+            android:layout_width="match_parent"
+            android:orientation="vertical"
+            android:layout_height="wrap_content">
+
+
+        <RelativeLayout
+
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+            <TextView
+               android:id="@+id/tv_fecha_registro"
+                android:gravity="right"
+                android:layout_width="70dp"
+                android:layout_height="wrap_content"
+                android:textSize="18sp"
+                android:text="Fecha :"/>
+            <ImageView
+                android:layout_alignParentRight="true"
+                android:layout_width="25dp"
+                android:layout_height="25dp"
+                android:id="@+id/img_fecha_registro"
+                android:onClick=""
+                android:background="@drawable/calendar"/>
+            <EditText
+                android:id="@+id/fecha_registro"
+                android:layout_toRightOf="@id/tv_fecha_registro"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content" />
+        </RelativeLayout>
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+
+        <LinearLayout
+            android:layout_width="150dp"
+            android:layout_height="wrap_content"
+            android:id="@+id/number_picker_registro"
+            android:gravity="center"
+            android:orientation="horizontal">
+            <Button
+                android:layout_width="30dp"
+                android:layout_height="30dp"
+                android:id="@+id/minus"
+                android:onClick=""
+                android:background="@drawable/minusgrey"/>
+            <TextView
+                android:layout_width="40dp"
+                android:layout_height="40dp"
+                android:gravity="center"
+                android:text="1"
+                android:id="@+id/cantidad"
+                android:textStyle="bold"
+                android:textSize="30sp"/>
+            <Button
+                android:layout_width="30dp"
+                android:id="@+id/addmore"
+                android:onClick=""
+                android:layout_height="30dp"
+                android:background="@drawable/plus"/>
+
+        </LinearLayout>
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_toRightOf="@+id/number_picker_registro"
+                android:layout_height="wrap_content">
+                <TextView
+                    android:id="@+id/tv_total_registro"
+                    android:gravity="right"
+                    android:layout_width="70dp"
+                    android:layout_height="wrap_content"
+                    android:textSize="18sp"
+                    android:text="Total :"/>
+
+                <EditText
+                    android:id="@+id/total_registro"
+                    android:layout_toRightOf="@id/tv_total_registro"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content" />
+            </RelativeLayout>
+
+        </RelativeLayout>
+
+
+        </LinearLayout>
+
+        <ListView
+            android:layout_above="@+id/registrar_registro"
+            android:layout_below="@+id/inputs_registro"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:id="@+id/lista_registros"
+            android:dividerHeight="15dp"
+            android:paddingRight="10dp"
+            android:paddingLeft="10dp"
+            android:background="@color/color4">
+
+        </ListView>
         <Button
-            android:layout_width="180dp"
+            android:layout_alignParentBottom="true"
+            android:id="@+id/registrar_registro"
+            android:layout_width="match_parent"
             android:layout_height="60dp"
             android:backgroundTint="@color/color5"
             android:drawableTintMode="multiply"
@@ -113,5 +140,30 @@
             android:text="Registrar Ticket"
             android:textSize="16sp"/>
 
-    </LinearLayout>
-</LinearLayout>
+
+        <!--RelativeLayout
+
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+            <TextView
+                android:id="@+id/tv_Foto_registro"
+                android:layout_width="70dp"
+                android:layout_height="wrap_content"
+                android:gravity="right"
+                android:textSize="18sp"
+                android:text="Foto :"/>
+            <ImageView
+                android:layout_alignParentRight="true"
+                android:layout_width="25dp"
+                android:layout_height="25dp"
+                android:id="@+id/img_foto_registro"
+                android:onClick=""
+                android:background="@drawable/photo_camera"/>
+
+        </RelativeLayout-->
+
+
+
+    </RelativeLayout>
+
+</RelativeLayout>
