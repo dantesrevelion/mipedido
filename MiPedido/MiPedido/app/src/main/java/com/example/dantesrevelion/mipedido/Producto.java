@@ -26,7 +26,7 @@ public class Producto extends BaseActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_producto);
-        toolbar = (Toolbar) findViewById(R.id.tool_bar);
+        toolbar = (Toolbar) findViewById(R.id.tool_bar_producto);
         setSupportActionBar(toolbar);
         TextView txttitulo1=(TextView) findViewById(R.id.txtNombreProd);
         TextView txttitulo2=(TextView) findViewById(R.id.txtTipoProd);
