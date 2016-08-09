@@ -31,17 +31,26 @@ public class ListaDeVentas extends BaseActivity {
         setSupportActionBar(toolbar);
         try {
             taskResult= ConnectionUtils.consultaSQLite(this,ConnectionUtils.queryAllUsuarios());
+            JSONArray filterResult =new JSONArray();
+            for(int n=0;n<taskResult.length(); n++){
+                if(ConnectionUtils.getUsuarioApp().equals("Administrador")){
+                    filterResult.put(taskResult.getJSONObject(n));
+                }else{
+                    if(taskResult.getJSONObject(n).get("usuario").equals(ConnectionUtils.getUsuarioApp())){
+                        filterResult.put(taskResult.getJSONObject(n));
+                    }
+                }
 
-            array=new String[taskResult.length()];
-            for(int i=0;i<taskResult.length();i++){
-                array[i]=taskResult.getJSONObject(i).get("usuario").toString();
+            }
+            array=new String[filterResult.length()];
+            for(int i=0;i<filterResult.length();i++){
+                array[i]=filterResult.getJSONObject(i).get("usuario").toString();
             }
         } catch (JSONException e) {
             e.printStackTrace();
         }
         spinervendedores=(Spinner) findViewById( R.id.spinnerVendedores);
-        ArrayAdapter<String> adapter = new ArrayAdapter<String>(this,
-                android.R.layout.simple_spinner_item, array);
+        ArrayAdapter<String> adapter = new ArrayAdapter<String>(this,android.R.layout.simple_spinner_item, array);
         spinervendedores.setAdapter(adapter);
         spinervendedores.setOnItemSelectedListener(itemselected);
 
@@ -61,13 +70,21 @@ public class ListaDeVentas extends BaseActivity {
         @Override
         public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
 
-            int idvendedor=spinervendedores.getSelectedItemPosition();
-            System.out.println("SELECTED--------------------------->"+idvendedor);
+
+
+            JSONArray datosUsuario= ConnectionUtils.consultaSQLite(getBaseContext(),ConnectionUtils.queryDatosDeUsuario(spinervendedores.getSelectedItem().toString()));
+            int id=0;
+            try {
+                id=Integer.parseInt(datosUsuario.getJSONObject(0).getString("id"));
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+
             final ListView listaVendidos = (ListView) findViewById(R.id.listaDeVentas);
 
 
 
-                taskResult2= ConnectionUtils.consultaSQLite(getBaseContext(),ConnectionUtils.queryVentasByUsuario(""+(idvendedor+1)));
+                taskResult2= ConnectionUtils.consultaSQLite(getBaseContext(),ConnectionUtils.queryVentasByUsuario(""+id));
 
             VysorAdapterVentaUsuario adapterVendidos = new VysorAdapterVentaUsuario(ListaDeVentas.this,
                     R.layout.item_listaventa,ConnectionUtils.jsonToArray(taskResult2,"nombre"), taskResult2);

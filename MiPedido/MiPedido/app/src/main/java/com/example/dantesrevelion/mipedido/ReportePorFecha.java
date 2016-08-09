@@ -47,9 +47,22 @@ public class ReportePorFecha extends BaseActivity {
         try {
             taskResult= ConnectionUtils.consultaSQLite(this,ConnectionUtils.queryAllUsuarios());
 
-            array=new String[taskResult.length()];
-            for(int i=0;i<taskResult.length();i++){
-                array[i]=taskResult.getJSONObject(i).get("usuario").toString();
+            JSONArray filterResult =new JSONArray();
+            for(int n=0;n<taskResult.length(); n++){
+                if(ConnectionUtils.getUsuarioApp().equals("Administrador")){
+                    filterResult.put(taskResult.getJSONObject(n));
+                }else{
+                    if(taskResult.getJSONObject(n).get("usuario").equals(ConnectionUtils.getUsuarioApp())){
+                        filterResult.put(taskResult.getJSONObject(n));
+                    }
+                }
+
+            }
+
+
+            array=new String[filterResult.length()];
+            for(int i=0;i<filterResult.length();i++){
+                array[i]=filterResult.getJSONObject(i).get("usuario").toString();
             }
         } catch (JSONException e) {
             e.printStackTrace();
@@ -145,8 +158,15 @@ public class ReportePorFecha extends BaseActivity {
                 "Seleccione fechas", Toast.LENGTH_SHORT);
         Toast toastNoData = Toast.makeText(getApplicationContext(),
                 "No hay registros", Toast.LENGTH_SHORT);
-        int idvendedor=spinervendedores.getSelectedItemPosition();
-        System.out.println("id vendedor ------------->"+idvendedor);
+
+
+        JSONArray datosUsuario= ConnectionUtils.consultaSQLite(getBaseContext(),ConnectionUtils.queryDatosDeUsuario(spinervendedores.getSelectedItem().toString()));
+        int id=0;
+        try {
+            id=Integer.parseInt(datosUsuario.getJSONObject(0).getString("id"));
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
 
         if(fecha1!=null && fecha2!=null) {
             if (!fecha1.trim().equals("") && !fecha2.trim().equals("")) {
@@ -156,7 +176,7 @@ public class ReportePorFecha extends BaseActivity {
                 final ListView listaVendidos = (ListView) findViewById(R.id.listaVentaPorFecha);
 
 
-                    taskResult2 = taskResult= ConnectionUtils.consultaSQLite(this,ConnectionUtils.queryVentasByUsuarioFecha(f1,f2,""+(idvendedor+1)));
+                    taskResult2 = taskResult= ConnectionUtils.consultaSQLite(this,ConnectionUtils.queryVentasByUsuarioFecha(f1,f2,""+id));
 
                 VysorAdapterReporte adapterVendidos = new VysorAdapterReporte(ReportePorFecha.this,
                         R.layout.item_reportefecha, ConnectionUtils.jsonToArray(taskResult2, "nombre"), taskResult2);

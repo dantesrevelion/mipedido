@@ -12,6 +12,8 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ListView;
 
+import com.example.dantesrevelion.mipedido.Utils.ConnectionUtils;
+
 public class Menu extends BaseActivity {
   //  JSONArray jsonArray;
 
@@ -26,7 +28,7 @@ public class Menu extends BaseActivity {
         VysorAdapterMenu adapter = new VysorAdapterMenu(Menu.this, R.layout.item_list, items);
 
       //  new Connection().execute();
-
+        ConnectionUtils.setUsuarioApp(getIntent().getExtras().getString("usuario"));
         lista.setAdapter(adapter);
         lista.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override

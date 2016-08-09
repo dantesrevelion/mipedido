@@ -52,6 +52,7 @@ public class ConnectionUtils {
     private static String USUARIO="";
     private static String PASS="";
     private static String BD="";
+    private static String USUARIO_APP="";
 
 
     public ConnectionUtils(){
@@ -126,6 +127,10 @@ public class ConnectionUtils {
     }
     public static String queryAllUsuarios(){
         String response = "SELECT * from usuarios ";
+        return response;
+    }
+    public static String queryDatosDeUsuario(String usuario){
+        String response = "SELECT * from usuarios where usuario='"+usuario+"'";
         return response;
     }
     public static String queryAllProd(){
@@ -213,6 +218,14 @@ public class ConnectionUtils {
 
     public static void setHOST(String HOST) {
         ConnectionUtils.HOST = HOST;
+    }
+
+    public static String getUsuarioApp() {
+        return USUARIO_APP;
+    }
+
+    public static void setUsuarioApp(String usuarioApp) {
+        USUARIO_APP = usuarioApp;
     }
 
     public JSONArray connect(String urlParameter) {
