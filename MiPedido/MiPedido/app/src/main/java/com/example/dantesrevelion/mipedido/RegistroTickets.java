@@ -13,6 +13,7 @@ import android.widget.TextView;
 
 import com.example.dantesrevelion.mipedido.Adapters.VysorAdapterRegistroTickets;
 import com.example.dantesrevelion.mipedido.Utils.ConnectionUtils;
+import com.example.dantesrevelion.mipedido.Utils.ViewUtils;
 
 import java.util.ArrayList;
 import java.util.Date;
@@ -56,8 +57,8 @@ public class RegistroTickets extends BaseActivity implements View.OnClickListene
             case R.id.addmore_registro:
                 n++;
                 items.add(""+n);
-                setLista();
                 txtCant.setText(""+n);
+                setLista();
                 break;
             case R.id.minus_registro:
                 if(n>0){
@@ -81,8 +82,11 @@ public class RegistroTickets extends BaseActivity implements View.OnClickListene
 
         VysorAdapterRegistroTickets adapter = new VysorAdapterRegistroTickets(RegistroTickets.this, R.layout.item_registro_tickets, items);
         lista.setAdapter(adapter);
-        TextView tv_nombre=(TextView) lista.getChildAt(n).findViewById(R.id.et_nombre_item_reg);
-        System.out.println("NOMBRE TV------> "+tv_nombre);
+
+        EditText tv_nombre=(EditText) ViewUtils.getViewByPosition((n-1),lista).findViewById(R.id.et_nombre_item_reg);
+        EditText tv_monto=(EditText) ViewUtils.getViewByPosition((n-1),lista).findViewById(R.id.et_monto_item_reg);
+        EditText tv_codigo=(EditText) ViewUtils.getViewByPosition((n-1),lista).findViewById(R.id.et_codigo_item_reg);
+
 
     }
     public static String getFechaCad() {
