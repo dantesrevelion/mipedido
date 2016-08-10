@@ -8,9 +8,15 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.ListView;
 import android.widget.TextView;
 
+import com.example.dantesrevelion.mipedido.Adapters.VysorAdapterRegistroTickets;
+import com.example.dantesrevelion.mipedido.Utils.ConnectionUtils;
+
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 public class RegistroTickets extends BaseActivity implements View.OnClickListener{
 
@@ -19,7 +25,10 @@ public class RegistroTickets extends BaseActivity implements View.OnClickListene
     ImageView fecha;
     public static EditText inputFecha;
     public static String fechaCad="";
-    int n=1;
+    int n=0;
+    List<String> items=new ArrayList<String>();
+    ListView lista;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -33,6 +42,10 @@ public class RegistroTickets extends BaseActivity implements View.OnClickListene
         menos.setOnClickListener(this);
         mas.setOnClickListener(this);
         fecha.setOnClickListener(this);
+
+
+        lista = (ListView) findViewById(R.id.lista_registros);
+
     }
 
 
@@ -42,13 +55,17 @@ public class RegistroTickets extends BaseActivity implements View.OnClickListene
         switch (view.getId()){
             case R.id.addmore_registro:
                 n++;
-
+                items.add(""+n);
+                setLista();
                 txtCant.setText(""+n);
                 break;
             case R.id.minus_registro:
-                if(n>1){
+                if(n>0){
                     n--;
+                    items.remove(n);
+                    setLista();
                 }
+
                 txtCant.setText(""+n);
                 break;
             case R.id.img_fecha_registro:
@@ -60,6 +77,14 @@ public class RegistroTickets extends BaseActivity implements View.OnClickListene
         }
     }
 
+    public void setLista(){
+
+        VysorAdapterRegistroTickets adapter = new VysorAdapterRegistroTickets(RegistroTickets.this, R.layout.item_registro_tickets, items);
+        lista.setAdapter(adapter);
+        TextView tv_nombre=(TextView) lista.getChildAt(n).findViewById(R.id.et_nombre_item_reg);
+        System.out.println("NOMBRE TV------> "+tv_nombre);
+
+    }
     public static String getFechaCad() {
         return fechaCad;
     }
