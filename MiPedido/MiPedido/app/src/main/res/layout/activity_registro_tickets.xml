@@ -41,23 +41,27 @@
             android:layout_height="wrap_content">
             <TextView
                android:id="@+id/tv_fecha_registro"
-                android:gravity="right"
+                android:gravity="right|center"
                 android:layout_width="70dp"
-                android:layout_height="wrap_content"
+                android:layout_height="40dp"
                 android:textSize="18sp"
                 android:text="Fecha :"/>
+            <EditText
+                android:layout_toLeftOf="@+id/img_fecha_registro"
+                android:id="@+id/fecha_registro"
+                android:layout_toRightOf="@id/tv_fecha_registro"
+                android:textSize="16dp"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content" />
             <ImageView
+                android:layout_marginTop="10dp"
                 android:layout_alignParentRight="true"
                 android:layout_width="25dp"
                 android:layout_height="25dp"
                 android:id="@+id/img_fecha_registro"
-                android:onClick=""
+                android:elevation="2dp"
                 android:background="@drawable/calendar"/>
-            <EditText
-                android:id="@+id/fecha_registro"
-                android:layout_toRightOf="@id/tv_fecha_registro"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content" />
+
         </RelativeLayout>
 
         <RelativeLayout
@@ -74,21 +78,21 @@
             <Button
                 android:layout_width="30dp"
                 android:layout_height="30dp"
-                android:id="@+id/minus"
-                android:onClick=""
+                android:id="@+id/minus_registro"
+                android:layout_marginRight="5dp"
                 android:background="@drawable/minusgrey"/>
             <TextView
-                android:layout_width="40dp"
+                android:layout_width="wrap_content"
                 android:layout_height="40dp"
                 android:gravity="center"
                 android:text="1"
-                android:id="@+id/cantidad"
+                android:id="@+id/cantidad_registro"
                 android:textStyle="bold"
                 android:textSize="30sp"/>
             <Button
                 android:layout_width="30dp"
-                android:id="@+id/addmore"
-                android:onClick=""
+                android:id="@+id/addmore_registro"
+                android:layout_marginLeft="5dp"
                 android:layout_height="30dp"
                 android:background="@drawable/plus"/>
 
@@ -99,14 +103,15 @@
                 android:layout_height="wrap_content">
                 <TextView
                     android:id="@+id/tv_total_registro"
-                    android:gravity="right"
+                    android:gravity="right|center"
                     android:layout_width="70dp"
-                    android:layout_height="wrap_content"
+                    android:layout_height="40dp"
                     android:textSize="18sp"
                     android:text="Total :"/>
 
                 <EditText
                     android:id="@+id/total_registro"
+                    android:textSize="16dp"
                     android:layout_toRightOf="@id/tv_total_registro"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content" />
