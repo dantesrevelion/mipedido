@@ -57,5 +57,7 @@ public class BaseActivity extends AppCompatActivity {
         return super.onOptionsItemSelected(item);
     }
 
-
+    public void debug(String s){
+        System.out.println(s);
+    }
 }

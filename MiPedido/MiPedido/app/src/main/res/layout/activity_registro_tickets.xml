@@ -109,12 +109,14 @@
                     android:textSize="18sp"
                     android:text="Total :"/>
 
-                <EditText
+                <TextView
                     android:id="@+id/total_registro"
-                    android:textSize="16dp"
+                    android:textSize="18dp"
                     android:layout_toRightOf="@id/tv_total_registro"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content" />
+                    android:gravity="center"
+                    android:layout_height="40dp"
+                    />
             </RelativeLayout>
 
         </RelativeLayout>

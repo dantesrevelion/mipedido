@@ -18,19 +18,28 @@
             android:textSize="16dp"/>
         <EditText
             android:id="@+id/et_nombre_item_reg"
-            android:layout_toRightOf="@id/tv_numero_item_reg"
-            android:layout_toLeftOf="@+id/et_monto_item_reg"
+            android:layout_toRightOf="@+id/tv_numero_item_reg"
+            android:layout_toLeftOf="@+id/signo_item_registro"
             android:text="Nombre"
             android:textSize="16dp"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content" />
+        <TextView
+           android:layout_toLeftOf="@+id/et_monto_item_reg"
+            android:layout_width="wrap_content"
+            android:layout_height="40dp"
+            android:id="@+id/signo_item_registro"
+            android:text="$"
+            android:gravity="center"
+            android:textSize="16dp"/>
         <EditText
             android:layout_alignParentRight="true"
             android:id="@+id/et_monto_item_reg"
-            android:text="$ Monto"
+            android:text="00.0"
             android:textSize="16dp"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content" />
+            android:layout_height="wrap_content"
+            android:numeric="decimal" />
     </RelativeLayout>
 
 
