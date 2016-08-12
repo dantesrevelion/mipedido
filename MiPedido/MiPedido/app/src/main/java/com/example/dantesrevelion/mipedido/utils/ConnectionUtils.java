@@ -96,6 +96,10 @@ public class ConnectionUtils {
         String ALL_PROD="http://"+ getDOMAIN() +"/mipedido/res/allprod.php";
         return ALL_PROD;
     }
+    public static String getAllGastos(){
+        String ALL_PROD="http://"+ getDOMAIN() +"/mipedido/res/allGastos.php";
+        return ALL_PROD;
+    }
     public static String getAllVentasParameter(){
         String ALL_VENTAS="http://"+ getDOMAIN() +"/mipedido/res/allventas.php";
         return ALL_VENTAS;

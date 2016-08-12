@@ -11,6 +11,7 @@ public class BeanResponses {
     private JSONArray responseUsuarios;
     private JSONArray responseVenta;
     private JSONArray responseProductos;
+    private JSONArray responseGastos;
 
     public JSONArray getResponseUsuarios() {
         return responseUsuarios;
@@ -34,5 +35,13 @@ public class BeanResponses {
 
     public void setResponseProductos(JSONArray responseProductos) {
         this.responseProductos = responseProductos;
+    }
+
+    public JSONArray getResponseGastos() {
+        return responseGastos;
+    }
+
+    public void setResponseGastos(JSONArray responseGastos) {
+        this.responseGastos = responseGastos;
     }
 }

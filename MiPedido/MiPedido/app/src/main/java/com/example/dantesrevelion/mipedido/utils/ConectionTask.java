@@ -46,6 +46,11 @@ public class ConectionTask extends AsyncTask{
         response = cn.connect(ConnectionUtils.getAllProdParameter());
         responses.setResponseProductos(response);
         ConnectionUtils.setprogress(40,c);
+
+        response = cn.connect(ConnectionUtils.getAllGastos());
+        responses.setResponseGastos(response);
+
+
         try {
             SQLiteDatabase db = (SQLiteDatabase) objects[0];
             db.execSQL("delete from usuarios");
@@ -91,6 +96,21 @@ public class ConectionTask extends AsyncTask{
                     db.execSQL("INSERT INTO ventas (id_venta, id_producto, id_vendedor,fecha,cantidad,monto) " +
                             "VALUES (" + obj.get("id_venta") + ", " + obj.get("id_producto") + ", " + obj.get("id_vendedor") + ",'" + obj.get("fecha")
                             + "'," + obj.get("cantidad") + "," + obj.get("monto") + " )");
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+
+            }
+
+            db.execSQL("delete from gastos");
+            db.execSQL("VACUUM");
+            JSONArray gastos = responses.getResponseGastos();
+
+            for (int i = 0; i < gastos.length(); i++) {
+                try {
+                    JSONObject obj = gastos.getJSONObject(i);
+                    db.execSQL("INSERT INTO `gastos` (`id`, `idvendedor`, `nombre`, `codigo`, `monto`, `fecha`) " +
+                            "VALUES ("+obj.get("id")+", '"+obj.get("idvendedor")+"', '"+obj.get("nombre")+"', '"+obj.get("codigo")+"', '"+obj.get("monto")+"', "+obj.get("fecha")+");");
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }
