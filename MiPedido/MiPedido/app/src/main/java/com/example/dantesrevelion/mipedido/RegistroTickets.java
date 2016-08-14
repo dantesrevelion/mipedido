@@ -13,6 +13,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.dantesrevelion.mipedido.Adapters.VysorAdapterRegistroTickets;
+import com.example.dantesrevelion.mipedido.Utils.CheckIn;
 import com.example.dantesrevelion.mipedido.Utils.ConnectionUtils;
 import com.example.dantesrevelion.mipedido.Utils.ViewUtils;
 
@@ -105,6 +106,24 @@ public class RegistroTickets extends BaseActivity implements View.OnClickListene
                                 "Gastos Registrados", Toast.LENGTH_SHORT);
                         toast1.show();
                     }
+
+
+                    if(ConnectionUtils.conectadoWifi(this) || ConnectionUtils.conectadoRedMovil(this)) {
+
+                        CheckIn.checkInProcess(this);
+
+                    }else{
+                        Toast toast1 = Toast.makeText(getApplicationContext(),
+                                "Registrado offline", Toast.LENGTH_SHORT);
+                        toast1.show();
+                    }
+
+
+
+                    n=0;
+                    items=new ArrayList<String>();
+                    txtCant.setText(""+n);
+                    setLista();
                 }else{
                     Toast toast1 = Toast.makeText(getApplicationContext(),
                             "Seleccione la fecha", Toast.LENGTH_SHORT);

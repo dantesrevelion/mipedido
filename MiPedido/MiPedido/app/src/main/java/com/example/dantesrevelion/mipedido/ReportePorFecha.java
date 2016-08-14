@@ -17,6 +17,7 @@ import com.example.dantesrevelion.mipedido.Utils.ConnectionUtils;
 
 import org.json.JSONArray;
 import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.util.Calendar;
 import java.util.Date;
@@ -28,7 +29,9 @@ public class ReportePorFecha extends BaseActivity {
     private static TextView fechaini=null;
     private static TextView fechafin=null;
     private static TextView total=null;
+    private static TextView tv_gastos=null;
     public static String fecha1,fecha2;
+    public static int id=0;
     public Spinner spinervendedores;
     JSONArray taskResult=null;
     JSONArray taskResult2 = null;
@@ -42,6 +45,7 @@ public class ReportePorFecha extends BaseActivity {
         fechaini=(TextView) findViewById(R.id.txtInicio);
         fechafin=(TextView) findViewById(R.id.txtFin);
         total=(TextView) findViewById(R.id.total_reporte_fecha);
+        tv_gastos=(TextView)findViewById(R.id.tv_gastos_reportefecha) ;
         String [] array=null;
 
         try {
@@ -161,7 +165,7 @@ public class ReportePorFecha extends BaseActivity {
 
 
         JSONArray datosUsuario= ConnectionUtils.consultaSQLite(getBaseContext(),ConnectionUtils.queryDatosDeUsuario(spinervendedores.getSelectedItem().toString()));
-        int id=0;
+
         try {
             id=Integer.parseInt(datosUsuario.getJSONObject(0).getString("id"));
         } catch (JSONException e) {
@@ -176,13 +180,15 @@ public class ReportePorFecha extends BaseActivity {
                 final ListView listaVendidos = (ListView) findViewById(R.id.listaVentaPorFecha);
 
 
-                    taskResult2 = taskResult= ConnectionUtils.consultaSQLite(this,ConnectionUtils.queryVentasByUsuarioFecha(f1,f2,""+id));
+                    taskResult2 = ConnectionUtils.consultaSQLite(this,ConnectionUtils.queryVentasByUsuarioFecha(f1,f2,""+id));
 
                 VysorAdapterReporte adapterVendidos = new VysorAdapterReporte(ReportePorFecha.this,
                         R.layout.item_reportefecha, ConnectionUtils.jsonToArray(taskResult2, "nombre"), taskResult2);
                 listaVendidos.setAdapter(adapterVendidos);
                 if(taskResult.length()==0){toastNoData.show();}
-                calculaTotal();
+
+                Double gastos=calcularGastos(f1,f2);
+                calculaTotal(gastos);
             } else {
 
                 toast1.show();
@@ -193,7 +199,7 @@ public class ReportePorFecha extends BaseActivity {
         fecha1=fecha2="";
     }
 
-    public void calculaTotal(){
+    public void calculaTotal(Double gastos){
         double monto=0;
        for (int i=0;i<taskResult2.length();i++){
            try {
@@ -207,7 +213,24 @@ public class ReportePorFecha extends BaseActivity {
        }
         fechafin.setText("Fecha Inicio");
         fechaini.setText("Fecha Fin");
-        total.setText(monto+"$");
+        total.setText((monto-gastos)+"$");
         System.out.println("TOTAL------------->"+monto);
     }
+
+    public Double calcularGastos(String f1,String f2){
+       JSONArray taskResultGastos = ConnectionUtils.consultaSQLite(this,ConnectionUtils.queryMontoGastosByFecha(f1,f2,""+id));
+        Double sumaGastos=0d;
+        for (int i=0;i<taskResultGastos.length();i++){
+            try {
+                Double cant=Double.parseDouble(taskResultGastos.getJSONObject(i).getString("monto"));
+                sumaGastos=sumaGastos+cant;
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+        }
+        tv_gastos.setText(String.valueOf(sumaGastos));
+        return sumaGastos;
+
+    }
 }
+
