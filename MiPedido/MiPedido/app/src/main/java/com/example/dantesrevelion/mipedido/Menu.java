@@ -44,7 +44,9 @@ public class Menu extends BaseActivity {
                     startActivity(intent);
 
                 } else if(position == 2) {
-                    startActivity(new Intent(Menu.this, RegistroTickets.class));
+                    Intent intent=new Intent(Menu.this,RegistroTickets.class);
+                    intent.putExtra("id",getIntent().getExtras().getString("id"));
+                    startActivity(intent);
 
                 } else if(position == 3) {
                     Intent intent=new Intent(Menu.this, ReportePorFecha.class);

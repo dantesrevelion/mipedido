@@ -109,8 +109,8 @@ public class ConectionTask extends AsyncTask{
             for (int i = 0; i < gastos.length(); i++) {
                 try {
                     JSONObject obj = gastos.getJSONObject(i);
-                    db.execSQL("INSERT INTO `gastos` (`id`, `idvendedor`, `nombre`, `codigo`, `monto`, `fecha`) " +
-                            "VALUES ("+obj.get("id")+", '"+obj.get("idvendedor")+"', '"+obj.get("nombre")+"', '"+obj.get("codigo")+"', '"+obj.get("monto")+"', "+obj.get("fecha")+");");
+                    db.execSQL("INSERT INTO `gastos` (`id`, `idvendedor`, `nombre`, `codigo`, `monto`, `fecha`,`estatus`) " +
+                            "VALUES ("+obj.get("id")+", "+obj.get("idvendedor")+", '"+obj.get("nombre")+"', '"+obj.get("codigo")+"', "+obj.get("monto")+", '"+obj.get("fecha")+"','S')");
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }

@@ -29,7 +29,6 @@ public class VysorAdapterRegistroTickets extends ArrayAdapter<String> implements
         super(context, -1, values);
         this.context = context;
         this.item_vysor = item_vysor;
-        System.out.println("derpingjoasdas "+values.size());
         this.values = values;
     }
 

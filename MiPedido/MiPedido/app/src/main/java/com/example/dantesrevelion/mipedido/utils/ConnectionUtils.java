@@ -155,12 +155,21 @@ public class ConnectionUtils {
                 "VALUES ("+idp+","+idv+","+cant+","+monto+",'"+estatus+"'); ";
         return response;
     }
+    public static String insertGastos(String idu,String nombre,String codigo,String monto,String estatus){
+        String response = "INSERT INTO `gastos` (`idvendedor`, `nombre`, `codigo`, `monto`,`estatus`)" +
+                " VALUES ('"+idu+"', '"+nombre+"', '"+codigo+"', '"+monto+"', '"+estatus+"'); ";
+        return response;
+    }
     public static String queryCarrito(){
         String response = "select * from carrito where estatus='P'";
         return response;
     }
     public static String queryCarritoUp(){
         String response = "select * from carrito where estatus='V'";
+        return response;
+    }
+    public static String queryGastosUp(){
+        String response = "select * from gastos where estatus='P'";
         return response;
     }
 
@@ -172,6 +181,10 @@ public class ConnectionUtils {
         String response = "update carrito SET estatus='S' where id_venta="+id;
         return response;
     }
+    public static String updateEstadoGastosS(String id){
+        String response = "update gastos SET estatus='S' where id="+id;
+        return response;
+    }
     public static String deleteCarrito(String id){
         String response = "delete from carrito where id_venta="+id;
         return response;
@@ -179,6 +192,10 @@ public class ConnectionUtils {
 
     public static String insertVentas(String idp,String idv,String cantidad,String monto){
         String response = "http://"+ getDOMAIN() +"/mipedido/res/ventasinsert.php?idp="+idp+"&idv="+idv+"&c="+cantidad+"&m="+monto;
+        return response;
+    }
+    public static String insertGastos(String idv,String nombre,String codigo,String monto){
+        String response = "http://"+ getDOMAIN() +"/mipedido/res/gastosinsert.php?idu="+idv+"&nombre="+nombre+"&cod="+codigo+"&m="+monto;
         return response;
     }
     HttpURLConnection urlConnection;

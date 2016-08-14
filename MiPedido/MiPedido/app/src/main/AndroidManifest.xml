@@ -50,7 +50,8 @@
         <activity android:name=".ListaDeVentas" />
         <activity android:name=".Perfil" />
         <activity android:name=".CarritoCompra" />
-        <activity android:name=".RegistroTickets" />
+        <activity android:name=".RegistroTickets"
+            android:windowSoftInputMode="adjustPan"/>
         <activity android:name=".Configuracion"></activity>
     </application>
 

@@ -21,6 +21,8 @@ public class CheckIn {
         SQLiteHelper sqlHelper=new SQLiteHelper(context, "miPedidoLite", null, 1);
         SQLiteDatabase db = sqlHelper.getWritableDatabase();
         JSONArray taskResult= ConnectionUtils.consultaSQLite(context,ConnectionUtils.queryCarritoUp());
+        JSONArray taskResultGastos= ConnectionUtils.consultaSQLite(context,ConnectionUtils.queryGastosUp());
+
         Toast toastError = Toast.makeText(context.getApplicationContext(),
                 "Error al actualizar", Toast.LENGTH_SHORT);
 
@@ -33,6 +35,15 @@ public class CheckIn {
                 String s=new InsertIntoVentas().execute(idp,idv,cantidad,monto).get().toString();
                 ConnectionUtils.consultaSQLite(context,ConnectionUtils.updateEstadoVentatoS(taskResult.getJSONObject(i).getString("id_venta")));
             }
+            for(int i=0;i<taskResultGastos.length();i++){
+                String idv=taskResultGastos.getJSONObject(i).getString("idvendedor");
+                String nombre=taskResultGastos.getJSONObject(i).getString("nombre");
+                String codigo=taskResultGastos.getJSONObject(i).getString("codigo");
+                String monto=taskResultGastos.getJSONObject(i).getString("monto");
+                String s=new InsertIntoGastos().execute(idv,nombre,codigo,monto).get().toString();
+                ConnectionUtils.consultaSQLite(context,ConnectionUtils.updateEstadoGastosS(taskResultGastos.getJSONObject(i).getString("id")));
+            }
+
 
 
 
@@ -77,6 +88,23 @@ public class CheckIn {
         }
 
     }
+    public static class InsertIntoGastos extends AsyncTask {
+
+        @Override
+        protected Object doInBackground(Object... param) {
+
+            JSONArray response=null;
+            ConnectionUtils cn=new ConnectionUtils();
+
+            cn.connect(ConnectionUtils.iniciarSesion());
+            response=cn.connect(ConnectionUtils.insertGastos((String)param[0],(String)param[1],(String)param[2],(String)param[3]));
+            cn.connect(ConnectionUtils.cerrarSesion());
+
+            return response;
+        }
+
+    }
+
 
 
 }

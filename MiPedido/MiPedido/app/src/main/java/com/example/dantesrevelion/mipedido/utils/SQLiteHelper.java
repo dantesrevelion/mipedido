@@ -51,13 +51,13 @@ public class SQLiteHelper extends SQLiteOpenHelper {
                 ");");
 
         sqLiteDatabase.execSQL("CREATE TABLE IF NOT EXISTS `gastos` (" +
-                "  `id` int(11) NOT NULL AUTO_INCREMENT," +
+                "  `id` INTEGER PRIMARY KEY AUTOINCREMENT," +
                 "  `idvendedor` int(11) NOT NULL," +
                 "  `nombre` varchar(50) NOT NULL," +
                 "  `codigo` varchar(40) NOT NULL," +
-                "  `monto` decimal(10,0) NOT NULL," +
-                "  `fecha` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ," +
-                "  PRIMARY KEY (`id`)" +
+                "  `monto` double NOT NULL," +
+                "  `fecha` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP, " +
+                "  `estatus` varchar(1) NOT NULL" +
                 ") ;");
 
 

@@ -16,8 +16,8 @@
         android:id="@+id/ly_body_registro"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_marginLeft="20dp"
-        android:layout_marginRight="20dp"
+        android:layout_marginLeft="10dp"
+        android:layout_marginRight="10dp"
         android:layout_marginTop="20dp"
         android:layout_marginBottom="20dp"
         android:padding="10dp"
@@ -51,6 +51,8 @@
                 android:id="@+id/fecha_registro"
                 android:layout_toRightOf="@id/tv_fecha_registro"
                 android:textSize="16dp"
+                android:gravity="center"
+                android:editable="false"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content" />
             <ImageView
@@ -131,6 +133,7 @@
             android:layout_height="match_parent"
             android:id="@+id/lista_registros"
             android:dividerHeight="5dp"
+            android:descendantFocusability="beforeDescendants"
             android:background="@color/color4">
 
         </ListView>

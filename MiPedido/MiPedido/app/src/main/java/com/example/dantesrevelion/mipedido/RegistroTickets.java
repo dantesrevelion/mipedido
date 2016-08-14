@@ -10,10 +10,13 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.example.dantesrevelion.mipedido.Adapters.VysorAdapterRegistroTickets;
 import com.example.dantesrevelion.mipedido.Utils.ConnectionUtils;
 import com.example.dantesrevelion.mipedido.Utils.ViewUtils;
+
+import org.json.JSONArray;
 
 import java.util.ArrayList;
 import java.util.Date;
@@ -29,7 +32,7 @@ public class RegistroTickets extends BaseActivity implements View.OnClickListene
     public static ListView lista;
     public static TextView tv_total;
     private static Button bt_registrar;
-
+    private static String idu;
     int n=0;
     List<String> items=new ArrayList<String>();
 
@@ -54,6 +57,7 @@ public class RegistroTickets extends BaseActivity implements View.OnClickListene
         fecha.setOnClickListener(this);
         bt_registrar.setOnClickListener(this);
 
+        idu=getIntent().getExtras().getString("id");
 
 
 
@@ -87,21 +91,32 @@ public class RegistroTickets extends BaseActivity implements View.OnClickListene
                 break;
 
             case R.id.registrar_registro:
-                for(int i=0;i<n;i++){
-                    EditText ed_nombre=(EditText) ViewUtils.getViewByPosition((i),lista).findViewById(R.id.et_nombre_item_reg);
-                    EditText ed_monto=(EditText) ViewUtils.getViewByPosition((i),lista).findViewById(R.id.et_monto_item_reg);
-                    EditText ed_codigo=(EditText) ViewUtils.getViewByPosition((i),lista).findViewById(R.id.et_codigo_item_reg);
-                    debug("Nombre: "+ed_nombre.getText()+" Monto: "+ed_monto.getText()+" Codigo: "+ed_codigo.getText());
+                if(!"".equals(inputFecha.getText().toString().trim())) {
+                    for (int i = 0; i < n; i++) {
+                        EditText ed_nombre = (EditText) ViewUtils.getViewByPosition((i), lista).findViewById(R.id.et_nombre_item_reg);
+                        EditText ed_monto = (EditText) ViewUtils.getViewByPosition((i), lista).findViewById(R.id.et_monto_item_reg);
+                        EditText ed_codigo = (EditText) ViewUtils.getViewByPosition((i), lista).findViewById(R.id.et_codigo_item_reg);
 
+                        debug("Nombre: " + ed_nombre.getText() + " Monto: " + ed_monto.getText() + " Codigo: " + ed_codigo.getText() + " Fecha: " + fechaCad);
+
+                        JSONArray taskResult= ConnectionUtils.consultaSQLite
+                                (this,ConnectionUtils.insertGastos(idu,ed_nombre.getText().toString(),ed_codigo.getText().toString(),ed_monto.getText().toString(),"P"));
+                        Toast toast1 = Toast.makeText(getApplicationContext(),
+                                "Gastos Registrados", Toast.LENGTH_SHORT);
+                        toast1.show();
+                    }
+                }else{
+                    Toast toast1 = Toast.makeText(getApplicationContext(),
+                            "Seleccione la fecha", Toast.LENGTH_SHORT);
+                    toast1.show();
                 }
-
                 break;
         }
     }
 
     public void setLista(){
 
-        VysorAdapterRegistroTickets adapter = new VysorAdapterRegistroTickets(RegistroTickets.this, R.layout.item_registro_tickets, items);
+        VysorAdapterRegistroTickets adapter = new VysorAdapterRegistroTickets(RegistroTickets.this, R.layout.item_registro_tickets,items);
         lista.setAdapter(adapter);
 
 
@@ -112,7 +127,7 @@ public class RegistroTickets extends BaseActivity implements View.OnClickListene
 
     public static void setFechaCad(Date fecha) {
         fechaCad=fecha.getYear()+"-"+fecha.getMonth()+"-"+fecha.getDate();
-        inputFecha.setText("+ "+fechaCad);
+        inputFecha.setText(""+fechaCad);
     }
 
 
