@@ -107,5 +107,10 @@ public class CarritoCompra extends BaseActivity {
 
     }
 
+    public void imprimir(View v){
+        Intent intent=new Intent(CarritoCompra.this, ImprimirTicket.class);
+        startActivity(intent);
+    }
+
 
 }
