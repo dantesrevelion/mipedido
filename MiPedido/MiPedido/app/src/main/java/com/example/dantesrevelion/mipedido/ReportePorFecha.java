@@ -213,7 +213,7 @@ public class ReportePorFecha extends BaseActivity {
        }
         fechafin.setText("Fecha Inicio");
         fechaini.setText("Fecha Fin");
-        total.setText((monto-gastos)+"$");
+        total.setText("$"+(monto-gastos));
         System.out.println("TOTAL------------->"+monto);
     }
 
@@ -228,7 +228,7 @@ public class ReportePorFecha extends BaseActivity {
                 e.printStackTrace();
             }
         }
-        tv_gastos.setText(String.valueOf(sumaGastos));
+        tv_gastos.setText("$"+String.valueOf(sumaGastos));
         return sumaGastos;
 
     }

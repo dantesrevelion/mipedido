@@ -164,6 +164,11 @@ public class ConnectionUtils {
                 " VALUES ('"+idu+"', '"+nombre+"', '"+codigo+"', '"+monto+"', '"+estatus+"'); ";
         return response;
     }
+    public static String insertVenta(String idp,String idv,String cant,String monto){
+        String response = "INSERT INTO ventas ( id_producto, id_vendedor,cantidad,monto)" +
+                "VALUES ("+idp+","+idv+","+cant+","+monto+"); ";
+        return response;
+    }
     public static String queryCarrito(){
         String response = "select * from carrito where estatus='P'";
         return response;

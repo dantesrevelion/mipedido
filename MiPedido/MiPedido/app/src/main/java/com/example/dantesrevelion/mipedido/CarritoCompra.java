@@ -54,6 +54,11 @@ public class CarritoCompra extends BaseActivity {
         System.out.println("GENERAR VENTA------------->");
         for(int i=0;i<taskResult.length();i++){
             ConnectionUtils.consultaSQLite(getBaseContext(),ConnectionUtils.updateEstadoVentatoP(taskResult.getJSONObject(i).getString("id_venta")));
+            String idp=taskResult.getJSONObject(i).getString("id_producto");
+            String idv=taskResult.getJSONObject(i).getString("id_vendedor");
+            String cant=taskResult.getJSONObject(i).getString("cantidad");
+            String monto=taskResult.getJSONObject(i).getString("monto");
+            ConnectionUtils.consultaSQLite(getBaseContext(),ConnectionUtils.insertVenta(idp,idv,cant,monto));
         }
 
         consultaCarrito();
