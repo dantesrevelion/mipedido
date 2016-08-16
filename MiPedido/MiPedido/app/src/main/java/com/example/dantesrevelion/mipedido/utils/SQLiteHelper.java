@@ -30,7 +30,7 @@ public class SQLiteHelper extends SQLiteOpenHelper {
                 "  `correo` varchar(30) NOT NULL" +
                 ");");
         sqLiteDatabase.execSQL("CREATE TABLE IF NOT EXISTS `ventas` (" +
-                "  `id_venta` int(11) NOT NULL," +
+                "  `id_venta`INTEGER PRIMARY KEY AUTOINCREMENT," +
                 "  `id_producto` int(11) NOT NULL," +
                 "  `id_vendedor` int(11) NOT NULL," +
                 "  `fecha` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP," +
