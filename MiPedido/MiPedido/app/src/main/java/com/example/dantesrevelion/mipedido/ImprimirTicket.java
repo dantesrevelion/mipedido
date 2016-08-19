@@ -38,6 +38,8 @@ public class ImprimirTicket extends AppCompatActivity {
         try {
             findBT();
             openBT();
+            sendData();
+            closeBT();
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -167,6 +169,41 @@ public class ImprimirTicket extends AppCompatActivity {
             e.printStackTrace();
         }
     }
+
+
+
+
+    // this will send text data to be printed by the bluetooth printer
+    void sendData() throws IOException {
+        try {
+
+            // the text typed by the user
+            String msg ="MY DATA DERP";
+            msg += "\n";
+
+            mmOutputStream.write(msg.getBytes());
+
+            // tell the user data were sent
+          //  myLabel.setText("Data sent.");
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    // close the connection to bluetooth printer.
+    void closeBT() throws IOException {
+        try {
+            stopWorker = true;
+            mmOutputStream.close();
+            mmInputStream.close();
+            mmSocket.close();
+           // myLabel.setText("Bluetooth Closed");
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
 
 
     /**end of class*/
