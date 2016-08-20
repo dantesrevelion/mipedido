@@ -1,5 +1,6 @@
 package com.example.dantesrevelion.mipedido;
 
+import android.bluetooth.BluetoothDevice;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.support.v7.app.AppCompatActivity;
@@ -108,8 +109,13 @@ public class CarritoCompra extends BaseActivity {
     }
 
     public void imprimir(View v){
-        Intent intent=new Intent(CarritoCompra.this, ImprimirTicket.class);
-        startActivity(intent);
+      //  Intent intent=new Intent(CarritoCompra.this, ImprimirTicket.class);
+      //  startActivity(intent);
+        ImprimirTicket imprimir=new ImprimirTicket();
+        imprimir.searchDevices(getBaseContext(),this);
+
+        //BluetoothDevice device = ImprimirTicket.getMmDevice();
+        //imprimir.pairDevice(device);
     }
 
 

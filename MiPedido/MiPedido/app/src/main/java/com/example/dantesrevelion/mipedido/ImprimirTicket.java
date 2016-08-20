@@ -1,25 +1,28 @@
 package com.example.dantesrevelion.mipedido;
 
+import android.app.Activity;
 import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothDevice;
 import android.bluetooth.BluetoothSocket;
+import android.content.BroadcastReceiver;
+import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.os.Handler;
-import android.support.v7.app.AppCompatActivity;
-import android.os.Bundle;
 
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.lang.reflect.Method;
 import java.util.Set;
 import java.util.UUID;
 
-public class ImprimirTicket extends AppCompatActivity {
+public class ImprimirTicket  {
 
     // android built in classes for bluetooth operations
     BluetoothAdapter mBluetoothAdapter;
     BluetoothSocket mmSocket;
-    BluetoothDevice mmDevice;
+    private static  BluetoothDevice mmDevice;
 
     OutputStream mmOutputStream;
     InputStream mmInputStream;
@@ -29,6 +32,14 @@ public class ImprimirTicket extends AppCompatActivity {
     int readBufferPosition;
     volatile boolean stopWorker;
 
+    public static BluetoothDevice getMmDevice() {
+        return mmDevice;
+    }
+
+    public static void setMmDevice(BluetoothDevice mmDevice) {
+        ImprimirTicket.mmDevice = mmDevice;
+    }
+/*
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -36,17 +47,75 @@ public class ImprimirTicket extends AppCompatActivity {
 
 
         try {
+
+
+
             findBT();
             openBT();
             sendData();
             closeBT();
+
         } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+
+        mBluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
+        IntentFilter filter = new IntentFilter();
+
+        filter.addAction(BluetoothDevice.ACTION_FOUND);
+        filter.addAction(BluetoothAdapter.ACTION_DISCOVERY_STARTED);
+        filter.addAction(BluetoothAdapter.ACTION_DISCOVERY_FINISHED);
+
+        registerReceiver(mReceiver, filter);
+        mBluetoothAdapter.startDiscovery();
+    }
+*/
+
+    public void searchDevices(Context context , Activity activity){
+
+
+        mBluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
+
+        if(!mBluetoothAdapter.isEnabled()) {
+            Intent enableBluetooth = new Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE);
+            activity.startActivityForResult(enableBluetooth, 0);
+
+        }
+
+            IntentFilter filter = new IntentFilter();
+            filter.addAction(BluetoothDevice.ACTION_FOUND);
+            filter.addAction(BluetoothAdapter.ACTION_DISCOVERY_STARTED);
+            filter.addAction(BluetoothAdapter.ACTION_DISCOVERY_FINISHED);
+
+            context.registerReceiver(mReceiver, filter);
+            mBluetoothAdapter.startDiscovery();
+
+
+    }
+
+
+    /** enpareja un dispositivo */
+    public void pairDevice(BluetoothDevice device) {
+        try {
+            Method method = device.getClass().getMethod("createBond", (Class[]) null);
+            method.invoke(device, (Object[]) null);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+    /** desenpareja dispositivo */
+    public void unpairDevice(BluetoothDevice device) {
+        try {
+            Method method = device.getClass().getMethod("removeBond", (Class[]) null);
+            method.invoke(device, (Object[]) null);
+
+        } catch (Exception e) {
             e.printStackTrace();
         }
     }
 
-
-    void findBT() {
+    void findBT(Context context) {
 
         try {
             mBluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
@@ -57,8 +126,11 @@ public class ImprimirTicket extends AppCompatActivity {
 
             if(!mBluetoothAdapter.isEnabled()) {
                 Intent enableBluetooth = new Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE);
-                startActivityForResult(enableBluetooth, 0);
+                //startActivityForResult(enableBluetooth, 0);
+
             }
+
+
 
             Set<BluetoothDevice> pairedDevices = mBluetoothAdapter.getBondedDevices();
 
@@ -68,7 +140,7 @@ public class ImprimirTicket extends AppCompatActivity {
                     // RPP300 is the name of the bluetooth printer device
                     // we got this name from the list of paired devices
                     if (device.getName().equals("RPP300")) {
-                        mmDevice = device;
+                        setMmDevice(device);
                         break;
                     }
                 }
@@ -81,13 +153,52 @@ public class ImprimirTicket extends AppCompatActivity {
         }
     }
 
+    /** Se ejecuta cuando encuentra un dispositivo */
+    private final BroadcastReceiver mReceiver = new BroadcastReceiver() {
+        public void onReceive(Context context, Intent intent) {
+            String action = intent.getAction();
+
+            if (BluetoothAdapter.ACTION_DISCOVERY_STARTED.equals(action)) {
+                //discovery starts, we can show progress dialog or perform other tasks
+            } else if (BluetoothAdapter.ACTION_DISCOVERY_FINISHED.equals(action)) {
+                //discovery finishes, dismis progress dialog
+            } else if (BluetoothDevice.ACTION_FOUND.equals(action)) {
+                //bluetooth device found
+                BluetoothDevice device = (BluetoothDevice) intent.getParcelableExtra(BluetoothDevice.EXTRA_DEVICE);
+                System.out.println("Found device " + device.getName());
+                setMmDevice(device);
+                //pairDevice(device);
+            }
+
+            if (BluetoothDevice.ACTION_BOND_STATE_CHANGED.equals(action)) {
+                final int state        = intent.getIntExtra(BluetoothDevice.EXTRA_BOND_STATE, BluetoothDevice.ERROR);
+                final int prevState    = intent.getIntExtra(BluetoothDevice.EXTRA_PREVIOUS_BOND_STATE, BluetoothDevice.ERROR);
+
+                if (state == BluetoothDevice.BOND_BONDED && prevState == BluetoothDevice.BOND_BONDING) {
+                    System.out.println("PAIRED");
+                } else if (state == BluetoothDevice.BOND_NONE && prevState == BluetoothDevice.BOND_BONDED){
+                    System.out.println("UNPAIRED");
+                }
+
+            }
+        }
+    };
+
+    /** se ejecuta al enparejarse con un dispositivo */
+    private final BroadcastReceiver mPairReceiver = new BroadcastReceiver() {
+        public void onReceive(Context context, Intent intent) {
+            String action = intent.getAction();
+
+
+        }
+    };
 
     void openBT() throws IOException {
         try {
 
             // Standard SerialPortService ID
             UUID uuid = UUID.fromString("00001101-0000-1000-8000-00805f9b34fb");
-            mmSocket = mmDevice.createRfcommSocketToServiceRecord(uuid);
+            mmSocket = getMmDevice().createRfcommSocketToServiceRecord(uuid);
             mmSocket.connect();
             mmOutputStream = mmSocket.getOutputStream();
             mmInputStream = mmSocket.getInputStream();
@@ -174,6 +285,7 @@ public class ImprimirTicket extends AppCompatActivity {
 
 
     // this will send text data to be printed by the bluetooth printer
+    /** envia datos al dispositivo */
     void sendData() throws IOException {
         try {
 
