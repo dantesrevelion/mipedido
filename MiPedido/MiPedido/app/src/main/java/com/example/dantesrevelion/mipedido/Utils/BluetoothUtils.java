@@ -8,9 +8,11 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.preference.PreferenceManager;
+import android.widget.TextView;
 
 import java.lang.reflect.Method;
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Set;
 
 /**
@@ -18,17 +20,20 @@ import java.util.Set;
  */
 public class BluetoothUtils {
     BluetoothAdapter mBluetoothAdapter;
-
+    List<BluetoothDevice> searchResult;
+    TextView tv_test;
 
     public BluetoothUtils(Context context){
         mBluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
+        searchResult=new ArrayList<>();
         IntentFilter filter = new IntentFilter();
         filter.addAction(BluetoothDevice.ACTION_FOUND);
         filter.addAction(BluetoothAdapter.ACTION_DISCOVERY_STARTED);
         filter.addAction(BluetoothAdapter.ACTION_DISCOVERY_FINISHED);
         context.registerReceiver(mReceiver, filter);
-    }
 
+    }
+    int n=0;
     /** Se ejecuta cuando encuentra un dispositivo */
     private final BroadcastReceiver mReceiver = new BroadcastReceiver() {
         public void onReceive(Context context, Intent intent) {
@@ -41,11 +46,12 @@ public class BluetoothUtils {
             } else if (BluetoothDevice.ACTION_FOUND.equals(action)) {
                 //bluetooth device found
                 BluetoothDevice device = (BluetoothDevice) intent.getParcelableExtra(BluetoothDevice.EXTRA_DEVICE);
+                searchResult.add(device);
                 System.out.println("Found device " + device.getName());
 
-                //pairDevice(device);
             }
 
+            /*
             if (BluetoothDevice.ACTION_BOND_STATE_CHANGED.equals(action)) {
                 final int state        = intent.getIntExtra(BluetoothDevice.EXTRA_BOND_STATE, BluetoothDevice.ERROR);
                 final int prevState    = intent.getIntExtra(BluetoothDevice.EXTRA_PREVIOUS_BOND_STATE, BluetoothDevice.ERROR);
@@ -57,8 +63,11 @@ public class BluetoothUtils {
                 }
 
             }
+            */
 
-            System.out.println(" state "+mBluetoothAdapter.getState());
+            n++;
+            tv_test.setText("N "+n);
+            System.out.println(" state receiver"+mBluetoothAdapter.getState());
         }
     };
 
@@ -76,7 +85,13 @@ public class BluetoothUtils {
         return mBluetoothAdapter.isEnabled();
     }
 
+    public List<BluetoothDevice> getListDevice(){
+        return searchResult;
+    }
+    public void setTextViewLEL(TextView tv){
+        tv_test=tv;
 
+    }
     public void searchDevices(){
 
         mBluetoothAdapter.startDiscovery();

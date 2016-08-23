@@ -1,6 +1,8 @@
 package com.example.dantesrevelion.mipedido;
 
 import android.app.Activity;
+import android.app.FragmentManager;
+import android.app.FragmentTransaction;
 import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothDevice;
 import android.content.Intent;
@@ -34,8 +36,9 @@ public class CarritoCompra extends BaseActivity {
     ListView lista;
     VysorAdapterCarrito adapter;
     Double total=0d;
-
+    BluetoothUtils utils;
     TextView tv_total;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -44,6 +47,7 @@ public class CarritoCompra extends BaseActivity {
         tv_total= (TextView) findViewById(R.id.tv_total_carrito);
         setSupportActionBar(toolbar);
         consultaCarrito();
+        utils= new BluetoothUtils(getBaseContext());
 
 
     }
@@ -153,12 +157,21 @@ public class CarritoCompra extends BaseActivity {
             e.printStackTrace();
         }
     */
-        BluetoothUtils utils=new BluetoothUtils(getBaseContext());
+
+        FragmentManager fragmentManager = getFragmentManager();
+        FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+        SearchList fragment = new SearchList();
+        fragmentTransaction.add(R.id.fragment_container_carrito, fragment, "HELLO");
+        fragmentTransaction.commit();
+
         if(utils.bluetoothIsOn(this)){
             if(utils.isPaired()){
 
+            }else{
+                utils.searchDevices();
+                utils.setTextViewLEL(tv_total);
             }
-            debug("is paired "+utils.isPaired());
+
         }
 
       //  Intent enableBluetooth = new Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE);
@@ -189,14 +202,18 @@ public class CarritoCompra extends BaseActivity {
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        BluetoothUtils utils= new BluetoothUtils(getBaseContext());
+
         debug("request code "+requestCode);
         debug("is paired "+utils.isPaired());
         /** si esta on */
         if(101==requestCode){
             if(utils.isPaired()){
 
+            }else{
+                utils.searchDevices();
+                utils.setTextViewLEL(tv_total);
             }
+
         }
         if(102==requestCode){
 
