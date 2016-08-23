@@ -16,6 +16,7 @@ import com.example.dantesrevelion.mipedido.Utils.ConnectionUtils;
 import org.json.JSONArray;
 import org.json.JSONException;
 
+import java.util.Calendar;
 import java.util.concurrent.ExecutionException;
 
 public class ListaDeVentas extends BaseActivity {
@@ -82,9 +83,22 @@ public class ListaDeVentas extends BaseActivity {
 
             final ListView listaVendidos = (ListView) findViewById(R.id.listaDeVentas);
 
+                Calendar c = Calendar.getInstance();
+                int year = c.get(Calendar.YEAR);
+                int month = c.get(Calendar.MONTH);
+                int day = c.get(Calendar.DAY_OF_MONTH);
+                String fecha=year+"-"+(month+1)+"-"+day;
 
 
-                taskResult2= ConnectionUtils.consultaSQLite(getBaseContext(),ConnectionUtils.queryVentasByUsuario(""+id));
+                c.add(Calendar.DAY_OF_MONTH, 1);
+                int year2 = c.get(Calendar.YEAR);
+                int month2 = c.get(Calendar.MONTH);
+                int day2 = c.get(Calendar.DAY_OF_MONTH);
+                String fecha2=year2+"-"+(month2+1)+"-"+day2;
+
+                System.out.println("FECHA LISTA VENTAS " +fecha);
+                debug(" fecha "+fecha2);
+                taskResult2= ConnectionUtils.consultaSQLite(getBaseContext(),ConnectionUtils.queryVentasByUsuarioFecha(ConnectionUtils.formatDate(fecha),ConnectionUtils.formatDate(fecha2),String.valueOf(id)));
 
             VysorAdapterVentaUsuario adapterVendidos = new VysorAdapterVentaUsuario(ListaDeVentas.this,
                     R.layout.item_listaventa,ConnectionUtils.jsonToArray(taskResult2,"nombre"), taskResult2);

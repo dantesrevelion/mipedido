@@ -34,7 +34,7 @@
             android:id="@+id/inputPassword"
             android:layout_gravity="center_horizontal"
             android:textColor="@color/white"
-            android:text="provisional0716"
+            android:text=""
             android:textSize="30dp"
             android:password="true" />
 
@@ -85,7 +85,7 @@
             android:layout_height="wrap_content"
             android:id="@+id/inputUser"
             android:textColor="@color/white"
-            android:text="Provisional"
+            android:text=""
             android:textSize="30dp" />
 
         <Space

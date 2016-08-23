@@ -1,8 +1,11 @@
 package com.example.dantesrevelion.mipedido;
 
+import android.app.Activity;
+import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothDevice;
 import android.content.Intent;
 import android.os.AsyncTask;
+import android.preference.PreferenceManager;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
@@ -11,9 +14,11 @@ import android.view.Menu;
 import android.widget.AdapterView;
 import android.widget.CheckBox;
 import android.widget.ListView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.dantesrevelion.mipedido.Adapters.VysorAdapterCarrito;
+import com.example.dantesrevelion.mipedido.Utils.BluetoothUtils;
 import com.example.dantesrevelion.mipedido.Utils.CheckIn;
 import com.example.dantesrevelion.mipedido.Utils.ConnectionUtils;
 
@@ -28,14 +33,18 @@ public class CarritoCompra extends BaseActivity {
     JSONArray taskResult=null;
     ListView lista;
     VysorAdapterCarrito adapter;
+    Double total=0d;
 
+    TextView tv_total;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_carrito_compra);
         toolbar = (Toolbar) findViewById(R.id.tool_bar_carrito); // Attaching the layout to the toolbar object
+        tv_total= (TextView) findViewById(R.id.tv_total_carrito);
         setSupportActionBar(toolbar);
         consultaCarrito();
+
 
     }
 
@@ -49,7 +58,25 @@ public class CarritoCompra extends BaseActivity {
 
 
         lista.setAdapter(adapter);
+        calculaTotal();
 
+    }
+
+    public void calculaTotal(){
+        total=0d;
+        for(int i=0;i<taskResult.length();i++){
+
+
+            try {
+                String monto=taskResult.getJSONObject(i).getString("monto");
+                Double valor=Double.parseDouble(monto);
+                total=total+valor;
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+
+        }
+        tv_total.setText("$"+String.valueOf(total));
     }
     public void generarVenta(View v) throws JSONException {
         System.out.println("GENERAR VENTA------------->");
@@ -105,18 +132,75 @@ public class CarritoCompra extends BaseActivity {
 
         }
          consultaCarrito();
-
+        calculaTotal();
     }
 
     public void imprimir(View v){
-      //  Intent intent=new Intent(CarritoCompra.this, ImprimirTicket.class);
-      //  startActivity(intent);
-        ImprimirTicket imprimir=new ImprimirTicket();
-        imprimir.searchDevices(getBaseContext(),this);
+        /*
+        try {
 
-        //BluetoothDevice device = ImprimirTicket.getMmDevice();
-        //imprimir.pairDevice(device);
+            debug("Bluetooth is ON");
+            boolean isEnabled=(boolean) new verificarBluetoothClass().execute(this).get();
+            debug("response "+isEnabled);
+
+            if(isEnabled){
+                debug("Bluetooth Search Devices");
+                new buscarDispositivos().execute();
+            }
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        } catch (ExecutionException e) {
+            e.printStackTrace();
+        }
+    */
+        BluetoothUtils utils=new BluetoothUtils(getBaseContext());
+        if(utils.bluetoothIsOn(this)){
+            if(utils.isPaired()){
+
+            }
+            debug("is paired "+utils.isPaired());
+        }
+
+      //  Intent enableBluetooth = new Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE);
+       // startActivityForResult(enableBluetooth, 0);
     }
 
 
+
+
+
+
+
+
+
+
+    private class buscarDispositivosClass extends AsyncTask {
+
+        @Override
+        protected Object doInBackground(Object... param) {
+
+            return "";
+        }
+
+    }
+
+
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        BluetoothUtils utils= new BluetoothUtils(getBaseContext());
+        debug("request code "+requestCode);
+        debug("is paired "+utils.isPaired());
+        /** si esta on */
+        if(101==requestCode){
+            if(utils.isPaired()){
+
+            }
+        }
+        if(102==requestCode){
+
+        }
+
+    }
 }

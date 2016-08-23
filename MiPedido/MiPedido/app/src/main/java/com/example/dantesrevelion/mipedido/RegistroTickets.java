@@ -145,8 +145,14 @@ public class RegistroTickets extends BaseActivity implements View.OnClickListene
     }
 
     public static void setFechaCad(Date fecha) {
-        fechaCad=fecha.getYear()+"-"+fecha.getMonth()+"-"+fecha.getDate();
-        inputFecha.setText(""+fechaCad);
+        fechaCad=fecha.getYear()+"-"+(fecha.getMonth()+1)+"-"+fecha.getDate();
+        if(fechaCad!=null){
+            if(inputFecha!=null){
+                inputFecha.setText(""+fechaCad);
+            }
+
+        }
+
     }
 
 

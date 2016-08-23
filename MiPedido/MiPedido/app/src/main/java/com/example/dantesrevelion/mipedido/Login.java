@@ -5,10 +5,12 @@ import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.content.SharedPreferences;
 import android.database.sqlite.SQLiteDatabase;
 import android.graphics.drawable.BitmapDrawable;
 import android.net.ConnectivityManager;
 import android.os.AsyncTask;
+import android.preference.PreferenceManager;
 import android.support.v4.app.NotificationCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -67,7 +69,16 @@ public class Login extends AppCompatActivity {
         inputTextUser = (EditText) findViewById(R.id.inputUser);
         inputTextPsw = (EditText) findViewById(R.id.inputPassword);
         layoutPass.setVisibility(View.INVISIBLE);
-        ConnectionUtils.consultaSQLite(this,"select * from usuarios");
+
+        SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(getBaseContext());
+        String u=preferences.getString("UsuarioLogin","");
+        String p=preferences.getString("PasswordLogin","");
+        System.out.println(u+"-----login-----"+p);
+        if(!"".equals(u) && !"".equals(p)) {
+            inputTextUser.setText(u);
+            inputTextPsw.setText(p);
+        }
+       // ConnectionUtils.consultaSQLite(this,"select * from usuarios");
         MyAnimationUtils.translateAnimation(layoutUser, 800L, 2.0f, 1000, 0, 0, 0);
     }
 
@@ -102,6 +113,7 @@ public class Login extends AppCompatActivity {
                 intent.putExtra("id",taskResult.getJSONObject(0).get("id").toString());
                 intent.putExtra("usuario",taskResult.getJSONObject(0).get("usuario").toString());
                 intent.putExtra("correo",taskResult.getJSONObject(0).get("correo").toString());
+                rememberUser(entryUser,entryPass);
                 startActivity(intent);
             }else{
                 Toast toast1 = Toast.makeText(getApplicationContext(),
@@ -125,6 +137,13 @@ public class Login extends AppCompatActivity {
         startActivity(intent);
     }
 
+    public void rememberUser(String user,String pass){
+        SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(getBaseContext());
+        SharedPreferences.Editor editor = preferences.edit();
+        editor.putString("UsuarioLogin",user);
+        editor.putString("PasswordLogin",pass);
+        editor.commit();
+    }
     /*
     private class Connection extends AsyncTask {
 

@@ -57,7 +57,7 @@ public class VysorAdapterCarrito extends ArrayAdapter<String> {
             name.setText(taskResult.getJSONObject(0).getString("nombre"));
             id.setText(values.getJSONObject(position).getString("id_venta"));
             cantidad.setText(values.getJSONObject(position).getString("cantidad"));
-            costo.setText(taskResult.getJSONObject(0).getString("costo"));
+            costo.setText("$ "+taskResult.getJSONObject(0).getString("costo"));
             fecha.setText(values.getJSONObject(position).getString("fecha"));
 
 

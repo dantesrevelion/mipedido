@@ -8,6 +8,7 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.os.AsyncTask;
 import android.os.Handler;
 
 import java.io.IOException;
@@ -32,6 +33,9 @@ public class ImprimirTicket  {
     int readBufferPosition;
     volatile boolean stopWorker;
 
+    public ImprimirTicket(){
+        mBluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
+    }
     public static BluetoothDevice getMmDevice() {
         return mmDevice;
     }
@@ -72,16 +76,17 @@ public class ImprimirTicket  {
     }
 */
 
-    public void searchDevices(Context context , Activity activity){
-
-
-        mBluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
+    public boolean verficarBluetooth(Activity activity){
 
         if(!mBluetoothAdapter.isEnabled()) {
             Intent enableBluetooth = new Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE);
             activity.startActivityForResult(enableBluetooth, 0);
 
+
         }
+        return mBluetoothAdapter.isEnabled();
+    }
+    public void searchDevices(Context context){
 
             IntentFilter filter = new IntentFilter();
             filter.addAction(BluetoothDevice.ACTION_FOUND);
@@ -184,14 +189,6 @@ public class ImprimirTicket  {
         }
     };
 
-    /** se ejecuta al enparejarse con un dispositivo */
-    private final BroadcastReceiver mPairReceiver = new BroadcastReceiver() {
-        public void onReceive(Context context, Intent intent) {
-            String action = intent.getAction();
-
-
-        }
-    };
 
     void openBT() throws IOException {
         try {
@@ -319,4 +316,8 @@ public class ImprimirTicket  {
 
 
     /**end of class*/
+
+
+
+
 }

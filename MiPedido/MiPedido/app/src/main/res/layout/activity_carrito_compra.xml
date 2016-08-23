@@ -47,7 +47,8 @@
         </ListView>
 
     </LinearLayout>
-    <LinearLayout
+    <RelativeLayout
+
         android:id="@+id/footer_carrito"
         android:layout_alignParentBottom="true"
         android:layout_width="match_parent"
@@ -57,28 +58,51 @@
         android:layout_marginTop="20dp"
         android:layout_marginBottom="20dp"
         android:background="@color/white"
-        android:gravity="center">
+        >
+
+        <Space
+            android:id="@+id/ly_izq_carrito"
+            android:layout_width="10dp"
+            android:layout_height="match_parent"
+            android:layout_alignParentLeft="true"/>
+
+
         <Button
-            android:layout_width="160dp"
-            android:layout_height="60dp"
+            android:layout_toRightOf="@+id/ly_izq_carrito"
+            android:id="@+id/bt_generar_carrito"
+            android:layout_width="170dp"
+            android:layout_height="50dp"
             android:text="Generar Venta"
+            android:layout_marginRight="5dp"
             android:backgroundTint="@color/color2"
             android:drawableTintMode="multiply"
             android:onClick="generarVenta"
             android:textColor="@color/white"
-            android:textSize="16sp"/>
+            android:textSize="12sp"/>
         <Button
-            android:layout_width="160dp"
-            android:layout_height="60dp"
+            android:layout_toRightOf="@+id/bt_generar_carrito"
+            android:layout_toLeftOf="@+id/ly_der_carrito"
+            android:id="@+id/bt_eliminar_carrito"
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
             android:backgroundTint="@color/color2"
             android:drawableTintMode="multiply"
             android:textColor="@color/white"
             android:text="Eliminar Seleccion"
             android:onClick="eliminarSeleccion"
-            android:textSize="16sp"/>
+            android:textSize="12sp"/>
+        <Space
+            android:id="@+id/ly_der_carrito"
+            android:layout_width="10dp"
+            android:layout_height="match_parent"
+            android:layout_alignParentRight="true"/>
+
         <Button
-            android:layout_width="40sp"
-            android:layout_height="wrap_content"
+            android:layout_below="@+id/bt_generar_carrito"
+            android:id="@+id/bt_imprimir_carrito"
+            android:layout_toRightOf="@+id/ly_izq_carrito"
+            android:layout_width="170dp"
+            android:layout_height="50dp"
             android:text="Imprimir"
             android:backgroundTint="@color/color2"
             android:drawableTintMode="multiply"
@@ -86,6 +110,31 @@
             android:onClick="imprimir"
             />
 
-    </LinearLayout>
+        <TextView
+            android:id="@+id/tv_total_texto"
+            android:layout_alignParentBottom="true"
+            android:layout_toRightOf="@+id/bt_imprimir_carrito"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textStyle="bold"
+            android:layout_marginBottom="15dp"
+            android:layout_marginLeft="10dp"
+            android:textSize="22sp"
+            android:text="Total : "/>
+        <TextView
+            android:layout_alignParentBottom="true"
+            android:layout_marginBottom="15dp"
+            android:layout_toRightOf="@+id/tv_total_texto"
+            android:layout_toLeftOf="@+id/ly_der_carrito"
+            android:gravity="right"
+            android:id="@+id/tv_total_carrito"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textStyle="bold"
+            android:textSize="22sp"
+            android:text="00.0"/>
+
+
+    </RelativeLayout>
 
 </RelativeLayout>
