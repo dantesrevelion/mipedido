@@ -10,6 +10,11 @@ import android.content.IntentFilter;
 import android.preference.PreferenceManager;
 import android.widget.TextView;
 
+import com.example.dantesrevelion.mipedido.CarritoCompra;
+import com.example.dantesrevelion.mipedido.R;
+import com.example.dantesrevelion.mipedido.SearchList;
+import com.example.dantesrevelion.mipedido.VysorAdapterMenu;
+
 import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.List;
@@ -48,6 +53,10 @@ public class BluetoothUtils {
                 BluetoothDevice device = (BluetoothDevice) intent.getParcelableExtra(BluetoothDevice.EXTRA_DEVICE);
                 searchResult.add(device);
                 System.out.println("Found device " + device.getName());
+                n++;
+                tv_test.setText("N "+n);
+//                SearchList search=new SearchList();
+ //               search.setSearchList();
 
             }
 
@@ -65,11 +74,11 @@ public class BluetoothUtils {
             }
             */
 
-            n++;
-            tv_test.setText("N "+n);
+
             System.out.println(" state receiver"+mBluetoothAdapter.getState());
         }
     };
+
 
     public boolean bluetoothIsOn(Activity activity){
 

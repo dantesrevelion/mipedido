@@ -8,18 +8,21 @@ import android.bluetooth.BluetoothDevice;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.preference.PreferenceManager;
+import android.support.v4.app.Fragment;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
 import android.view.*;
 import android.view.Menu;
 import android.widget.AdapterView;
+import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.dantesrevelion.mipedido.Adapters.VysorAdapterCarrito;
+import com.example.dantesrevelion.mipedido.Adapters.VysorAdapterSearchList;
 import com.example.dantesrevelion.mipedido.Utils.BluetoothUtils;
 import com.example.dantesrevelion.mipedido.Utils.CheckIn;
 import com.example.dantesrevelion.mipedido.Utils.ConnectionUtils;
@@ -38,6 +41,10 @@ public class CarritoCompra extends BaseActivity {
     Double total=0d;
     BluetoothUtils utils;
     TextView tv_total;
+    Button bt_generar;
+    Button bt_imprimir;
+    Button bt_eliminar;
+    boolean searchIsVisible=false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -45,6 +52,9 @@ public class CarritoCompra extends BaseActivity {
         setContentView(R.layout.activity_carrito_compra);
         toolbar = (Toolbar) findViewById(R.id.tool_bar_carrito); // Attaching the layout to the toolbar object
         tv_total= (TextView) findViewById(R.id.tv_total_carrito);
+        bt_generar=(Button) findViewById(R.id.bt_generar_carrito);
+        bt_imprimir=(Button) findViewById(R.id.bt_imprimir_carrito);
+        bt_eliminar=(Button) findViewById(R.id.bt_eliminar_carrito);
         setSupportActionBar(toolbar);
         consultaCarrito();
         utils= new BluetoothUtils(getBaseContext());
@@ -135,7 +145,7 @@ public class CarritoCompra extends BaseActivity {
             System.out.println("checked "+cb.isChecked());
 
         }
-         consultaCarrito();
+        consultaCarrito();
         calculaTotal();
     }
 
@@ -158,17 +168,12 @@ public class CarritoCompra extends BaseActivity {
         }
     */
 
-        FragmentManager fragmentManager = getFragmentManager();
-        FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
-        SearchList fragment = new SearchList();
-        fragmentTransaction.add(R.id.fragment_container_carrito, fragment, "HELLO");
-        fragmentTransaction.commit();
-
         if(utils.bluetoothIsOn(this)){
             if(utils.isPaired()){
 
             }else{
                 utils.searchDevices();
+                showSearchList();
                 utils.setTextViewLEL(tv_total);
             }
 
@@ -177,15 +182,34 @@ public class CarritoCompra extends BaseActivity {
       //  Intent enableBluetooth = new Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE);
        // startActivityForResult(enableBluetooth, 0);
     }
+    public void showSearchList(){
+        switchButtons(false);
+        searchIsVisible=true;
+        FragmentManager fragmentManager = getFragmentManager();
+        FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+        SearchList fragment = new SearchList();
+        fragmentTransaction.add(R.id.fragment_container_carrito, fragment, "listSearch");
+        fragmentTransaction.commit();
+        CarritoCompra car=new CarritoCompra();
+        car.setSearchList();
+    }
+    public void switchButtons(boolean bol){
+        bt_eliminar.setEnabled(bol);
+        bt_imprimir.setEnabled(bol);
+        bt_generar.setEnabled(bol);
+    }
 
-
-
-
-
-
-
-
-
+    @Override
+    public void onBackPressed() {
+     //   super.onBackPressed();
+        if(searchIsVisible){
+            getFragmentManager().beginTransaction().remove(getFragmentManager().findFragmentById(R.id.fragment_container_carrito)).commit();
+            searchIsVisible=false;
+            switchButtons(true);
+        }else{
+            super.onBackPressed();
+        }
+    }
 
     private class buscarDispositivosClass extends AsyncTask {
 
@@ -211,6 +235,7 @@ public class CarritoCompra extends BaseActivity {
 
             }else{
                 utils.searchDevices();
+                showSearchList();
                 utils.setTextViewLEL(tv_total);
             }
 
@@ -218,6 +243,17 @@ public class CarritoCompra extends BaseActivity {
         if(102==requestCode){
 
         }
+
+    }
+
+
+    public void setSearchList(){
+
+
+        ListView lista=SearchList.getlista() ;
+        final String[] items ={"Productos","Lista de Ventas","Gastos Operativos","Reporte por Fecha","Mi Perfil"};
+        VysorAdapterSearchList adapter = new VysorAdapterSearchList(CarritoCompra.this, R.layout.item_search_list, items);
+        lista.setAdapter(adapter);
 
     }
 }
