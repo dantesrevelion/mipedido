@@ -190,8 +190,7 @@ public class CarritoCompra extends BaseActivity {
         SearchList fragment = new SearchList();
         fragmentTransaction.add(R.id.fragment_container_carrito, fragment, "listSearch");
         fragmentTransaction.commit();
-        CarritoCompra car=new CarritoCompra();
-        car.setSearchList();
+
     }
     public void switchButtons(boolean bol){
         bt_eliminar.setEnabled(bol);
@@ -247,13 +246,5 @@ public class CarritoCompra extends BaseActivity {
     }
 
 
-    public void setSearchList(){
 
-
-        ListView lista=SearchList.getlista() ;
-        final String[] items ={"Productos","Lista de Ventas","Gastos Operativos","Reporte por Fecha","Mi Perfil"};
-        VysorAdapterSearchList adapter = new VysorAdapterSearchList(CarritoCompra.this, R.layout.item_search_list, items);
-        lista.setAdapter(adapter);
-
-    }
 }

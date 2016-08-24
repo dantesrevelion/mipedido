@@ -54,7 +54,10 @@ public class BluetoothUtils {
                 searchResult.add(device);
                 System.out.println("Found device " + device.getName());
                 n++;
-                tv_test.setText("N "+n);
+                SearchList search=new SearchList();
+                search.addToSearchList(device.getName());
+//                search.addToSearchList(device.getName());
+
 //                SearchList search=new SearchList();
  //               search.setSearchList();
 

@@ -68,6 +68,10 @@ public class ConnectionUtils {
         String user=preferences.getString("config_user","");
         String pass=preferences.getString("config_pass","");
         String bd=preferences.getString("config_db","");
+
+        /**TODO remove hardcode*/
+            domain="mipedidoapp.esy.es";host="mysql.hostinger.mx";user="u152348074_ma12m";pass="mipedido123";bd="u152348074_mpdb";
+        /***/
         System.out.println("DATOS DE CONFIGURACION: "+domain+" "+host+" "+user+" "+pass+" "+bd);
         setDOMAIN(domain);
         setHOST(host);
