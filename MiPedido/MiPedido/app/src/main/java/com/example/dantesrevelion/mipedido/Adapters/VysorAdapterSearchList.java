@@ -18,12 +18,14 @@ import java.util.List;
 public class VysorAdapterSearchList extends ArrayAdapter<String> {
     private final Context context;
     private final List<String> values;
+    private final List<String> adress;
     int item_vysor;
-    public VysorAdapterSearchList(Context context, int item_vysor, List<String> values) {
+    public VysorAdapterSearchList(Context context, int item_vysor, List<String> values,List<String> adress) {
         super(context, -1, values);
         this.context = context;
         this.item_vysor = item_vysor;
         this.values = values;
+        this.adress=adress;
     }
 
     @Override
@@ -32,7 +34,9 @@ public class VysorAdapterSearchList extends ArrayAdapter<String> {
                 .getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         View rowView = inflater.inflate(item_vysor, parent, false);
         TextView name = (TextView) rowView.findViewById(R.id.tv_nombre_device);
+        TextView adress = (TextView) rowView.findViewById(R.id.tv_adress_device);
         name.setText(values.get(position));
+        adress.setText(this.adress.get(position));
 
         //   LinearLayout rlayout=(LinearLayout)rowView.findViewById(R.id.mylayout) ;
        // name.setText(values[position]);

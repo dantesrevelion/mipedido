@@ -205,6 +205,7 @@ public class CarritoCompra extends BaseActivity {
             getFragmentManager().beginTransaction().remove(getFragmentManager().findFragmentById(R.id.fragment_container_carrito)).commit();
             searchIsVisible=false;
             switchButtons(true);
+            utils.stopSearch();
         }else{
             super.onBackPressed();
         }

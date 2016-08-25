@@ -25,7 +25,7 @@ import java.util.Set;
  */
 public class BluetoothUtils {
     BluetoothAdapter mBluetoothAdapter;
-    List<BluetoothDevice> searchResult;
+    public static List<BluetoothDevice> searchResult;
     TextView tv_test;
 
     public BluetoothUtils(Context context){
@@ -55,7 +55,9 @@ public class BluetoothUtils {
                 System.out.println("Found device " + device.getName());
                 n++;
                 SearchList search=new SearchList();
-                search.addToSearchList(device.getName());
+
+                search.addToSearchList(device.getName(),device.getAddress());
+                search.setDevices(searchResult);
 //                search.addToSearchList(device.getName());
 
 //                SearchList search=new SearchList();
@@ -109,6 +111,9 @@ public class BluetoothUtils {
         mBluetoothAdapter.startDiscovery();
         System.out.println(" state "+mBluetoothAdapter.getState());
 
+    }
+    public void stopSearch(){
+        mBluetoothAdapter.cancelDiscovery();
     }
 
 
