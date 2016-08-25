@@ -5,6 +5,7 @@ import android.app.FragmentManager;
 import android.app.FragmentTransaction;
 import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothDevice;
+import android.content.Context;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.preference.PreferenceManager;
@@ -39,12 +40,13 @@ public class CarritoCompra extends BaseActivity {
     ListView lista;
     VysorAdapterCarrito adapter;
     Double total=0d;
-    BluetoothUtils utils;
+    public static BluetoothUtils utils;
     TextView tv_total;
-    Button bt_generar;
-    Button bt_imprimir;
-    Button bt_eliminar;
-    boolean searchIsVisible=false;
+    public static Button bt_generar;
+    public static Button bt_imprimir;
+    public static Button bt_eliminar;
+    public static boolean searchIsVisible=false;
+    public static Activity context;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -55,6 +57,7 @@ public class CarritoCompra extends BaseActivity {
         bt_generar=(Button) findViewById(R.id.bt_generar_carrito);
         bt_imprimir=(Button) findViewById(R.id.bt_imprimir_carrito);
         bt_eliminar=(Button) findViewById(R.id.bt_eliminar_carrito);
+        context=this;
         setSupportActionBar(toolbar);
         consultaCarrito();
         utils= new BluetoothUtils(getBaseContext());
@@ -202,13 +205,16 @@ public class CarritoCompra extends BaseActivity {
     public void onBackPressed() {
      //   super.onBackPressed();
         if(searchIsVisible){
-            getFragmentManager().beginTransaction().remove(getFragmentManager().findFragmentById(R.id.fragment_container_carrito)).commit();
-            searchIsVisible=false;
-            switchButtons(true);
-            utils.stopSearch();
+            hideSearchList();
         }else{
             super.onBackPressed();
         }
+    }
+    public void hideSearchList(){
+        context.getFragmentManager().beginTransaction().remove(context.getFragmentManager().findFragmentById(R.id.fragment_container_carrito)).commit();
+        searchIsVisible=false;
+        switchButtons(true);
+        utils.stopSearch();
     }
 
     private class buscarDispositivosClass extends AsyncTask {

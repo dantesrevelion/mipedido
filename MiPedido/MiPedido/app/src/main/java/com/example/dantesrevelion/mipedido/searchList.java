@@ -14,6 +14,7 @@ import android.widget.AdapterView;
 import android.widget.ListView;
 
 import com.example.dantesrevelion.mipedido.Adapters.VysorAdapterSearchList;
+import com.example.dantesrevelion.mipedido.Utils.BluetoothUtils;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -40,6 +41,7 @@ public class SearchList extends Fragment {
         super.onViewCreated(view, savedInstanceState);
         items=new ArrayList<>();
         adress=new ArrayList<>();
+        devices=new ArrayList<>();
         context=getActivity().getBaseContext();
         initSearchList();
 
@@ -59,7 +61,16 @@ public class SearchList extends Fragment {
         @Override
         public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
             System.out.println("click device ----------> "+position+" name "+devices.get(position).getName());
-
+            BluetoothUtils util=new BluetoothUtils(context);
+            util.pairDevice(devices.get(position));
+            CarritoCompra c=new CarritoCompra();
+            c.hideSearchList();
+            items=new ArrayList<>();
+            adress=new ArrayList<>();
+            devices=new ArrayList<>();
+            /**TODO finalizar busqueda cuando se haga clic*/
+            adapter = new VysorAdapterSearchList(context, R.layout.item_search_list, items,adress);
+            lista.setAdapter(adapter);
         }
     };
     public void addToSearchList(String nombre,String adress){
