@@ -1,6 +1,7 @@
 package com.example.dantesrevelion.mipedido;
 
 import android.app.Fragment;
+import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothDevice;
 import android.content.Context;
 import android.net.Uri;
@@ -60,17 +61,21 @@ public class SearchList extends Fragment {
     AdapterView.OnItemClickListener itemclick=new AdapterView.OnItemClickListener() {
         @Override
         public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-            System.out.println("click device ----------> "+position+" name "+devices.get(position).getName());
-            BluetoothUtils util=new BluetoothUtils(context);
-            util.pairDevice(devices.get(position));
-            CarritoCompra c=new CarritoCompra();
-            c.hideSearchList();
-            items=new ArrayList<>();
-            adress=new ArrayList<>();
-            devices=new ArrayList<>();
+            System.out.println("----------> Click on item device"+position+" name "+devices.get(position).getName());
+           // BluetoothUtils util=new BluetoothUtils(context);
+            BluetoothUtils.pairDevice(devices.get(position));
+
+           // CarritoCompra c=new CarritoCompra();
+            CarritoCompra.hideSearchList();
+            BluetoothAdapter mBluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
+            System.out.println("------------>IS SEARCHING "+mBluetoothAdapter.isDiscovering());
+           // items=new ArrayList<>();
+           // adress=new ArrayList<>();
+           // devices=new ArrayList<>();
             /**TODO finalizar busqueda cuando se haga clic*/
-            adapter = new VysorAdapterSearchList(context, R.layout.item_search_list, items,adress);
-            lista.setAdapter(adapter);
+           // adapter = new VysorAdapterSearchList(context, R.layout.item_search_list, items,adress);
+           // lista.setAdapter(adapter);
+
         }
     };
     public void addToSearchList(String nombre,String adress){

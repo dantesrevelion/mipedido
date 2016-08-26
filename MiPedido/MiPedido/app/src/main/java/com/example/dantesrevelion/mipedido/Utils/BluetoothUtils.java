@@ -38,7 +38,7 @@ public class BluetoothUtils {
         context.registerReceiver(mReceiver, filter);
 
     }
-    int n=0;
+
     /** Se ejecuta cuando encuentra un dispositivo */
     private final BroadcastReceiver mReceiver = new BroadcastReceiver() {
         public void onReceive(Context context, Intent intent) {
@@ -52,41 +52,22 @@ public class BluetoothUtils {
                 //bluetooth device found
                 BluetoothDevice device = (BluetoothDevice) intent.getParcelableExtra(BluetoothDevice.EXTRA_DEVICE);
                 searchResult.add(device);
-                System.out.println("Found device " + device.getName());
-                n++;
+                System.out.println("--------->Device "+device.getName());
+
                 SearchList search=new SearchList();
 
                 search.addToSearchList(device.getName(),device.getAddress());
                 search.setDevices(searchResult);
-//                search.addToSearchList(device.getName());
-
-//                SearchList search=new SearchList();
- //               search.setSearchList();
 
             }
 
-            /*
-            if (BluetoothDevice.ACTION_BOND_STATE_CHANGED.equals(action)) {
-                final int state        = intent.getIntExtra(BluetoothDevice.EXTRA_BOND_STATE, BluetoothDevice.ERROR);
-                final int prevState    = intent.getIntExtra(BluetoothDevice.EXTRA_PREVIOUS_BOND_STATE, BluetoothDevice.ERROR);
 
-                if (state == BluetoothDevice.BOND_BONDED && prevState == BluetoothDevice.BOND_BONDING) {
-                    System.out.println("PAIRED");
-                } else if (state == BluetoothDevice.BOND_NONE && prevState == BluetoothDevice.BOND_BONDED){
-                    System.out.println("UNPAIRED");
-                }
-
-            }
-            */
-
-
-            System.out.println(" state receiver"+mBluetoothAdapter.getState());
         }
     };
 
 
     public boolean bluetoothIsOn(Activity activity){
-
+        System.out.println("--------->Revisa bluetooth on");
         if(!mBluetoothAdapter.isEnabled()) {
             Intent enableBluetooth = new Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE);
             enableBluetooth.putExtra("Proceso","1");
@@ -95,7 +76,7 @@ public class BluetoothUtils {
 
 
         }
-        System.out.println(" state "+mBluetoothAdapter.getState());
+       
         return mBluetoothAdapter.isEnabled();
     }
 
@@ -107,9 +88,9 @@ public class BluetoothUtils {
 
     }
     public void searchDevices(){
-
+        System.out.println("--------->Inicia busqueda de dispositivos");
         mBluetoothAdapter.startDiscovery();
-        System.out.println(" state "+mBluetoothAdapter.getState());
+
 
     }
     public void stopSearch(){
@@ -118,7 +99,7 @@ public class BluetoothUtils {
 
 
     /** enpareja un dispositivo */
-    public void pairDevice(BluetoothDevice device) {
+    public static void pairDevice(BluetoothDevice device) {
         try {
             Method method = device.getClass().getMethod("createBond", (Class[]) null);
             method.invoke(device, (Object[]) null);
@@ -138,6 +119,7 @@ public class BluetoothUtils {
     }
 
     public boolean isPaired() {
+        System.out.println("--------->Revisa si esta emparejado");
         Set<BluetoothDevice> pairedDevice = mBluetoothAdapter.getBondedDevices();
       //  ArrayList<String> arrayListpaired;
         if(pairedDevice.size()>0) {

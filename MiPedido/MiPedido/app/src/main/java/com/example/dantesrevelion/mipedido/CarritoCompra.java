@@ -145,7 +145,7 @@ public class CarritoCompra extends BaseActivity {
                 }
             }
 
-            System.out.println("checked "+cb.isChecked());
+
 
         }
         consultaCarrito();
@@ -153,31 +153,14 @@ public class CarritoCompra extends BaseActivity {
     }
 
     public void imprimir(View v){
-        /*
-        try {
-
-            debug("Bluetooth is ON");
-            boolean isEnabled=(boolean) new verificarBluetoothClass().execute(this).get();
-            debug("response "+isEnabled);
-
-            if(isEnabled){
-                debug("Bluetooth Search Devices");
-                new buscarDispositivos().execute();
-            }
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        } catch (ExecutionException e) {
-            e.printStackTrace();
-        }
-    */
-
+        System.out.println("--------->Inicia proceso de impresion");
         if(utils.bluetoothIsOn(this)){
             if(utils.isPaired()){
 
             }else{
                 utils.searchDevices();
                 showSearchList();
-                utils.setTextViewLEL(tv_total);
+
             }
 
         }
@@ -186,6 +169,7 @@ public class CarritoCompra extends BaseActivity {
        // startActivityForResult(enableBluetooth, 0);
     }
     public void showSearchList(){
+        System.out.println("--------->Muestra lista de dispositivos");
         switchButtons(false);
         searchIsVisible=true;
         FragmentManager fragmentManager = getFragmentManager();
@@ -195,7 +179,7 @@ public class CarritoCompra extends BaseActivity {
         fragmentTransaction.commit();
 
     }
-    public void switchButtons(boolean bol){
+    public static void switchButtons(boolean bol){
         bt_eliminar.setEnabled(bol);
         bt_imprimir.setEnabled(bol);
         bt_generar.setEnabled(bol);
@@ -206,15 +190,16 @@ public class CarritoCompra extends BaseActivity {
      //   super.onBackPressed();
         if(searchIsVisible){
             hideSearchList();
+            utils.stopSearch();
         }else{
             super.onBackPressed();
         }
     }
-    public void hideSearchList(){
+    public static void hideSearchList(){
         context.getFragmentManager().beginTransaction().remove(context.getFragmentManager().findFragmentById(R.id.fragment_container_carrito)).commit();
         searchIsVisible=false;
         switchButtons(true);
-        utils.stopSearch();
+       // utils.stopSearch();
     }
 
     private class buscarDispositivosClass extends AsyncTask {
@@ -232,9 +217,7 @@ public class CarritoCompra extends BaseActivity {
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-
-        debug("request code "+requestCode);
-        debug("is paired "+utils.isPaired());
+        System.out.println("--------->Activity result");
         /** si esta on */
         if(101==requestCode){
             if(utils.isPaired()){
@@ -242,7 +225,7 @@ public class CarritoCompra extends BaseActivity {
             }else{
                 utils.searchDevices();
                 showSearchList();
-                utils.setTextViewLEL(tv_total);
+
             }
 
         }
