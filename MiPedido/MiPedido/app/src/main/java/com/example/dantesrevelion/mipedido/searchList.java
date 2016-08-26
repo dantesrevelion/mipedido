@@ -68,6 +68,7 @@ public class SearchList extends Fragment {
            // CarritoCompra c=new CarritoCompra();
             CarritoCompra.hideSearchList();
             BluetoothAdapter mBluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
+        //    mBluetoothAdapter.cancelDiscovery();
             System.out.println("------------>IS SEARCHING "+mBluetoothAdapter.isDiscovering());
            // items=new ArrayList<>();
            // adress=new ArrayList<>();

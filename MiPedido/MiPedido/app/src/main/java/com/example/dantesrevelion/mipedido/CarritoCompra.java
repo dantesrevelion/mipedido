@@ -220,12 +220,15 @@ public class CarritoCompra extends BaseActivity {
         System.out.println("--------->Activity result");
         /** si esta on */
         if(101==requestCode){
-            if(utils.isPaired()){
+            BluetoothAdapter mBluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
+            if(mBluetoothAdapter.isEnabled()) {
+                if (utils.isPaired()) {
 
-            }else{
-                utils.searchDevices();
-                showSearchList();
+                } else {
+                    utils.searchDevices();
+                    showSearchList();
 
+                }
             }
 
         }
