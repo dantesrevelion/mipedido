@@ -21,7 +21,7 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Password"
+            android:text="Contraseña"
             android:id="@+id/txtPassword"
             android:layout_gravity="left"
             android:textSize="@dimen/abc_action_button_min_width_overflow_material"
@@ -74,7 +74,7 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Username"
+            android:text="Usuario"
             android:textColor="@color/white"
             android:id="@+id/txtUser"
             android:layout_gravity="left"

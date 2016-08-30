@@ -3,8 +3,9 @@
 
 
 
-    <PreferenceCategory
-        android:title="Configuración del servidor">
+    <com.example.dantesrevelion.mipedido.Utils.CustomPreference android:title="Configuracion del servidor" />
+
+
         <EditTextPreference android:key="config_domain"
             android:title="Dominio" />
         <EditTextPreference android:key="config_host"
@@ -15,7 +16,7 @@
             android:title="Password"/>
         <EditTextPreference android:key="config_db"
             android:title="Base de Datos"/>
-    </PreferenceCategory>
+
 
 
 

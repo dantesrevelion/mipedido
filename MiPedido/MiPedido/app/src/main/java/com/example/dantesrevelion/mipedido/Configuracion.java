@@ -29,4 +29,5 @@ public class Configuracion extends PreferenceActivity {
     }
 
 
+
 }

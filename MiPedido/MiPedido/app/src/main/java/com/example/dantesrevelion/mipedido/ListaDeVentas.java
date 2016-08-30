@@ -9,6 +9,7 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.Spinner;
+import android.widget.TextView;
 
 import com.example.dantesrevelion.mipedido.Adapters.VysorAdapterVentaUsuario;
 import com.example.dantesrevelion.mipedido.Utils.ConnectionUtils;
@@ -23,6 +24,8 @@ public class ListaDeVentas extends BaseActivity {
     Spinner spinervendedores=null;
     JSONArray taskResult=null;
     JSONArray taskResult2=null;
+    TextView tv_total=null;
+    TextView tv_cantidad=null;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -30,6 +33,8 @@ public class ListaDeVentas extends BaseActivity {
         String [] array=null;
         toolbar = (Toolbar) findViewById(R.id.tool_bar);
         setSupportActionBar(toolbar);
+        tv_total=(TextView)findViewById(R.id.total_lista_ventas);
+        tv_cantidad=(TextView)findViewById(R.id.cantidad_lista_ventas);
         try {
             taskResult= ConnectionUtils.consultaSQLite(this,ConnectionUtils.queryAllUsuarios());
             JSONArray filterResult =new JSONArray();
@@ -99,7 +104,7 @@ public class ListaDeVentas extends BaseActivity {
                 System.out.println("FECHA LISTA VENTAS " +fecha);
                 debug(" fecha "+fecha2);
                 taskResult2= ConnectionUtils.consultaSQLite(getBaseContext(),ConnectionUtils.queryVentasByUsuarioFecha(ConnectionUtils.formatDate(fecha),ConnectionUtils.formatDate(fecha2),String.valueOf(id)));
-
+                calculaTotal();
             VysorAdapterVentaUsuario adapterVendidos = new VysorAdapterVentaUsuario(ListaDeVentas.this,
                     R.layout.item_listaventa,ConnectionUtils.jsonToArray(taskResult2,"nombre"), taskResult2);
             listaVendidos.setAdapter(adapterVendidos);
@@ -111,6 +116,23 @@ public class ListaDeVentas extends BaseActivity {
         }
     };
 
+    public void calculaTotal(){
+        double total=0d;
+        int cantidadTotal=0;
+        for(int i=0;i<taskResult2.length();i++){
+            try {
+                int cantidad=taskResult2.getJSONObject(i).getInt("cantidad");
+                Double valor=taskResult2.getJSONObject(i).getDouble("monto");
+                total=(valor)+total;
+                cantidadTotal=cantidad+cantidadTotal;
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+        }
+
+        tv_total.setText("$"+total);
+        tv_cantidad.setText(String.valueOf(cantidadTotal));
+    }
     /*
     private class ConnectionAllUsuarios extends AsyncTask {
 

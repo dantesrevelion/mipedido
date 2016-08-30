@@ -126,7 +126,12 @@ public class CarritoCompra extends BaseActivity {
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-
+        int id = item.getItemId();
+        if (id==R.id.config){
+            System.out.println("Configuracion clicked");
+            Intent intent=new Intent(CarritoCompra.this,Configuracion.class);
+            startActivity(intent);
+        }
         return true;
     }
 
