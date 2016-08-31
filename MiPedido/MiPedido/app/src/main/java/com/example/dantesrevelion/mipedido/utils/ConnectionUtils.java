@@ -34,6 +34,7 @@ import java.net.UnknownHostException;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.Calendar;
 import java.util.Date;
 
 /**
@@ -161,18 +162,39 @@ public class ConnectionUtils {
     }
 
     public static String insertCarrito(String idp,String idv,String cant,String monto,String estatus){
-        String response = "INSERT INTO carrito ( id_producto, id_vendedor,cantidad,monto,estatus)" +
-                "VALUES ("+idp+","+idv+","+cant+","+monto+",'"+estatus+"'); ";
+        Calendar c = Calendar.getInstance();
+        int year = c.get(Calendar.YEAR);
+        int month = c.get(Calendar.MONTH);
+        int day = c.get(Calendar.DAY_OF_MONTH);
+        String fecha=year+"-"+(month+1)+"-"+day+" "+c.get(Calendar.HOUR)+":"+c.get(Calendar.MINUTE)+":"+c.get(Calendar.SECOND);
+        String formated=ConnectionUtils.formatDateGeneral(fecha,"yyyy-MM-dd HH:mm:ss");
+
+        String response = "INSERT INTO carrito ( id_producto, id_vendedor,fecha,cantidad,monto,estatus)" +
+                "VALUES ("+idp+","+idv+",'"+formated+"',"+cant+","+monto+",'"+estatus+"'); ";
         return response;
     }
     public static String insertGastos(String idu,String nombre,String codigo,String monto,String estatus){
-        String response = "INSERT INTO `gastos` (`idvendedor`, `nombre`, `codigo`, `monto`,`estatus`)" +
-                " VALUES ('"+idu+"', '"+nombre+"', '"+codigo+"', '"+monto+"', '"+estatus+"'); ";
+        Calendar c = Calendar.getInstance();
+        int year = c.get(Calendar.YEAR);
+        int month = c.get(Calendar.MONTH);
+        int day = c.get(Calendar.DAY_OF_MONTH);
+        String fecha=year+"-"+(month+1)+"-"+day+" "+c.get(Calendar.HOUR)+":"+c.get(Calendar.MINUTE)+":"+c.get(Calendar.SECOND);
+        String formated=ConnectionUtils.formatDateGeneral(fecha,"yyyy-MM-dd HH:mm:ss");
+        String response = "INSERT INTO `gastos` (`idvendedor`, `nombre`, `codigo`, `monto`,fecha,`estatus`)" +
+                " VALUES ('"+idu+"', '"+nombre+"', '"+codigo+"', '"+monto+"','"+formated+"','"+estatus+"'); ";
         return response;
     }
     public static String insertVenta(String idp,String idv,String cant,String monto){
-        String response = "INSERT INTO ventas ( id_producto, id_vendedor,cantidad,monto)" +
-                "VALUES ("+idp+","+idv+","+cant+","+monto+"); ";
+        Calendar c = Calendar.getInstance();
+        int year = c.get(Calendar.YEAR);
+        int month = c.get(Calendar.MONTH);
+        int day = c.get(Calendar.DAY_OF_MONTH);
+        String fecha=year+"-"+(month+1)+"-"+day+" "+c.get(Calendar.HOUR)+":"+c.get(Calendar.MINUTE)+":"+c.get(Calendar.SECOND);
+        String formated=ConnectionUtils.formatDateGeneral(fecha,"yyyy-MM-dd HH:mm:ss");
+
+
+        String response = "INSERT INTO ventas ( id_producto, id_vendedor,fecha,cantidad,monto)" +
+                "VALUES ("+idp+","+idv+",'"+formated+"',"+cant+","+monto+"); ";
         return response;
     }
     public static String queryCarrito(){
@@ -325,6 +347,23 @@ public class ConnectionUtils {
         try {
             Date date = formatter.parse(s);
             SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+            response=sdf.format(date);
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+
+
+
+
+
+        return response;
+    }
+    public static String formatDateGeneral(String s,String format){
+        DateFormat formatter = new SimpleDateFormat(format);
+        String response="";
+        try {
+            Date date = formatter.parse(s);
+            SimpleDateFormat sdf = new SimpleDateFormat(format);
             response=sdf.format(date);
         } catch (ParseException e) {
             e.printStackTrace();

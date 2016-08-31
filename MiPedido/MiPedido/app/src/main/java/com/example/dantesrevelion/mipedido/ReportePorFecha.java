@@ -104,22 +104,23 @@ public class ReportePorFecha extends BaseActivity {
 
     public static void setDate(Date d){
         Calendar c = Calendar.getInstance();
-        c.setTime(d);
-        c.add(Calendar.MONTH, 1);
-        d = c.getTime();
+        int year = c.get(Calendar.YEAR);
+        int month = c.get(Calendar.MONTH);
+        int day = c.get(Calendar.DAY_OF_MONTH);
         String fecha="";
 
 
         if(ReportePorFecha.idfecha==R.id.fechaInicio){
-             fecha=d.getYear()+"-"+d.getMonth()+"-"+d.getDate();
+             fecha=year+"-"+(month+1)+"-"+day;
              ReportePorFecha.fechaini.setText(""+fecha);
              fecha1=fecha;
         }
         if(ReportePorFecha.idfecha==R.id.fechaFin){
-            c.setTime(d);
-            c.add(Calendar.DATE, 1);
-            d = c.getTime();
-            fecha=d.getYear()+"-"+d.getMonth()+"-"+d.getDate();
+            c.add(Calendar.DAY_OF_MONTH, 1);
+            int year2 = c.get(Calendar.YEAR);
+            int month2 = c.get(Calendar.MONTH);
+            int day2 = c.get(Calendar.DAY_OF_MONTH);
+            fecha=year2+"-"+(month2+1)+"-"+day2;
             ReportePorFecha.fechafin.setText(""+fecha);
             fecha2=fecha;
         }
