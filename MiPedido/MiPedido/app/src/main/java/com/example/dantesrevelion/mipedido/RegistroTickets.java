@@ -1,5 +1,7 @@
 package com.example.dantesrevelion.mipedido;
 
+import android.app.Activity;
+import android.os.AsyncTask;
 import android.support.v4.app.DialogFragment;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -34,6 +36,7 @@ public class RegistroTickets extends BaseActivity implements View.OnClickListene
     public static TextView tv_total;
     private static Button bt_registrar;
     private static String idu;
+    public static Activity activity=null;
     int n=0;
     List<String> items=new ArrayList<String>();
 
@@ -43,7 +46,7 @@ public class RegistroTickets extends BaseActivity implements View.OnClickListene
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_registro_tickets);
         toolbar = (Toolbar) findViewById(R.id.tool_bar_registro);
-
+        activity=this;
         menos= (Button)findViewById(R.id.minus_registro);
         mas=(Button)findViewById(R.id.addmore_registro);
         fecha=(ImageView) findViewById(R.id.img_fecha_registro);
@@ -110,7 +113,7 @@ public class RegistroTickets extends BaseActivity implements View.OnClickListene
 
                     if(ConnectionUtils.conectadoWifi(this) || ConnectionUtils.conectadoRedMovil(this)) {
 
-                        CheckIn.checkInProcess(this);
+                        new callCheckIn().execute();
 
                     }else{
                         Toast toast1 = Toast.makeText(getApplicationContext(),
@@ -132,6 +135,7 @@ public class RegistroTickets extends BaseActivity implements View.OnClickListene
                 break;
         }
     }
+
 
     public void setLista(){
 
@@ -155,5 +159,15 @@ public class RegistroTickets extends BaseActivity implements View.OnClickListene
 
     }
 
+    public class callCheckIn extends AsyncTask {
+
+        @Override
+        protected Object doInBackground(Object... param) {
+
+            CheckIn.checkInRunnable(getBaseContext(),activity);
+            return true;
+        }
+
+    }
 
 }

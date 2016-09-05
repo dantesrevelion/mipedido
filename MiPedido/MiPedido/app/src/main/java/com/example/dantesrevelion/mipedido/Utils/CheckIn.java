@@ -1,5 +1,6 @@
 package com.example.dantesrevelion.mipedido.Utils;
 
+import android.app.Activity;
 import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.AsyncTask;
@@ -15,16 +16,18 @@ import java.util.concurrent.ExecutionException;
  * Created by Dantes Revelion on 08/07/2016.
  */
 public class CheckIn {
+    public static ConnectionUtils cn=null;
 
-    public static void checkInProcess(Context context){
+    public static void checkInRunnable(final Context context, Activity activity){
+
         System.out.println("CHECK IN PROCESS------------->");
         SQLiteHelper sqlHelper=new SQLiteHelper(context, "miPedidoLite", null, 1);
         SQLiteDatabase db = sqlHelper.getWritableDatabase();
         JSONArray taskResult= ConnectionUtils.consultaSQLite(context,ConnectionUtils.queryCarritoUp());
         JSONArray taskResultGastos= ConnectionUtils.consultaSQLite(context,ConnectionUtils.queryGastosUp());
+        cn=new ConnectionUtils();
 
-        Toast toastError = Toast.makeText(context.getApplicationContext(),
-                "Error al actualizar", Toast.LENGTH_SHORT);
+
 
         try {
             for(int i=0;i<taskResult.length();i++){
@@ -32,7 +35,7 @@ public class CheckIn {
                 String idv=taskResult.getJSONObject(i).getString("id_vendedor");
                 String cantidad=taskResult.getJSONObject(i).getString("cantidad");
                 String monto=taskResult.getJSONObject(i).getString("monto");
-                String s=new InsertIntoVentas().execute(idp,idv,cantidad,monto).get().toString();
+                new InsertIntoVentas().execute(idp,idv,cantidad,monto);
                 ConnectionUtils.consultaSQLite(context,ConnectionUtils.updateEstadoVentatoS(taskResult.getJSONObject(i).getString("id_venta")));
             }
             for(int i=0;i<taskResultGastos.length();i++){
@@ -40,36 +43,40 @@ public class CheckIn {
                 String nombre=taskResultGastos.getJSONObject(i).getString("nombre");
                 String codigo=taskResultGastos.getJSONObject(i).getString("codigo");
                 String monto=taskResultGastos.getJSONObject(i).getString("monto");
-                String s=new InsertIntoGastos().execute(idv,nombre,codigo,monto).get().toString();
+                new InsertIntoGastos().execute(idv,nombre,codigo,monto);
                 ConnectionUtils.consultaSQLite(context,ConnectionUtils.updateEstadoGastosS(taskResultGastos.getJSONObject(i).getString("id")));
             }
 
 
 
 
-            Toast toast1 = Toast.makeText(context.getApplicationContext(),
-                    "Actualizando base de datos", Toast.LENGTH_SHORT);
-            toast1.show();
+         //   Toast toast1 = Toast.makeText(context.getApplicationContext(),
+          //          "Actualizando base de datos", Toast.LENGTH_SHORT);
+          //  toast1.show();
 
-          //      String task=new ConectionTask().execute(db,context).get().toString();
+
+            activity.runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    Toast toast = Toast.makeText(context.getApplicationContext(),
+                            "Actualizando base de datos", Toast.LENGTH_SHORT);
+                    toast.show();
+                }
+            });
+          //      String task=new ConectionTask().execute(db,activity).get().toString();
             new ConectionTask().execute(db,context);
 
 
-            //Toast toast2 = Toast.makeText(context.getApplicationContext(), task, Toast.LENGTH_SHORT);
+            //Toast toast2 = Toast.makeText(activity.getApplicationContext(), task, Toast.LENGTH_SHORT);
             //toast2.show();
-        } catch (InterruptedException e) {
-
-            toastError.show();
-            e.printStackTrace();
-        } catch (ExecutionException e) {
-            toastError.show();
-            e.printStackTrace();
         } catch (JSONException e) {
-            toastError.show();
+        //    toastError.show();
             e.printStackTrace();
         }
         System.out.println("check In End");
     }
+
+
 
     public static class InsertIntoVentas extends AsyncTask {
 
@@ -77,7 +84,7 @@ public class CheckIn {
         protected Object doInBackground(Object... param) {
 
             JSONArray response=null;
-            ConnectionUtils cn=new ConnectionUtils();
+
 
             //    response=cn.connect(ConnectionUtils.insertVentas(idp,idv,cantidad,monto));
             cn.connect(ConnectionUtils.iniciarSesion());
@@ -94,7 +101,7 @@ public class CheckIn {
         protected Object doInBackground(Object... param) {
 
             JSONArray response=null;
-            ConnectionUtils cn=new ConnectionUtils();
+         //   ConnectionUtils cn=new ConnectionUtils();
 
             cn.connect(ConnectionUtils.iniciarSesion());
             response=cn.connect(ConnectionUtils.insertGastos((String)param[0],(String)param[1],(String)param[2],(String)param[3]));

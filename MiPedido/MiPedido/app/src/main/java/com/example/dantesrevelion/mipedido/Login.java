@@ -51,7 +51,7 @@ public class Login extends AppCompatActivity {
 
         NetworkState receiver;
         IntentFilter filter = new IntentFilter(ConnectivityManager.CONNECTIVITY_ACTION);
-        receiver = new NetworkState();
+        receiver = new NetworkState(this);
         registerReceiver(receiver, filter);
 
         /*

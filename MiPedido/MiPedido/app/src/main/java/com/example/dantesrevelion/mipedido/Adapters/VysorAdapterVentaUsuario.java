@@ -42,7 +42,7 @@ public class VysorAdapterVentaUsuario extends ArrayAdapter<String> {
         TextView total = (TextView) rowView.findViewById(R.id.total);
         ImageView imageView = (ImageView) rowView.findViewById(R.id.backgroundList);
 
-        System.out.println("        ----------VALUES "+values);
+       // System.out.println("        ----------VALUES "+values);
 
         try {
             name.setText(values.getJSONObject(position).getString("nombre"));

@@ -62,7 +62,7 @@ public class SearchList extends Fragment {
         @Override
         public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
             System.out.println("----------> Click on item device"+position+" name "+devices.get(position).getName());
-           // BluetoothUtils util=new BluetoothUtils(context);
+           // BluetoothUtils util=new BluetoothUtils(activity);
             BluetoothUtils.pairDevice(devices.get(position));
 
            // CarritoCompra c=new CarritoCompra();
@@ -74,7 +74,7 @@ public class SearchList extends Fragment {
            // adress=new ArrayList<>();
            // devices=new ArrayList<>();
             /**TODO finalizar busqueda cuando se haga clic*/
-           // adapter = new VysorAdapterSearchList(context, R.layout.item_search_list, items,adress);
+           // adapter = new VysorAdapterSearchList(activity, R.layout.item_search_list, items,adress);
            // lista.setAdapter(adapter);
 
         }

@@ -1,5 +1,6 @@
 package com.example.dantesrevelion.mipedido;
 
+import android.app.Activity;
 import android.content.Intent;
 
 import android.content.IntentFilter;
@@ -17,6 +18,7 @@ import com.example.dantesrevelion.mipedido.Utils.ConnectionUtils;
 public class Menu extends BaseActivity {
   //  JSONArray jsonArray;
 
+    public static Activity activity;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -26,7 +28,7 @@ public class Menu extends BaseActivity {
         final ListView lista = (ListView) findViewById(R.id.listaMenu);
         final String[] items ={"Productos","Lista de Ventas","Gastos Operativos","Reporte por Fecha","Mi Perfil"};
         VysorAdapterMenu adapter = new VysorAdapterMenu(Menu.this, R.layout.item_list, items);
-
+        activity=this;
       //  new Connection().execute();
         ConnectionUtils.setUsuarioApp(getIntent().getExtras().getString("usuario"));
         lista.setAdapter(adapter);

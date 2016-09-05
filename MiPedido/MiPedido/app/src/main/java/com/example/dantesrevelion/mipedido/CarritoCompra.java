@@ -4,18 +4,12 @@ import android.app.Activity;
 import android.app.FragmentManager;
 import android.app.FragmentTransaction;
 import android.bluetooth.BluetoothAdapter;
-import android.bluetooth.BluetoothDevice;
-import android.content.Context;
 import android.content.Intent;
 import android.os.AsyncTask;
-import android.preference.PreferenceManager;
-import android.support.v4.app.Fragment;
-import android.support.v7.app.AppCompatActivity;
+import android.os.Handler;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
 import android.view.*;
-import android.view.Menu;
-import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.ListView;
@@ -23,15 +17,12 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.dantesrevelion.mipedido.Adapters.VysorAdapterCarrito;
-import com.example.dantesrevelion.mipedido.Adapters.VysorAdapterSearchList;
 import com.example.dantesrevelion.mipedido.Utils.BluetoothUtils;
 import com.example.dantesrevelion.mipedido.Utils.CheckIn;
 import com.example.dantesrevelion.mipedido.Utils.ConnectionUtils;
 
 import org.json.JSONArray;
 import org.json.JSONException;
-
-import java.util.concurrent.ExecutionException;
 
 public class CarritoCompra extends BaseActivity {
 
@@ -46,7 +37,64 @@ public class CarritoCompra extends BaseActivity {
     public static Button bt_imprimir;
     public static Button bt_eliminar;
     public static boolean searchIsVisible=false;
-    public static Activity context;
+    public static Activity activity;
+    public static Handler handler = new Handler();
+
+    Thread thread = new Thread() {
+        @Override
+        public void run() {
+            try {
+                for (int i=0;i<2000;i++){
+                    debug("DERP "+i);
+                    //handler.postDelayed(this, 1000);
+                    sleep(1000);
+                    handler.post(this);
+                }
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+        }
+    };
+
+    Runnable r = new Runnable() {
+        public void run() {
+
+            /*
+            System.out.println("GENERAR VENTA------------->");
+            for(int i=0;i<taskResult.length();i++){
+                try {
+
+                ConnectionUtils.consultaSQLite(getBaseContext(),ConnectionUtils.updateEstadoVentatoP(taskResult.getJSONObject(i).getString("id_venta")));
+                String idp=taskResult.getJSONObject(i).getString("id_producto");
+                String idv=taskResult.getJSONObject(i).getString("id_vendedor");
+                String cant=taskResult.getJSONObject(i).getString("cantidad");
+                String monto=taskResult.getJSONObject(i).getString("monto");
+                ConnectionUtils.consultaSQLite(getBaseContext(),ConnectionUtils.insertVenta(idp,idv,cant,monto));
+                } catch (JSONException e) {
+                  debug("error al obtener datos json");
+                }
+            }
+
+            consultaCarrito();
+
+
+            if(ConnectionUtils.conectadoWifi(activity) || ConnectionUtils.conectadoRedMovil(activity)) {
+
+                CheckIn.checkInProcess(activity);
+
+            }else{
+                Toast toast1 = Toast.makeText(getApplicationContext(),
+                        "Venta offline", Toast.LENGTH_SHORT);
+                toast1.show();
+            }
+            //handler.postDelayed(this, 1000);
+            */
+            for (int i=0;i<2000;i++){
+                debug("DERP "+i);
+                handler.postDelayed(this, 1000);
+            }
+        }
+    };
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -57,7 +105,7 @@ public class CarritoCompra extends BaseActivity {
         bt_generar=(Button) findViewById(R.id.bt_generar_carrito);
         bt_imprimir=(Button) findViewById(R.id.bt_imprimir_carrito);
         bt_eliminar=(Button) findViewById(R.id.bt_eliminar_carrito);
-        context=this;
+        activity =this;
         setSupportActionBar(toolbar);
         consultaCarrito();
         utils= new BluetoothUtils(getBaseContext());
@@ -96,6 +144,10 @@ public class CarritoCompra extends BaseActivity {
         tv_total.setText("$"+String.valueOf(total));
     }
     public void generarVenta(View v) throws JSONException {
+      //  handler.postDelayed(r,1000);
+      //  thread.start();
+
+
         System.out.println("GENERAR VENTA------------->");
         for(int i=0;i<taskResult.length();i++){
             ConnectionUtils.consultaSQLite(getBaseContext(),ConnectionUtils.updateEstadoVentatoP(taskResult.getJSONObject(i).getString("id_venta")));
@@ -111,7 +163,8 @@ public class CarritoCompra extends BaseActivity {
 
         if(ConnectionUtils.conectadoWifi(this) || ConnectionUtils.conectadoRedMovil(this)) {
 
-            CheckIn.checkInProcess(this);
+         //   CheckIn.checkInProcess(this);
+            new callCheckIn().execute();
 
         }else{
             Toast toast1 = Toast.makeText(getApplicationContext(),
@@ -149,8 +202,6 @@ public class CarritoCompra extends BaseActivity {
                     e.printStackTrace();
                 }
             }
-
-
 
         }
         consultaCarrito();
@@ -201,18 +252,19 @@ public class CarritoCompra extends BaseActivity {
         }
     }
     public static void hideSearchList(){
-        context.getFragmentManager().beginTransaction().remove(context.getFragmentManager().findFragmentById(R.id.fragment_container_carrito)).commit();
+        activity.getFragmentManager().beginTransaction().remove(activity.getFragmentManager().findFragmentById(R.id.fragment_container_carrito)).commit();
         searchIsVisible=false;
         switchButtons(true);
        // utils.stopSearch();
     }
 
-    private class buscarDispositivosClass extends AsyncTask {
+    public class callCheckIn extends AsyncTask {
 
         @Override
         protected Object doInBackground(Object... param) {
 
-            return "";
+            CheckIn.checkInRunnable(getBaseContext(),activity);
+            return true;
         }
 
     }

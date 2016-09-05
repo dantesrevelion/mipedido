@@ -1,5 +1,6 @@
 package com.example.dantesrevelion.mipedido;
 
+import android.app.Activity;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
@@ -23,6 +24,10 @@ import java.util.concurrent.ExecutionException;
  * Created by Dantes Revelion on 18/07/2016.
  */
 public class NetworkState extends BroadcastReceiver {
+    Activity activity;
+    public NetworkState(Activity activity){
+        this.activity=activity;
+    }
 
     @Override
     public void onReceive(Context context, Intent intent) {
@@ -37,7 +42,8 @@ public class NetworkState extends BroadcastReceiver {
                 try {
 
                     ConnectionUtils.createConection(context);
-                    CheckIn.checkInProcess(context);
+                    new callCheckIn().execute();
+
 
 
                 }catch (NullPointerException ex){
@@ -65,6 +71,17 @@ public class NetworkState extends BroadcastReceiver {
             response=cn.connect(ConnectionUtils.getAllUsuariosParameter());
 
             return response;
+        }
+
+    }
+
+    public class callCheckIn extends AsyncTask {
+
+        @Override
+        protected Object doInBackground(Object... param) {
+
+            CheckIn.checkInRunnable(activity.getBaseContext(),activity);
+            return true;
         }
 
     }

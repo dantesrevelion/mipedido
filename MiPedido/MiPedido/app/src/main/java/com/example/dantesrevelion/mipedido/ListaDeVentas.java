@@ -101,8 +101,8 @@ public class ListaDeVentas extends BaseActivity {
                 int day2 = c.get(Calendar.DAY_OF_MONTH);
                 String fecha2=year2+"-"+(month2+1)+"-"+day2;
 
-                System.out.println("FECHA LISTA VENTAS " +fecha);
-                debug(" fecha "+fecha2);
+             //   System.out.println("FECHA LISTA VENTAS " +fecha);
+             //   debug(" fecha "+fecha2);
                 taskResult2= ConnectionUtils.consultaSQLite(getBaseContext(),ConnectionUtils.queryVentasByUsuarioFecha(ConnectionUtils.formatDate(fecha),ConnectionUtils.formatDate(fecha2),String.valueOf(id)));
                 calculaTotal();
             VysorAdapterVentaUsuario adapterVendidos = new VysorAdapterVentaUsuario(ListaDeVentas.this,
