@@ -103,7 +103,12 @@ public class ReportePorFecha extends BaseActivity {
     }
 
     public static void setDate(Date d){
+
+        String fechaCad=d.getYear()+"-"+(d.getMonth()+1)+"-"+d.getDate();
         Calendar c = Calendar.getInstance();
+        c.set(Calendar.YEAR, d.getYear());
+        c.set(Calendar.MONTH, d.getMonth());
+        c.set(Calendar.DATE, d.getDate());
         int year = c.get(Calendar.YEAR);
         int month = c.get(Calendar.MONTH);
         int day = c.get(Calendar.DAY_OF_MONTH);
