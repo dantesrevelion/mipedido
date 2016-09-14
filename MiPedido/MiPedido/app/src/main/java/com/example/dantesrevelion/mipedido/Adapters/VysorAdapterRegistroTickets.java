@@ -59,10 +59,11 @@ public class VysorAdapterRegistroTickets extends ArrayAdapter<String> implements
         //   LinearLayout rlayout=(LinearLayout)rowView.findViewById(R.id.mylayout) ;
         name.setText(values[position]);
         */
-        monto.setText(montoArray[position]);
-        codigo.setText(codigoArray[position]);
-        nombre.setText(nombreArray[position]);
-
+        if(position!=0) {
+            monto.setText(montoArray[position]);
+            codigo.setText(codigoArray[position]);
+            nombre.setText(nombreArray[position]);
+        }
         monto.addTextChangedListener(new TextWatcher() {
 
 

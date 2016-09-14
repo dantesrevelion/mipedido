@@ -35,7 +35,8 @@ public class CheckIn {
                 String idv=taskResult.getJSONObject(i).getString("id_vendedor");
                 String cantidad=taskResult.getJSONObject(i).getString("cantidad");
                 String monto=taskResult.getJSONObject(i).getString("monto");
-                new InsertIntoVentas().execute(idp,idv,cantidad,monto);
+                String fecha=taskResult.getJSONObject(i).getString("fecha");
+                new InsertIntoVentas().execute(idp,idv,cantidad,monto,fecha);
                 ConnectionUtils.consultaSQLite(context,ConnectionUtils.updateEstadoVentatoS(taskResult.getJSONObject(i).getString("id_venta")));
             }
             for(int i=0;i<taskResultGastos.length();i++){
@@ -43,7 +44,8 @@ public class CheckIn {
                 String nombre=taskResultGastos.getJSONObject(i).getString("nombre");
                 String codigo=taskResultGastos.getJSONObject(i).getString("codigo");
                 String monto=taskResultGastos.getJSONObject(i).getString("monto");
-                new InsertIntoGastos().execute(idv,nombre,codigo,monto);
+                String fecha=taskResultGastos.getJSONObject(i).getString("fecha");
+                new InsertIntoGastos().execute(idv,nombre,codigo,monto,fecha);
                 ConnectionUtils.consultaSQLite(context,ConnectionUtils.updateEstadoGastosS(taskResultGastos.getJSONObject(i).getString("id")));
             }
 
@@ -88,7 +90,7 @@ public class CheckIn {
 
             //    response=cn.connect(ConnectionUtils.insertVentas(idp,idv,cantidad,monto));
             cn.connect(ConnectionUtils.iniciarSesion());
-            response=cn.connect(ConnectionUtils.insertVentas((String)param[0],(String)param[1],(String)param[2],(String)param[3]));
+            response=cn.connect(ConnectionUtils.insertVentas((String)param[0],(String)param[1],(String)param[2],(String)param[3],(String)param[4]));
             cn.connect(ConnectionUtils.cerrarSesion());
 
             return response;
@@ -104,7 +106,7 @@ public class CheckIn {
          //   ConnectionUtils cn=new ConnectionUtils();
 
             cn.connect(ConnectionUtils.iniciarSesion());
-            response=cn.connect(ConnectionUtils.insertGastos((String)param[0],(String)param[1],(String)param[2],(String)param[3]));
+            response=cn.connect(ConnectionUtils.insertGastosWEB((String)param[0],(String)param[1],(String)param[2],(String)param[3],(String)param[4]));
             cn.connect(ConnectionUtils.cerrarSesion());
 
             return response;

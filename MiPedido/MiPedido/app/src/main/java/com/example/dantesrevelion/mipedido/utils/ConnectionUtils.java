@@ -25,11 +25,13 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.io.UnsupportedEncodingException;
 import java.net.CookieHandler;
 import java.net.CookieManager;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.net.URLEncoder;
 import java.net.UnknownHostException;
 import java.text.DateFormat;
 import java.text.ParseException;
@@ -227,13 +229,23 @@ public class ConnectionUtils {
         return response;
     }
 
-    public static String insertVentas(String idp,String idv,String cantidad,String monto){
-        String response = "http://"+ getDOMAIN() +"/mipedido/res/ventasinsert.php?idp="+idp+"&idv="+idv+"&c="+cantidad+"&m="+monto;
-        return response;
+    public static String insertVentas(String idp,String idv,String cantidad,String monto,String fecha){
+        String url = "";
+        try {
+            url = "http://"+ getDOMAIN() +"/mipedido/res/ventasinsert.php?idp="+idp+"&idv="+idv+"&c="+cantidad+"&m="+monto+"&pFecha="+ URLEncoder.encode(fecha, "utf-8");
+        } catch (UnsupportedEncodingException e) {
+            e.printStackTrace();
+        }
+        return url;
     }
-    public static String insertGastos(String idv,String nombre,String codigo,String monto){
-        String response = "http://"+ getDOMAIN() +"/mipedido/res/gastosinsert.php?idu="+idv+"&nombre="+nombre+"&cod="+codigo+"&m="+monto;
-        return response;
+    public static String insertGastosWEB(String idv,String nombre,String codigo,String monto,String paramFecha){
+        String url = "";
+        try {
+            url = "http://"+ getDOMAIN() +"/mipedido/res/gastosinsert.php?idu="+idv+"&nombre="+nombre+"&cod="+codigo+"&m="+monto+"&pFecha="+ URLEncoder.encode(paramFecha, "utf-8");
+        } catch (UnsupportedEncodingException e) {
+            e.printStackTrace();
+        }
+        return url;
     }
     HttpURLConnection urlConnection;
     InputStream is;
