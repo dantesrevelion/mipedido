@@ -25,8 +25,10 @@ import java.util.concurrent.ExecutionException;
  */
 public class NetworkState extends BroadcastReceiver {
     Activity activity;
+    public static callCheckIn cin=null;
     public NetworkState(Activity activity){
         this.activity=activity;
+        cin=new callCheckIn();
     }
 
     @Override
@@ -38,17 +40,41 @@ public class NetworkState extends BroadcastReceiver {
             Toast toast1 = Toast.makeText(context,
                     "Conectado", Toast.LENGTH_SHORT);
             toast1.show();
-            if(ConnectionUtils.conectadoWifi(context)) {
-                try {
+            if(ConnectionUtils.conectadoWifi(context) || ConnectionUtils.conectadoRedMovil(context)) {
 
-                    ConnectionUtils.createConection(context);
-                    new callCheckIn().execute();
+                    try {
 
 
+                        ConnectionUtils.createConection(context);
+                        /*
+                        if( cin.getStatus().equals(AsyncTask.Status.RUNNING))
+                        {
+                            System.out.println("-------------->RUNNUNG CIN");
+                            cin.cancel(true);
+                            cin.execute();
+                        }else{
+                            System.out.println("-------------->NOT RUNNUNG CIN");
+                            cin.execute();
+                        }
+                        */
+                        try {
 
-                }catch (NullPointerException ex){
-                    toastError.show();
-                }
+                            cin.execute();
+                            System.out.println("------------->executed");
+                        }catch (IllegalStateException ex){
+                            System.out.println("------------->already been executed");
+
+
+                        }
+                        //new callCheckIn().execute();
+
+
+
+
+                    } catch (NullPointerException ex) {
+                        toastError.show();
+                    }
+
 
             }
         }else{
@@ -64,9 +90,9 @@ public class NetworkState extends BroadcastReceiver {
         @Override
         protected Object doInBackground(Object... param) {
 
+
             JSONArray response=null;
             ConnectionUtils cn=new ConnectionUtils();
-
             cn.connect(ConnectionUtils.iniciarSesion());
             response=cn.connect(ConnectionUtils.getAllUsuariosParameter());
 
@@ -80,11 +106,14 @@ public class NetworkState extends BroadcastReceiver {
         @Override
         protected Object doInBackground(Object... param) {
 
+
             CheckIn.checkInRunnable(activity.getBaseContext(),activity);
             return true;
         }
 
     }
+
+
 
 
 }

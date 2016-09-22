@@ -6,6 +6,8 @@ import android.database.sqlite.SQLiteDatabase;
 import android.os.AsyncTask;
 import android.widget.Toast;
 
+import com.example.dantesrevelion.mipedido.NetworkState;
+
 import org.json.JSONArray;
 import org.json.JSONException;
 
@@ -17,6 +19,7 @@ import java.util.concurrent.ExecutionException;
  */
 public class CheckIn {
     public static ConnectionUtils cn=null;
+    public static Context contextG=null;
 
     public static void checkInRunnable(final Context context, Activity activity){
 
@@ -26,6 +29,7 @@ public class CheckIn {
         JSONArray taskResult= ConnectionUtils.consultaSQLite(context,ConnectionUtils.queryCarritoUp());
         JSONArray taskResultGastos= ConnectionUtils.consultaSQLite(context,ConnectionUtils.queryGastosUp());
         cn=new ConnectionUtils();
+        contextG=context;
 
 
 
@@ -36,8 +40,9 @@ public class CheckIn {
                 String cantidad=taskResult.getJSONObject(i).getString("cantidad");
                 String monto=taskResult.getJSONObject(i).getString("monto");
                 String fecha=taskResult.getJSONObject(i).getString("fecha");
-                new InsertIntoVentas().execute(idp,idv,cantidad,monto,fecha);
-                ConnectionUtils.consultaSQLite(context,ConnectionUtils.updateEstadoVentatoS(taskResult.getJSONObject(i).getString("id_venta")));
+                String idventa=taskResult.getJSONObject(i).getString("id_venta");
+                new InsertIntoVentas().execute(idp,idv,cantidad,monto,fecha,idventa);
+
             }
             for(int i=0;i<taskResultGastos.length();i++){
                 String idv=taskResultGastos.getJSONObject(i).getString("idvendedor");
@@ -66,7 +71,7 @@ public class CheckIn {
                 }
             });
           //      String task=new ConectionTask().execute(db,activity).get().toString();
-            new ConectionTask().execute(db,context);
+            new ConectionTask().execute(db,context,activity);
 
 
             //Toast toast2 = Toast.makeText(activity.getApplicationContext(), task, Toast.LENGTH_SHORT);
@@ -76,6 +81,7 @@ public class CheckIn {
             e.printStackTrace();
         }
         System.out.println("check In End");
+
     }
 
 
@@ -92,7 +98,8 @@ public class CheckIn {
             cn.connect(ConnectionUtils.iniciarSesion());
             response=cn.connect(ConnectionUtils.insertVentas((String)param[0],(String)param[1],(String)param[2],(String)param[3],(String)param[4]));
             cn.connect(ConnectionUtils.cerrarSesion());
-
+            System.out.println("---------------<<<>RESPONSE "+response);
+          //  ConnectionUtils.consultaSQLite(contextG,ConnectionUtils.updateEstadoVentatoS((String)param[5]));
             return response;
         }
 

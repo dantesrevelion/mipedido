@@ -39,7 +39,7 @@ public class Login extends AppCompatActivity {
     LinearLayout layoutPass;
     EditText inputTextUser=null;
     EditText inputTextPsw=null;
-
+    NetworkState receiver=null;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -49,7 +49,7 @@ public class Login extends AppCompatActivity {
 
 
 
-        NetworkState receiver;
+
         IntentFilter filter = new IntentFilter(ConnectivityManager.CONNECTIVITY_ACTION);
         receiver = new NetworkState(this);
         registerReceiver(receiver, filter);
