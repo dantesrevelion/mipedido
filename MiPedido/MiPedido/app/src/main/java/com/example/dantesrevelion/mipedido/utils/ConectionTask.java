@@ -22,6 +22,7 @@ import org.json.JSONObject;
  */
 public class ConectionTask extends AsyncTask{
     BeanResponses responses=new BeanResponses();
+    boolean tablaProductos=false,tablaVentas=false,tablaUsuarios=false,tablaGastos=false;
 
     @Override
     protected Object doInBackground(Object[] objects) {
@@ -56,7 +57,8 @@ public class ConectionTask extends AsyncTask{
 
         try {
             SQLiteDatabase db = (SQLiteDatabase) objects[0];
-            if(responses.getResponseUsuarios().length()>0) {
+            tablaUsuarios=searchError(responses.getResponseUsuarios());
+            if(!tablaUsuarios) {
 
                 db.execSQL("delete from usuarios");
                 db.execSQL("VACUUM");
@@ -74,8 +76,8 @@ public class ConectionTask extends AsyncTask{
                 }
                 ConnectionUtils.setprogress(50, c);
             }
-
-            if(responses.getResponseProductos().length()>0) {
+            tablaProductos=searchError(responses.getResponseProductos());
+            if(!tablaProductos) {
                 db.execSQL("delete from productos");
                 db.execSQL("VACUUM");
                 JSONArray productos = responses.getResponseProductos();
@@ -94,7 +96,8 @@ public class ConectionTask extends AsyncTask{
                 }
                 ConnectionUtils.setprogress(60, c);
             }
-            if(responses.getResponseVenta().length()>0) {
+            tablaVentas=searchError(responses.getResponseVenta());
+            if(!tablaVentas) {
                 db.execSQL("delete from ventas");
                 db.execSQL("VACUUM");
                 JSONArray ventas = responses.getResponseVenta();
@@ -111,7 +114,8 @@ public class ConectionTask extends AsyncTask{
 
                 }
             }
-            if(responses.getResponseGastos().length()>0) {
+            tablaGastos=searchError(responses.getResponseGastos());
+            if(!tablaGastos) {
                 db.execSQL("delete from gastos");
                 db.execSQL("VACUUM");
                 JSONArray gastos = responses.getResponseGastos();
@@ -138,6 +142,13 @@ public class ConectionTask extends AsyncTask{
             ConnectionUtils.setprogress(80,c);
             db.close();
             NetworkState ns= new NetworkState(activity);
+            if(checkUpdate()){
+                return  "Base de datos Actualizada";
+            }else{
+                ConnectionUtils.notificateIncompleta(c);
+                return  "Actualización Incompleta";
+            }
+
         }catch (NullPointerException ex){
             ConnectionUtils.notificateError(c);
             NetworkState ns= new NetworkState(activity);
@@ -146,7 +157,34 @@ public class ConectionTask extends AsyncTask{
 
        // NetworkState.cin=new NetworkState.callCheckIn();
 
-        return  "Base de datos Actualizada";
+
+    }
+
+    private boolean searchError(JSONArray array){
+        boolean response=false;
+        for(int i=0;i<array.length();i++){
+            try {
+
+                if(array.getJSONObject(i).get("a").equals("Error")){
+                    response=true;
+                }else {
+                    response=false;
+                }
+
+            } catch (JSONException e) {
+                response=false;
+            }
+
+        }
+       return response;
+    }
+    private boolean checkUpdate(){
+        if(!tablaGastos && !tablaVentas && !tablaProductos && !tablaUsuarios){
+
+            return true;
+        }else{
+            return false;
+        }
     }
 }
 

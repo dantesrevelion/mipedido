@@ -21,17 +21,22 @@
         <activity
             android:name=".MainActivity"
             android:screenOrientation="portrait"
-            android:theme="@style/Theme.AppCompat.NoActionBar">
+            android:theme="@style/Theme.AppCompat.NoActionBar"
+            >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".Menu" />
-        <activity android:name=".Lista_Producto" />
-        <activity android:name=".Producto" />
-        <activity android:name=".MenuReporte" />
+        <activity android:name=".Menu" android:launchMode="singleTask"
+            android:screenOrientation="portrait"/>
+        <activity android:name=".Lista_Producto" android:launchMode="singleTask"
+            android:screenOrientation="portrait" />
+        <activity android:name=".Producto" android:launchMode="singleTask"
+            android:screenOrientation="portrait"/>
+        <activity android:name=".MenuReporte" android:launchMode="singleTask"
+            android:screenOrientation="portrait"/>
 
         <!--
  ATTENTION: This was auto-generated to add Google Play services to your project for

@@ -515,7 +515,15 @@ public class ConnectionUtils {
         mBuilder.setProgress(80,n,false);
         mNotificationManager.notify(01, mBuilder.build());
     }
-
+    public static void notificateIncompleta(Context c){
+        mBuilder =new NotificationCompat.Builder(c)
+                .setSmallIcon(R.drawable.download)
+                .setLargeIcon((((BitmapDrawable)c.getResources()
+                        .getDrawable(R.drawable.download)).getBitmap()))
+                .setContentTitle("Actualizacion DB Incompleta")
+                .setTicker("Actualizacion Incompleta");
+        mNotificationManager.notify(01, mBuilder.build());
+    }
     public static void notificateError(Context c){
         mBuilder =new NotificationCompat.Builder(c)
                 .setSmallIcon(R.drawable.download)
