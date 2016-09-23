@@ -50,8 +50,9 @@ public class CheckIn {
                 String codigo=taskResultGastos.getJSONObject(i).getString("codigo");
                 String monto=taskResultGastos.getJSONObject(i).getString("monto");
                 String fecha=taskResultGastos.getJSONObject(i).getString("fecha");
-                new InsertIntoGastos().execute(idv,nombre,codigo,monto,fecha);
-                ConnectionUtils.consultaSQLite(context,ConnectionUtils.updateEstadoGastosS(taskResultGastos.getJSONObject(i).getString("id")));
+                String id=taskResultGastos.getJSONObject(i).getString("id");
+                new InsertIntoGastos().execute(idv,nombre,codigo,monto,fecha,id);
+
             }
 
 
@@ -99,7 +100,15 @@ public class CheckIn {
             response=cn.connect(ConnectionUtils.insertVentas((String)param[0],(String)param[1],(String)param[2],(String)param[3],(String)param[4]));
             cn.connect(ConnectionUtils.cerrarSesion());
             System.out.println("---------------<<<>RESPONSE "+response);
-          //  ConnectionUtils.consultaSQLite(contextG,ConnectionUtils.updateEstadoVentatoS((String)param[5]));
+            try {
+                if("ok".equals(response.getJSONObject(0).get("a"))) {
+                    ConnectionUtils.consultaSQLite(contextG,ConnectionUtils.updateEstadoVentatoS((String)param[5]));
+                }else{
+                    ConnectionUtils.notificateError(contextG);
+                }
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
             return response;
         }
 
@@ -116,6 +125,16 @@ public class CheckIn {
             response=cn.connect(ConnectionUtils.insertGastosWEB((String)param[0],(String)param[1],(String)param[2],(String)param[3],(String)param[4]));
             cn.connect(ConnectionUtils.cerrarSesion());
 
+            System.out.println("---------------<<<>RESPONSE "+response);
+            try {
+                if("ok".equals(response.getJSONObject(0).get("a"))) {
+                    ConnectionUtils.consultaSQLite(contextG,ConnectionUtils.updateEstadoGastosS((String)param[5]));
+                }else{
+                    ConnectionUtils.notificateError(contextG);
+                }
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
             return response;
         }
 

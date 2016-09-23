@@ -1,5 +1,6 @@
 package com.example.dantesrevelion.mipedido.Utils;
 
+import android.app.Activity;
 import android.app.NotificationManager;
 import android.content.Context;
 import android.content.Intent;
@@ -9,6 +10,7 @@ import android.support.v4.app.NotificationCompat;
 import android.widget.Toast;
 
 import com.example.dantesrevelion.mipedido.Beans.BeanResponses;
+import com.example.dantesrevelion.mipedido.NetworkState;
 import com.example.dantesrevelion.mipedido.R;
 
 import org.json.JSONArray;
@@ -24,6 +26,7 @@ public class ConectionTask extends AsyncTask{
     @Override
     protected Object doInBackground(Object[] objects) {
         Context c=(Context)objects[1];
+        Activity activity=(Activity)objects[2] ;
         ConnectionUtils.showNotificacion(c);
 
 
@@ -53,71 +56,79 @@ public class ConectionTask extends AsyncTask{
 
         try {
             SQLiteDatabase db = (SQLiteDatabase) objects[0];
-            db.execSQL("delete from usuarios");
-            db.execSQL("VACUUM");
-            JSONArray usuarios = responses.getResponseUsuarios();
+            if(responses.getResponseUsuarios().length()>0) {
 
-            for (int i = 0; i < usuarios.length(); i++) {
-                try {
-                    JSONObject obj = usuarios.getJSONObject(i);
-                    db.execSQL("INSERT INTO usuarios (id, usuario, password,correo) " +
-                            "VALUES (" + obj.get("id") + ", '" + obj.get("usuario") + "', '" + obj.get("password") + "','" + obj.get("correo") + "' )");
-                } catch (JSONException e) {
-                    e.printStackTrace();
+                db.execSQL("delete from usuarios");
+                db.execSQL("VACUUM");
+                JSONArray usuarios = responses.getResponseUsuarios();
+
+                for (int i = 0; i < usuarios.length(); i++) {
+                    try {
+                        JSONObject obj = usuarios.getJSONObject(i);
+                        db.execSQL("INSERT INTO usuarios (id, usuario, password,correo) " +
+                                "VALUES (" + obj.get("id") + ", '" + obj.get("usuario") + "', '" + obj.get("password") + "','" + obj.get("correo") + "' )");
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
+
                 }
-
-            }
-            ConnectionUtils.setprogress(50,c);
-
-            db.execSQL("delete from productos");
-            db.execSQL("VACUUM");
-            JSONArray productos = responses.getResponseProductos();
-
-
-            for (int i = 0; i < productos.length(); i++) {
-                try {
-                    JSONObject obj = productos.getJSONObject(i);
-                    db.execSQL("INSERT INTO productos (id, nombre, denominacion,costo,marca,img) " +
-                            "VALUES (" + obj.get("id") + ", '" + obj.get("nombre") + "', '" + obj.get("denominacion") + "'," + obj.get("costo") + ",'" +
-                            obj.get("marca") + "','" + obj.get("img") + "')");
-                } catch (JSONException e) {
-                    e.printStackTrace();
-                }
-
-            }
-            ConnectionUtils.setprogress(60,c);
-            db.execSQL("delete from ventas");
-            db.execSQL("VACUUM");
-            JSONArray ventas = responses.getResponseVenta();
-
-            for (int i = 0; i < ventas.length(); i++) {
-                try {
-                    JSONObject obj = ventas.getJSONObject(i);
-                    db.execSQL("INSERT INTO ventas (id_venta, id_producto, id_vendedor,fecha,cantidad,monto) " +
-                            "VALUES (" + obj.get("id_venta") + ", " + obj.get("id_producto") + ", " + obj.get("id_vendedor") + ",'" + obj.get("fecha")
-                            + "'," + obj.get("cantidad") + "," + obj.get("monto") + " )");
-                } catch (JSONException e) {
-                    e.printStackTrace();
-                }
-
+                ConnectionUtils.setprogress(50, c);
             }
 
-            db.execSQL("delete from gastos");
-            db.execSQL("VACUUM");
-            JSONArray gastos = responses.getResponseGastos();
+            if(responses.getResponseProductos().length()>0) {
+                db.execSQL("delete from productos");
+                db.execSQL("VACUUM");
+                JSONArray productos = responses.getResponseProductos();
 
-            for (int i = 0; i < gastos.length(); i++) {
-                try {
-                    JSONObject obj = gastos.getJSONObject(i);
-                    db.execSQL("INSERT INTO `gastos` (`id`, `idvendedor`, `nombre`, `codigo`, `monto`, `fecha`,`estatus`) " +
-                            "VALUES ("+obj.get("id")+", "+obj.get("idvendedor")+", '"+obj.get("nombre")+"', '"+obj.get("codigo")+"', "+obj.get("monto")+", '"+obj.get("fecha")+"','S')");
-                } catch (JSONException e) {
-                    e.printStackTrace();
+
+                for (int i = 0; i < productos.length(); i++) {
+                    try {
+                        JSONObject obj = productos.getJSONObject(i);
+                        db.execSQL("INSERT INTO productos (id, nombre, denominacion,costo,marca,img) " +
+                                "VALUES (" + obj.get("id") + ", '" + obj.get("nombre") + "', '" + obj.get("denominacion") + "'," + obj.get("costo") + ",'" +
+                                obj.get("marca") + "','" + obj.get("img") + "')");
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
+
                 }
-
+                ConnectionUtils.setprogress(60, c);
             }
-            ConnectionUtils.setprogress(70,c);
-            ConnectionUtils.notificateOK(c);
+            if(responses.getResponseVenta().length()>0) {
+                db.execSQL("delete from ventas");
+                db.execSQL("VACUUM");
+                JSONArray ventas = responses.getResponseVenta();
+
+                for (int i = 0; i < ventas.length(); i++) {
+                    try {
+                        JSONObject obj = ventas.getJSONObject(i);
+                        db.execSQL("INSERT INTO ventas (id_venta, id_producto, id_vendedor,fecha,cantidad,monto) " +
+                                "VALUES (" + obj.get("id_venta") + ", " + obj.get("id_producto") + ", " + obj.get("id_vendedor") + ",'" + obj.get("fecha")
+                                + "'," + obj.get("cantidad") + "," + obj.get("monto") + " )");
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
+
+                }
+            }
+            if(responses.getResponseGastos().length()>0) {
+                db.execSQL("delete from gastos");
+                db.execSQL("VACUUM");
+                JSONArray gastos = responses.getResponseGastos();
+
+                for (int i = 0; i < gastos.length(); i++) {
+                    try {
+                        JSONObject obj = gastos.getJSONObject(i);
+                        db.execSQL("INSERT INTO `gastos` (`id`, `idvendedor`, `nombre`, `codigo`, `monto`, `fecha`,`estatus`) " +
+                                "VALUES (" + obj.get("id") + ", " + obj.get("idvendedor") + ", '" + obj.get("nombre") + "', '" + obj.get("codigo") + "', " + obj.get("monto") + ", '" + obj.get("fecha") + "','S')");
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
+
+                }
+                ConnectionUtils.setprogress(70, c);
+                ConnectionUtils.notificateOK(c);
+            }
             cn.connect(ConnectionUtils.cerrarSesion());
 
 
@@ -126,10 +137,14 @@ public class ConectionTask extends AsyncTask{
 
             ConnectionUtils.setprogress(80,c);
             db.close();
+            NetworkState ns= new NetworkState(activity);
         }catch (NullPointerException ex){
             ConnectionUtils.notificateError(c);
+            NetworkState ns= new NetworkState(activity);
             return "Error de configuracion";
         }
+
+       // NetworkState.cin=new NetworkState.callCheckIn();
 
         return  "Base de datos Actualizada";
     }

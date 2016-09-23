@@ -322,9 +322,27 @@ public class ConnectionUtils {
 
         } catch (MalformedURLException e) {
             System.out.println("Error 1");
+            String erroS="[{\"a\":\"Error\"}]";
+            JSONArray errorArray=null;
+            try {
+                errorArray=new JSONArray(erroS);
+            } catch (JSONException ex) {
+                ex.printStackTrace();
+            }
+            response=errorArray;
         } catch (IOException e) {
             System.out.println("Error 2");
+            String erroS="[{\"a\":\"Error\"}]";
+            JSONArray errorArray=null;
+            try {
+                errorArray=new JSONArray(erroS);
+            } catch (JSONException ex) {
+                ex.printStackTrace();
+            }
+            response=errorArray;
         }
+
+
         return  response;
     }
 
