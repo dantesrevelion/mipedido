@@ -188,6 +188,7 @@ public class CarritoCompra extends BaseActivity {
         return true;
     }
 
+
     public void eliminarSeleccion(View v){
 
 

@@ -6,8 +6,10 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.widget.LinearLayout;
 
+import com.crashlytics.android.Crashlytics;
 import com.example.dantesrevelion.mipedido.Utils.MyAnimationUtils;
 
+import io.fabric.sdk.android.Fabric;
 import java.net.CookieHandler;
 import java.net.CookieManager;
 
@@ -21,6 +23,7 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        Fabric.with(this, new Crashlytics());
         CookieManager cookieManager = new CookieManager();
         CookieHandler.setDefault(cookieManager);
         setContentView(R.layout.activity_main);

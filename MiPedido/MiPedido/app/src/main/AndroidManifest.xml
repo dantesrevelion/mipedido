@@ -61,7 +61,10 @@
             android:name=".RegistroTickets"
             android:windowSoftInputMode="adjustPan" />
         <activity android:name=".Configuracion" />
-        <activity android:name=".ImprimirTicket"></activity>
+
+        <meta-data
+            android:name="io.fabric.ApiKey"
+            android:value="c4288c02c0b7608ca4a56ed6e70647c266da68c4" />
     </application>
 
 </manifest>
