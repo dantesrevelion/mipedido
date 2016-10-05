@@ -7,6 +7,7 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
+import android.database.sqlite.SQLiteDatabaseLockedException;
 import android.graphics.drawable.BitmapDrawable;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
@@ -434,10 +435,17 @@ public class ConnectionUtils {
         return false;
     }
     public static JSONArray consultaSQLite(Context context,String query){
-        SQLiteHelper sqlHelper=new SQLiteHelper(context, "miPedidoLite", null, 1);
-        SQLiteDatabase db = sqlHelper.getWritableDatabase();
-        Cursor c=db.rawQuery(query,null);
-        JSONArray response=cursorToJsonArray(c);
+        JSONArray response=null;
+        try {
+            SQLiteHelper sqlHelper = new SQLiteHelper(context, "miPedidoLite", null, 1);
+            SQLiteDatabase db = sqlHelper.getWritableDatabase();
+            Cursor c = db.rawQuery(query, null);
+            response = cursorToJsonArray(c);
+            db.close();
+        }catch (SQLiteDatabaseLockedException ex){
+           // throw (ex);
+            System.out.println("Locked exception");
+        }
         return response;
     }
 

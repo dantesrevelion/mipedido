@@ -3,14 +3,20 @@
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
 
+    <item android:id="@+id/update"
+        android:icon="@drawable/update"
+        android:title="update"
+        android:orderInCategory="1"
+        app:showAsAction="ifRoom"/>
+
     <item android:id="@+id/cart"
         android:icon="@drawable/cart"
         android:title="cart"
-        android:orderInCategory="1"
+        android:orderInCategory="2"
         app:showAsAction="ifRoom"/>
 
     <item android:id="@+id/config"
         android:title="Configuracion"
-        android:orderInCategory="2"
+        android:orderInCategory="3"
         app:showAsAction="never"/>
 </menu>

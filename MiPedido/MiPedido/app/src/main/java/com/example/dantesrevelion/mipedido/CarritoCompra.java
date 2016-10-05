@@ -161,6 +161,7 @@ public class CarritoCompra extends BaseActivity {
         consultaCarrito();
 
 
+        /*
         if(ConnectionUtils.conectadoWifi(this) || ConnectionUtils.conectadoRedMovil(this)) {
 
          //   CheckIn.checkInProcess(this);
@@ -172,7 +173,7 @@ public class CarritoCompra extends BaseActivity {
             toast1.show();
         }
 
-
+        */
 
     }
 
@@ -259,6 +260,7 @@ public class CarritoCompra extends BaseActivity {
        // utils.stopSearch();
     }
 
+    /*
     public class callCheckIn extends AsyncTask {
 
         @Override
@@ -269,6 +271,7 @@ public class CarritoCompra extends BaseActivity {
         }
 
     }
+    */
 
 
 

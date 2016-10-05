@@ -29,6 +29,8 @@ public class Menu extends BaseActivity {
         final String[] items ={"Productos","Lista de Ventas","Gastos Operativos","Reporte por Fecha","Mi Perfil"};
         VysorAdapterMenu adapter = new VysorAdapterMenu(Menu.this, R.layout.item_list, items);
         activity=this;
+        BaseActivity.activity=this;
+
       //  new Connection().execute();
         ConnectionUtils.setUsuarioApp(getIntent().getExtras().getString("usuario"));
         lista.setAdapter(adapter);

@@ -68,6 +68,7 @@ public class Producto extends BaseActivity {
         Toast toast1 = Toast.makeText(getApplicationContext(),
                 "Añadidos al Carrito", Toast.LENGTH_SHORT);
         toast1.show();
+        onBackPressed();
     }
 
 

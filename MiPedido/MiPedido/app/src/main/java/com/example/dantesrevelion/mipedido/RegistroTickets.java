@@ -111,6 +111,7 @@ public class RegistroTickets extends BaseActivity implements View.OnClickListene
                     }
 
 
+                    /*
                     if(ConnectionUtils.conectadoWifi(this) || ConnectionUtils.conectadoRedMovil(this)) {
 
                         new callCheckIn().execute();
@@ -120,6 +121,7 @@ public class RegistroTickets extends BaseActivity implements View.OnClickListene
                                 "Registrado offline", Toast.LENGTH_SHORT);
                         toast1.show();
                     }
+                    */
 
 
 
@@ -159,6 +161,7 @@ public class RegistroTickets extends BaseActivity implements View.OnClickListene
 
     }
 
+    /*
     public class callCheckIn extends AsyncTask {
 
         @Override
@@ -169,5 +172,6 @@ public class RegistroTickets extends BaseActivity implements View.OnClickListene
         }
 
     }
+    */
 
 }

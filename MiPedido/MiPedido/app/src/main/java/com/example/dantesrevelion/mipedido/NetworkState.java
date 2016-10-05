@@ -25,14 +25,15 @@ import java.util.concurrent.ExecutionException;
  */
 public class NetworkState extends BroadcastReceiver {
     Activity activity;
-    public static callCheckIn cin=null;
+    //public static callCheckIn cin=null;
     public NetworkState(Activity activity){
         this.activity=activity;
-        cin=new callCheckIn();
+      //  cin=new callCheckIn();
     }
 
     @Override
     public void onReceive(Context context, Intent intent) {
+
         NetworkInfo ni=(NetworkInfo) intent.getExtras().get(ConnectivityManager.EXTRA_NETWORK_INFO);
         Toast toastError = Toast.makeText(context.getApplicationContext(),
                 "Error al actualizar", Toast.LENGTH_SHORT);
@@ -40,13 +41,14 @@ public class NetworkState extends BroadcastReceiver {
             Toast toast1 = Toast.makeText(context,
                     "Conectado", Toast.LENGTH_SHORT);
             toast1.show();
+            /*
             if(ConnectionUtils.conectadoWifi(context) || ConnectionUtils.conectadoRedMovil(context)) {
 
                     try {
 
 
                         ConnectionUtils.createConection(context);
-                        /*
+
                         if( cin.getStatus().equals(AsyncTask.Status.RUNNING))
                         {
                             System.out.println("-------------->RUNNUNG CIN");
@@ -56,7 +58,7 @@ public class NetworkState extends BroadcastReceiver {
                             System.out.println("-------------->NOT RUNNUNG CIN");
                             cin.execute();
                         }
-                        */
+
                         try {
 
                             cin.execute();
@@ -77,6 +79,8 @@ public class NetworkState extends BroadcastReceiver {
 
 
             }
+
+            */
         }else{
             System.out.println("desconectado");
             Toast toast1 = Toast.makeText(context,
@@ -101,6 +105,8 @@ public class NetworkState extends BroadcastReceiver {
 
     }
 
+    /*
+
     public class callCheckIn extends AsyncTask {
 
         @Override
@@ -112,6 +118,7 @@ public class NetworkState extends BroadcastReceiver {
         }
 
     }
+    */
 
 
 

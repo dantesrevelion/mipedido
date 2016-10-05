@@ -80,6 +80,7 @@ public class Login extends AppCompatActivity {
         }
        // ConnectionUtils.consultaSQLite(this,"select * from usuarios");
         MyAnimationUtils.translateAnimation(layoutUser, 800L, 2.0f, 1000, 0, 0, 0);
+
     }
 
     public void nextStep(View view){
