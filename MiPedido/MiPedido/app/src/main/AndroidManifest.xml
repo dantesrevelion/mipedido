@@ -50,17 +50,17 @@
             android:name=".Navegacion"
             android:label="@string/title_activity_navegacion"
             android:theme="@style/AppTheme.NoActionBar" />
-        <activity android:name=".Login" />
-        <activity android:name=".ListaVendedor" />
-        <activity android:name=".Vendedor" />
-        <activity android:name=".ReportePorFecha" />
-        <activity android:name=".ListaDeVentas" />
-        <activity android:name=".Perfil" />
-        <activity android:name=".CarritoCompra" />
+        <activity android:name=".Login" android:launchMode="singleTask" />
+        <activity android:name=".ListaVendedor" android:launchMode="singleTask" />
+        <activity android:name=".Vendedor" android:launchMode="singleTask"/>
+        <activity android:name=".ReportePorFecha" android:launchMode="singleTask" />
+        <activity android:name=".ListaDeVentas" android:launchMode="singleTask"/>
+        <activity android:name=".Perfil" android:launchMode="singleTask"/>
+        <activity android:name=".CarritoCompra" android:launchMode="singleTask" />
         <activity
             android:name=".RegistroTickets"
-            android:windowSoftInputMode="adjustPan" />
-        <activity android:name=".Configuracion" />
+            android:windowSoftInputMode="adjustPan" android:launchMode="singleTask" />
+        <activity android:name=".Configuracion" android:launchMode="singleTask" />
 
         <meta-data
             android:name="io.fabric.ApiKey"

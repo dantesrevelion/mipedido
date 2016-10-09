@@ -74,6 +74,8 @@
             android:background="@color/white"
             android:id="@+id/ly_footer_lista_venta">
 
+
+
             <TextView
                 android:layout_width="100dp"
                 android:layout_height="40dp"
@@ -104,6 +106,18 @@
                 android:gravity="right"
                 android:textColor="@color/black"
                 android:text="0$"/>
+            <Button
+                android:layout_toRightOf="@+id/total_lista_ventas"
+                android:id="@+id/bt_enviar_venta"
+                android:layout_width="65dp"
+                android:layout_height="50dp"
+                android:text="Enviar ventas"
+                android:layout_marginRight="5dp"
+                android:backgroundTint="@color/color2"
+                android:drawableTintMode="multiply"
+                android:onClick="enviarventaClic"
+                android:textColor="@color/white"
+                android:textSize="8sp"/>
         </LinearLayout>
 
 

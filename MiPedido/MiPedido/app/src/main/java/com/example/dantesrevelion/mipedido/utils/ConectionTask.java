@@ -7,6 +7,7 @@ import android.content.Intent;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.AsyncTask;
 import android.support.v4.app.NotificationCompat;
+import android.view.MenuItem;
 import android.widget.Toast;
 
 import com.example.dantesrevelion.mipedido.Beans.BeanResponses;
@@ -53,8 +54,6 @@ public class ConectionTask extends AsyncTask{
 
         response = cn.connect(ConnectionUtils.getAllGastos());
         responses.setResponseGastos(response);
-
-
         try {
             SQLiteDatabase db = (SQLiteDatabase) objects[0];
             tablaUsuarios=searchError(responses.getResponseUsuarios());

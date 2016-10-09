@@ -1,5 +1,6 @@
 package com.example.dantesrevelion.mipedido;
 
+import android.app.Activity;
 import android.os.AsyncTask;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -7,12 +8,15 @@ import android.support.v7.widget.Toolbar;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
 import android.widget.ListView;
 import android.widget.Spinner;
 import android.widget.TextView;
 
 import com.example.dantesrevelion.mipedido.Adapters.VysorAdapterVentaUsuario;
+import com.example.dantesrevelion.mipedido.Utils.CheckIn;
 import com.example.dantesrevelion.mipedido.Utils.ConnectionUtils;
+import com.example.dantesrevelion.mipedido.Utils.VolleyS;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -26,6 +30,9 @@ public class ListaDeVentas extends BaseActivity {
     JSONArray taskResult2=null;
     TextView tv_total=null;
     TextView tv_cantidad=null;
+    Button bt_enviar=null;
+
+    Activity actividad;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -35,6 +42,12 @@ public class ListaDeVentas extends BaseActivity {
         setSupportActionBar(toolbar);
         tv_total=(TextView)findViewById(R.id.total_lista_ventas);
         tv_cantidad=(TextView)findViewById(R.id.cantidad_lista_ventas);
+        bt_enviar=(Button) findViewById(R.id.bt_enviar_venta);
+        actividad=this;
+        volley = VolleyS.getInstance(this.getApplicationContext());
+        fRequestQueue = volley.getRequestQueue();
+       // makeRequest();
+        makeRequest2();
         try {
             taskResult= ConnectionUtils.consultaSQLite(this,ConnectionUtils.queryAllUsuarios());
             JSONArray filterResult =new JSONArray();
@@ -116,6 +129,11 @@ public class ListaDeVentas extends BaseActivity {
         }
     };
 
+    public void enviarventaClic(View e){
+        bt_enviar.setEnabled(false);
+        new callCheckIn().execute();
+
+    }
     public void calculaTotal(){
         double total=0d;
         int cantidadTotal=0;
@@ -162,4 +180,27 @@ public class ListaDeVentas extends BaseActivity {
 
     }
     */
+
+    public class callCheckIn extends AsyncTask {
+
+        //Button bt_enviar=null;
+
+        @Override
+        protected Object doInBackground(Object... param) {
+
+
+            CheckIn.checkInRunnable(actividad.getBaseContext(),actividad);
+
+
+            return true;
+        }
+
+        @Override
+        protected void onPostExecute(Object o) {
+            super.onPostExecute(o);
+
+                    bt_enviar.setEnabled(true);
+
+        }
+    }
 }
