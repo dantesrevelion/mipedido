@@ -23,6 +23,7 @@ public class CheckIn {
 
     public static void checkInRunnable(final Context context, Activity activity){
 
+        /**TODO PROCESO DE SUBIDA */
         System.out.println("CHECK IN PROCESS------------->");
         SQLiteHelper sqlHelper=new SQLiteHelper(context, "miPedidoLite", null, 1);
         SQLiteDatabase db = sqlHelper.getWritableDatabase();
@@ -72,6 +73,9 @@ public class CheckIn {
                 }
             });
           //      String task=new ConectionTask().execute(db,activity).get().toString();
+            /**
+             * TODO PROCESO DE BAJADA
+             */
             new ConectionTask().execute(db,context,activity);
 
 
@@ -84,6 +88,7 @@ public class CheckIn {
         System.out.println("check In End");
 
     }
+
 
 
 

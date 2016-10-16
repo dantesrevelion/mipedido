@@ -34,7 +34,7 @@ public class ConectionTask extends AsyncTask{
 
 
 
-
+        /**TODO PROCESO DE DESCARGA */
         JSONArray response;
         ConnectionUtils cn=new ConnectionUtils();
         //obtiene tabla de usuarios
@@ -51,9 +51,12 @@ public class ConectionTask extends AsyncTask{
         response = cn.connect(ConnectionUtils.getAllProdParameter());
         responses.setResponseProductos(response);
         ConnectionUtils.setprogress(40,c);
-
         response = cn.connect(ConnectionUtils.getAllGastos());
         responses.setResponseGastos(response);
+
+        /**
+         * TODO ACTUALIZACION DE LA BASE DE DATOS LOCAL
+         */
         try {
             SQLiteDatabase db = (SQLiteDatabase) objects[0];
             tablaUsuarios=searchError(responses.getResponseUsuarios());

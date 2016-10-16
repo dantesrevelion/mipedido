@@ -13,6 +13,9 @@ import android.widget.ListView;
 import android.widget.Spinner;
 import android.widget.TextView;
 
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
+import com.android.volley.toolbox.JsonArrayRequest;
 import com.example.dantesrevelion.mipedido.Adapters.VysorAdapterVentaUsuario;
 import com.example.dantesrevelion.mipedido.Utils.CheckIn;
 import com.example.dantesrevelion.mipedido.Utils.ConnectionUtils;
@@ -47,7 +50,10 @@ public class ListaDeVentas extends BaseActivity {
         volley = VolleyS.getInstance(this.getApplicationContext());
         fRequestQueue = volley.getRequestQueue();
        // makeRequest();
-        makeRequest2();
+       // ConnectionUtils cn=new ConnectionUtils();
+
+
+
         try {
             taskResult= ConnectionUtils.consultaSQLite(this,ConnectionUtils.queryAllUsuarios());
             JSONArray filterResult =new JSONArray();
@@ -131,7 +137,10 @@ public class ListaDeVentas extends BaseActivity {
 
     public void enviarventaClic(View e){
         bt_enviar.setEnabled(false);
-        new callCheckIn().execute();
+
+  //      ConnectionUtils.createConection(getBaseContext());
+ //       makeRequest(ConnectionUtils.getAllGastos());
+//        new callCheckIn().execute();
 
     }
     public void calculaTotal(){
@@ -181,6 +190,7 @@ public class ListaDeVentas extends BaseActivity {
     }
     */
 
+    /*
     public class callCheckIn extends AsyncTask {
 
         //Button bt_enviar=null;
@@ -203,4 +213,5 @@ public class ListaDeVentas extends BaseActivity {
 
         }
     }
+    */
 }

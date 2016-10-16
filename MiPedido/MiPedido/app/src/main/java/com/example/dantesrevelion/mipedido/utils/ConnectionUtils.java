@@ -436,15 +436,19 @@ public class ConnectionUtils {
     }
     public static JSONArray consultaSQLite(Context context,String query){
         JSONArray response=null;
+        SQLiteDatabase db=null;
         try {
             SQLiteHelper sqlHelper = new SQLiteHelper(context, "miPedidoLite", null, 1);
-            SQLiteDatabase db = sqlHelper.getWritableDatabase();
+            db = sqlHelper.getWritableDatabase();
             Cursor c = db.rawQuery(query, null);
             response = cursorToJsonArray(c);
             db.close();
         }catch (SQLiteDatabaseLockedException ex){
            // throw (ex);
+            db.close();
             System.out.println("Locked exception");
+        }finally {
+            db.close();
         }
         return response;
     }

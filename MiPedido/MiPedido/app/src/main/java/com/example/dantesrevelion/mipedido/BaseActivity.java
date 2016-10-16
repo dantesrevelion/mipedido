@@ -15,6 +15,7 @@ import android.view.*;
 import android.view.Menu;
 import android.widget.Toast;
 
+import com.android.volley.AuthFailureError;
 import com.android.volley.DefaultRetryPolicy;
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
@@ -24,10 +25,14 @@ import com.android.volley.toolbox.JsonArrayRequest;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.JsonRequest;
 import com.example.dantesrevelion.mipedido.Utils.CheckIn;
+import com.example.dantesrevelion.mipedido.Utils.ConnectionUtils;
 import com.example.dantesrevelion.mipedido.Utils.VolleyS;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
+
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * Created by Dantes Revelion on 13/07/2016.
@@ -111,8 +116,9 @@ public class BaseActivity extends AppCompatActivity {
         Toast.makeText(this, error.toString(), Toast.LENGTH_SHORT).show();
     }
 
-    public void makeRequest(){
-        String url = "http://maps.googleapis.com/maps/api/geocode/json?latlng=39.476245,-0.349448&sensor=true";
+    public void makeRequestFirst(JsonArrayRequest request){
+    //    String url = "http://maps.googleapis.com/maps/api/geocode/json?latlng=39.476245,-0.349448&sensor=true";
+        /*
         JsonArrayRequest request = new JsonArrayRequest(url, new Response.Listener<JSONArray>() {
             @Override
             public void onResponse(JSONArray jsonArray) {
@@ -128,6 +134,7 @@ public class BaseActivity extends AppCompatActivity {
 
 
         });
+        */
         addToQueue(request);
     }
     public void makeRequest2(){
@@ -150,6 +157,84 @@ public class BaseActivity extends AppCompatActivity {
                 });
 
         addToQueue(jsObjRequest);
+
+    }
+
+    public void makeRequest(String url){
+
+
+
+
+        final JsonArrayRequest requestClose=new JsonArrayRequest(ConnectionUtils.cerrarSesion(), new Response.Listener<JSONArray>() {
+            @Override
+            public void onResponse(JSONArray jsonArray) {
+                //  label.setText(jsonArray.toString());
+                debug("------------->Cerrar sesion"+jsonArray.toString());
+
+            }
+        }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                onConnectionFailed(error);
+            }
+
+
+        });
+        /**Todo SE HACEN LAS PETICIONES EN LISTA*/
+        final JsonArrayRequest requestData=new JsonArrayRequest(url, new Response.Listener<JSONArray>() {
+            @Override
+            public void onResponse(JSONArray jsonArray) {
+                //  label.setText(jsonArray.toString());
+                debug("------------->Response"+jsonArray.toString());
+                fRequestQueue.add(requestClose);
+
+            }
+        }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                onConnectionFailed(error);
+            }
+
+
+        });
+        final JsonArrayRequest requestOpen=new JsonArrayRequest(ConnectionUtils.iniciarSesion(), new Response.Listener<JSONArray>() {
+            @Override
+            public void onResponse(JSONArray jsonArray) {
+                //  label.setText(jsonArray.toString());
+                debug("------------->Iniciar sesion"+jsonArray.toString());
+
+                fRequestQueue.add(requestData);
+            }
+        }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                onConnectionFailed(error);
+            }
+
+
+        });
+
+
+
+        fRequestQueue.add(requestOpen);
+    }
+
+    public void makePostRequest(String url,JSONArray params){
+
+        JsonArrayRequest jsonArrayRequest = new JsonArrayRequest(Request.Method.POST, url, params, new Response.Listener<JSONArray>() {
+            @Override
+            public void onResponse(JSONArray response) {
+               // mTextView.setText(response.toString());
+                System.out.println(" -------------->POST RESPONSE"+response);
+            }
+        }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+              //  mTextView.setText(error.toString());
+                System.out.println("------------->POST ERROR "+error.toString());
+            }
+        }) ;
+        fRequestQueue.add(jsonArrayRequest);
     }
     public void debug(String s){
         System.out.println(s);
