@@ -17,6 +17,11 @@ import android.widget.Toast;
 
 import com.example.dantesrevelion.mipedido.MainActivity;
 import com.example.dantesrevelion.mipedido.R;
+import com.example.dantesrevelion.mipedido.orm.Session;
+import com.google.gson.Gson;
+import com.google.gson.JsonArray;
+import com.google.gson.JsonElement;
+import com.google.gson.reflect.TypeToken;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -39,6 +44,7 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.List;
 
 /**
  * Created by Dantes Revelion on 01/07/2016.
@@ -59,7 +65,7 @@ public class ConnectionUtils {
     private static String PASS="";
     private static String BD="";
     private static String USUARIO_APP="";
-
+    private static Session session;
 
     public ConnectionUtils(){
 
@@ -82,11 +88,20 @@ public class ConnectionUtils {
         setUSUARIO(user);
         setPASS(pass);
         setBD(bd);
-
+        session=new Session();
+        session.setBaseDatos(bd);
+        session.setHost(host);
+        session.setPassword(pass);
+        session.setUsuario(user);
+        session.setDomain(domain);
 
     }
     public static String iniciarSesion(){
         String COMP_USER="http://"+ getDOMAIN() +"/mipedido/res/iniciarSesion.php?h="+getHOST()+"&u="+getUSUARIO()+"&p="+getPASS()+"&b="+getBD();
+        return COMP_USER;
+    }
+    public static String iniciarSesionPost(){
+        String COMP_USER="http://"+ getDOMAIN() +"/mipedido/res/api/iniciarSesionPost.php";
         return COMP_USER;
     }
     public static String cerrarSesion(){
@@ -248,6 +263,12 @@ public class ConnectionUtils {
         }
         return url;
     }
+    public static String insertGastosPost(){
+        String url = "";
+            url = "http://"+ getDOMAIN() +"/mipedido/res/api/gastosinsert.php";
+
+        return url;
+    }
     HttpURLConnection urlConnection;
     InputStream is;
 
@@ -297,6 +318,14 @@ public class ConnectionUtils {
 
     public static void setUsuarioApp(String usuarioApp) {
         USUARIO_APP = usuarioApp;
+    }
+
+    public static Session getSession() {
+        return session;
+    }
+
+    public static void setSession(Session session) {
+        ConnectionUtils.session = session;
     }
 
     public JSONArray connect(String urlParameter) {
@@ -555,5 +584,22 @@ public class ConnectionUtils {
                 .setTicker("BD Actualizada");
         mNotificationManager.notify(01, mBuilder.build());
     }
+    public static JSONArray parseBeantoJsonArray(List lista){
+        Gson gson = new Gson();
+        JsonElement element = gson.toJsonTree(lista, new TypeToken<List<Session>>() {}.getType());
 
+        if (! element.isJsonArray()) {
+           return  null;
+        }else {
+            JsonArray jsonArray = element.getAsJsonArray();
+
+            try {
+                JSONArray data = new JSONArray(jsonArray.toString());
+                System.out.println("---------------> DATA " + data);
+                return data;
+            } catch (JSONException e) {
+               return null;
+            }
+        }
+    }
 }

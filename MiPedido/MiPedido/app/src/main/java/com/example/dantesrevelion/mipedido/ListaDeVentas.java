@@ -1,8 +1,6 @@
 package com.example.dantesrevelion.mipedido;
 
 import android.app.Activity;
-import android.os.AsyncTask;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
@@ -13,19 +11,18 @@ import android.widget.ListView;
 import android.widget.Spinner;
 import android.widget.TextView;
 
-import com.android.volley.Response;
-import com.android.volley.VolleyError;
-import com.android.volley.toolbox.JsonArrayRequest;
 import com.example.dantesrevelion.mipedido.Adapters.VysorAdapterVentaUsuario;
-import com.example.dantesrevelion.mipedido.Utils.CheckIn;
 import com.example.dantesrevelion.mipedido.Utils.ConnectionUtils;
 import com.example.dantesrevelion.mipedido.Utils.VolleyS;
+import com.example.dantesrevelion.mipedido.orm.DatosGastos;
+import com.example.dantesrevelion.mipedido.orm.Session;
 
 import org.json.JSONArray;
 import org.json.JSONException;
 
+import java.util.ArrayList;
 import java.util.Calendar;
-import java.util.concurrent.ExecutionException;
+import java.util.List;
 
 public class ListaDeVentas extends BaseActivity {
     Spinner spinervendedores=null;
@@ -51,6 +48,22 @@ public class ListaDeVentas extends BaseActivity {
         fRequestQueue = volley.getRequestQueue();
        // makeRequest();
        // ConnectionUtils cn=new ConnectionUtils();
+
+        List<Session> listaDatos=new ArrayList<>();
+        Session datos=new Session();
+        ConnectionUtils.createConection(getBaseContext());
+        datos=ConnectionUtils.getSession();
+        listaDatos.add(datos);
+        JSONArray request=ConnectionUtils.parseBeantoJsonArray(listaDatos);
+        makePostRequest(ConnectionUtils.iniciarSesionPost(),request);
+
+
+
+            //  makePostRequest(ConnectionUtils.iniciarSesionPost(),jsonArray);
+
+
+
+
 
 
 

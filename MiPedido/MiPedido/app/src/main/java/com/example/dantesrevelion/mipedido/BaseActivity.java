@@ -27,11 +27,14 @@ import com.android.volley.toolbox.JsonRequest;
 import com.example.dantesrevelion.mipedido.Utils.CheckIn;
 import com.example.dantesrevelion.mipedido.Utils.ConnectionUtils;
 import com.example.dantesrevelion.mipedido.Utils.VolleyS;
+import com.example.dantesrevelion.mipedido.orm.DatosGastos;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -226,11 +229,39 @@ public class BaseActivity extends AppCompatActivity {
             public void onResponse(JSONArray response) {
                // mTextView.setText(response.toString());
                 System.out.println(" -------------->POST RESPONSE"+response);
+                List<DatosGastos> listaGastos=new ArrayList<>();
+                DatosGastos gastos=new DatosGastos();
+                gastos.setCodigo("11111333");
+                gastos.setIdv("22222");
+                gastos.setMonto("555555");
+                gastos.setNombre("Revelion");
+                gastos.setParamFecha("2016-10-05 00:21:47");
+                listaGastos.add(gastos);
+                JSONArray requestGastos=ConnectionUtils.parseBeantoJsonArray(listaGastos);
+                makePostRequestInsert(ConnectionUtils.insertGastosPost(),requestGastos);
             }
         }, new Response.ErrorListener() {
             @Override
             public void onErrorResponse(VolleyError error) {
               //  mTextView.setText(error.toString());
+                System.out.println("------------->POST ERROR "+error.toString());
+            }
+        }) ;
+        fRequestQueue.add(jsonArrayRequest);
+    }
+
+    public void makePostRequestInsert(String url,JSONArray params){
+
+        JsonArrayRequest jsonArrayRequest = new JsonArrayRequest(Request.Method.POST, url, params, new Response.Listener<JSONArray>() {
+            @Override
+            public void onResponse(JSONArray response) {
+                // mTextView.setText(response.toString());
+                System.out.println(" -------------->POST insert"+response);
+            }
+        }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                //  mTextView.setText(error.toString());
                 System.out.println("------------->POST ERROR "+error.toString());
             }
         }) ;
