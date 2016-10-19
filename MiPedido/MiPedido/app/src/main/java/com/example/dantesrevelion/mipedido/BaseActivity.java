@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.database.sqlite.SQLiteDatabase;
 import android.net.ConnectivityManager;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -26,10 +27,13 @@ import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.JsonRequest;
 import com.example.dantesrevelion.mipedido.Utils.CheckIn;
 import com.example.dantesrevelion.mipedido.Utils.ConnectionUtils;
+import com.example.dantesrevelion.mipedido.Utils.SQLiteHelper;
 import com.example.dantesrevelion.mipedido.Utils.VolleyS;
 import com.example.dantesrevelion.mipedido.orm.DatosGastos;
+import com.example.dantesrevelion.mipedido.orm.DatosVenta;
 
 import org.json.JSONArray;
+import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
@@ -45,6 +49,8 @@ public class BaseActivity extends AppCompatActivity {
     public Toolbar toolbar;
     public static  VolleyS volley;
     public static RequestQueue fRequestQueue;
+    List<DatosGastos> listaGastos;
+    List<DatosVenta> listaVentas;
 
 
     @Override
@@ -205,7 +211,6 @@ public class BaseActivity extends AppCompatActivity {
             public void onResponse(JSONArray jsonArray) {
                 //  label.setText(jsonArray.toString());
                 debug("------------->Iniciar sesion"+jsonArray.toString());
-
                 fRequestQueue.add(requestData);
             }
         }, new Response.ErrorListener() {
@@ -222,23 +227,24 @@ public class BaseActivity extends AppCompatActivity {
         fRequestQueue.add(requestOpen);
     }
 
-    public void makePostRequest(String url,JSONArray params){
+
+    public void makePostVentasRequest(String url,JSONArray params){
 
         JsonArrayRequest jsonArrayRequest = new JsonArrayRequest(Request.Method.POST, url, params, new Response.Listener<JSONArray>() {
             @Override
             public void onResponse(JSONArray response) {
                // mTextView.setText(response.toString());
                 System.out.println(" -------------->POST RESPONSE"+response);
-                List<DatosGastos> listaGastos=new ArrayList<>();
-                DatosGastos gastos=new DatosGastos();
-                gastos.setCodigo("11111333");
-                gastos.setIdv("22222");
-                gastos.setMonto("555555");
-                gastos.setNombre("Revelion");
-                gastos.setParamFecha("2016-10-05 00:21:47");
-                listaGastos.add(gastos);
-                JSONArray requestGastos=ConnectionUtils.parseBeantoJsonArray(listaGastos);
-                makePostRequestInsert(ConnectionUtils.insertGastosPost(),requestGastos);
+                try {
+                    if("ok".equals(response.getJSONObject(0).get("a"))){
+                        for(DatosVenta item: listaVentas){
+                            ConnectionUtils.consultaSQLite(getBaseContext(),ConnectionUtils.updateEstadoVentatoS(item.getId()));
+                        }
+                    }
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+
             }
         }, new Response.ErrorListener() {
             @Override
@@ -249,14 +255,23 @@ public class BaseActivity extends AppCompatActivity {
         }) ;
         fRequestQueue.add(jsonArrayRequest);
     }
-
-    public void makePostRequestInsert(String url,JSONArray params){
+    public void makePostGastosRequest(String url,JSONArray params){
 
         JsonArrayRequest jsonArrayRequest = new JsonArrayRequest(Request.Method.POST, url, params, new Response.Listener<JSONArray>() {
             @Override
             public void onResponse(JSONArray response) {
                 // mTextView.setText(response.toString());
-                System.out.println(" -------------->POST insert"+response);
+                System.out.println(" -------------->POST RESPONSE"+response);
+                try {
+                    if("ok".equals(response.getJSONObject(0).get("a"))){
+                        for(DatosGastos item: listaGastos){
+                            ConnectionUtils.consultaSQLite(getBaseContext(),ConnectionUtils.updateEstadoGastosS(item.getId()));
+                        }
+                    }
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+
             }
         }, new Response.ErrorListener() {
             @Override
@@ -267,8 +282,87 @@ public class BaseActivity extends AppCompatActivity {
         }) ;
         fRequestQueue.add(jsonArrayRequest);
     }
+
+
     public void debug(String s){
         System.out.println(s);
+    }
+
+    public void runUpdate(){
+        /**TODO INICIA RUN UPDATE*/
+        System.out.println("----------->INICIA RUN UPDATE");
+        System.out.println("----------->OPTIENE BASE DE DATOS");
+        SQLiteHelper sqlHelper=new SQLiteHelper(getBaseContext(), "miPedidoLite", null, 1);
+        SQLiteDatabase db = sqlHelper.getWritableDatabase();
+
+        System.out.println("----------->OPTIENE DATOS A SUBIR");
+        JSONArray taskResult= ConnectionUtils.consultaSQLite(getBaseContext(),ConnectionUtils.queryCarritoUp());
+        JSONArray taskResultGastos= ConnectionUtils.consultaSQLite(getBaseContext(),ConnectionUtils.queryGastosUp());
+        System.out.println("----------->SUBE LOS DATOS");
+        try {
+            listaGastos=new ArrayList<>();
+            listaVentas=new ArrayList<>();
+            ConnectionUtils.createConection(getBaseContext());
+
+            System.out.println("----------->LLENA REQUEST VENTAS");
+            for (int i = 0; i < taskResult.length(); i++) {
+                String idp = taskResult.getJSONObject(i).getString("id_producto");
+                String idv = taskResult.getJSONObject(i).getString("id_vendedor");
+                String cantidad = taskResult.getJSONObject(i).getString("cantidad");
+                String monto = taskResult.getJSONObject(i).getString("monto");
+                String fecha = taskResult.getJSONObject(i).getString("fecha");
+                String idventa = taskResult.getJSONObject(i).getString("id_venta");
+                DatosVenta ventas=new DatosVenta();
+                ventas.setSession(ConnectionUtils.getSession());
+                ventas.setMonto(monto);
+                ventas.setCantidad(cantidad);
+                ventas.setFecha(fecha);
+                ventas.setIdp(idp);
+                ventas.setIdv(idv);
+                ventas.setId(idventa);
+                listaVentas.add(ventas);
+                //   new CheckIn.InsertIntoVentas().execute(idp, idv, cantidad, monto, fecha, idventa);
+                //     makeRequest(ConnectionUtils.insertVentas(idp,idv,cantidad,monto,fecha));
+
+            }
+            System.out.println("----------->LLENA REQUEST GASTOS");
+            for (int i = 0; i < taskResultGastos.length(); i++) {
+                String idv = taskResultGastos.getJSONObject(i).getString("idvendedor");
+                String nombre = taskResultGastos.getJSONObject(i).getString("nombre");
+                String codigo = taskResultGastos.getJSONObject(i).getString("codigo");
+                String monto = taskResultGastos.getJSONObject(i).getString("monto");
+                String fecha = taskResultGastos.getJSONObject(i).getString("fecha");
+                String id = taskResultGastos.getJSONObject(i).getString("id");
+                DatosGastos gastos=new DatosGastos();
+                gastos.setCodigo(codigo);
+                gastos.setIdv(idv);
+                gastos.setMonto(monto);
+                gastos.setNombre(nombre);
+                gastos.setParamFecha(fecha);
+                gastos.setId(id);
+                gastos.setSession(ConnectionUtils.getSession());
+                listaGastos.add(gastos);
+
+                //   new CheckIn.InsertIntoGastos().execute(idv, nombre, codigo, monto, fecha, id);
+
+            }
+
+            System.out.println("----------->INICIA PETICIONES");
+            if(listaVentas.size()>0){
+                JSONArray requestVentas=ConnectionUtils.parseBeantoJsonArray(listaVentas);
+                makePostVentasRequest(ConnectionUtils.insertVentasPost(),requestVentas);
+            }
+            if(listaGastos.size()>0){
+                JSONArray requestGastos=ConnectionUtils.parseBeantoJsonArray(listaGastos);
+                makePostGastosRequest(ConnectionUtils.insertGastosPost(),requestGastos);
+            }
+
+            System.out.println("----------->INICIA DESCARGA");
+
+
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
     }
 
 

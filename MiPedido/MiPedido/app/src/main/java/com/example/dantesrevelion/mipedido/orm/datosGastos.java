@@ -5,11 +5,13 @@ package com.example.dantesrevelion.mipedido.orm;
  */
 
 public class DatosGastos {
+    private String id;
     private String idv;
     private String nombre;
     private String codigo;
     private String monto;
     private String paramFecha;
+    private Session session;
 
     public String getIdv() {
         return idv;
@@ -49,5 +51,21 @@ public class DatosGastos {
 
     public void setParamFecha(String paramFecha) {
         this.paramFecha = paramFecha;
+    }
+
+    public Session getSession() {
+        return session;
+    }
+
+    public void setSession(Session session) {
+        this.session = session;
+    }
+
+    public String getId() {
+        return id;
+    }
+
+    public void setId(String id) {
+        this.id = id;
     }
 }

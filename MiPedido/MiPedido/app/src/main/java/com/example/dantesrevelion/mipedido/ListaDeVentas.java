@@ -15,10 +15,12 @@ import com.example.dantesrevelion.mipedido.Adapters.VysorAdapterVentaUsuario;
 import com.example.dantesrevelion.mipedido.Utils.ConnectionUtils;
 import com.example.dantesrevelion.mipedido.Utils.VolleyS;
 import com.example.dantesrevelion.mipedido.orm.DatosGastos;
+import com.example.dantesrevelion.mipedido.orm.DatosVenta;
 import com.example.dantesrevelion.mipedido.orm.Session;
 
 import org.json.JSONArray;
 import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -49,17 +51,42 @@ public class ListaDeVentas extends BaseActivity {
        // makeRequest();
        // ConnectionUtils cn=new ConnectionUtils();
 
-        List<Session> listaDatos=new ArrayList<>();
-        Session datos=new Session();
+
+        /*
         ConnectionUtils.createConection(getBaseContext());
-        datos=ConnectionUtils.getSession();
-        listaDatos.add(datos);
-        JSONArray request=ConnectionUtils.parseBeantoJsonArray(listaDatos);
-        makePostRequest(ConnectionUtils.iniciarSesionPost(),request);
+        List<DatosGastos> listaGastos=new ArrayList<>();
+        DatosGastos gastos=new DatosGastos();
+        gastos.setCodigo("11111333");
+        gastos.setIdv("22222");
+        gastos.setMonto("555555");
+        gastos.setNombre("Revelion");
+        gastos.setParamFecha("2016-10-05 00:21:47");
+        gastos.setSession(ConnectionUtils.getSession());
+        listaGastos.add(gastos);
+        listaGastos.add(gastos);
+        listaGastos.add(gastos);
+        JSONArray requestGastos=ConnectionUtils.parseBeantoJsonArray(listaGastos);
+        makePostRequest(ConnectionUtils.insertGastosPost(),requestGastos);
 
+        ConnectionUtils.createConection(getBaseContext());
+        List<DatosVenta> listaVentas=new ArrayList<>();
+        DatosVenta ventas=new DatosVenta();
+        ventas.setSession(ConnectionUtils.getSession());
+        ventas.setMonto("123");
+        ventas.setCantidad("223");
+        ventas.setFecha("2016-10-05 00:21:47");
+        ventas.setIdp("333");
+        ventas.setIdv("666");
+        listaVentas.add(ventas);
+        listaVentas.add(ventas);
+        listaVentas.add(ventas);
+        listaVentas.add(ventas);
+        JSONArray requestVentas=ConnectionUtils.parseBeantoJsonArray(listaVentas);
+        makePostRequest(ConnectionUtils.insertVentasPost(),requestVentas);
+        */
+        ConnectionUtils.createConection(getBaseContext());
+        makeRequest(ConnectionUtils.getAllVentasParameter());
 
-
-            //  makePostRequest(ConnectionUtils.iniciarSesionPost(),jsonArray);
 
 
 

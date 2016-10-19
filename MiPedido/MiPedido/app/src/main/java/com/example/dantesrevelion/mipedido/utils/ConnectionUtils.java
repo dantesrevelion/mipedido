@@ -254,6 +254,11 @@ public class ConnectionUtils {
         }
         return url;
     }
+    public static String insertVentasPost(){
+        String url = "";
+            url = "http://"+ getDOMAIN() +"/mipedido/res/api/ventasinsert.php?";
+        return url;
+    }
     public static String insertGastosWEB(String idv,String nombre,String codigo,String monto,String paramFecha){
         String url = "";
         try {
