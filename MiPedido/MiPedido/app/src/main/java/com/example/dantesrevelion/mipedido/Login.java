@@ -91,7 +91,8 @@ public class Login extends BaseActivity {
     protected void onResume() {
         super.onResume();
         if(wasConfigOpen){
-            runUpdate();
+            new Connection().execute();
+            wasConfigOpen=false;
         }
     }
 
@@ -158,24 +159,19 @@ public class Login extends BaseActivity {
         editor.putString("PasswordLogin",pass);
         editor.commit();
     }
-    /*
+
     private class Connection extends AsyncTask {
 
         @Override
         protected Object doInBackground(Object... param) {
+            runUpdate();
 
-            JSONArray response=null;
-            ConnectionUtils cn=new ConnectionUtils();
-            if(param!=null){
-                if(!param[0].toString().trim().equals("")){
-                    response=cn.connect(ConnectionUtils.getUserParameter(param[0].toString()));
-                }
-            }
-            return response;
+            return true;
         }
 
     }
 
+    /*
     private class ConnectionUserPass extends AsyncTask {
 
         @Override
