@@ -78,6 +78,7 @@ public class ConectionTask extends AsyncTask{
                 }
                 ConnectionUtils.setprogress(50, c);
             }
+
             tablaProductos=searchError(responses.getResponseProductos());
             if(!tablaProductos) {
                 db.execSQL("delete from productos");

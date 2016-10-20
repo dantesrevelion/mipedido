@@ -84,8 +84,8 @@ public class ListaDeVentas extends BaseActivity {
         JSONArray requestVentas=ConnectionUtils.parseBeantoJsonArray(listaVentas);
         makePostRequest(ConnectionUtils.insertVentasPost(),requestVentas);
         */
-        ConnectionUtils.createConection(getBaseContext());
-        makeRequest(ConnectionUtils.getAllVentasParameter());
+        //ConnectionUtils.createConection(getBaseContext());
+        //makeRequest(ConnectionUtils.getAllVentasParameter());
 
 
 
@@ -177,7 +177,7 @@ public class ListaDeVentas extends BaseActivity {
 
     public void enviarventaClic(View e){
         bt_enviar.setEnabled(false);
-
+        runUpdate();
   //      ConnectionUtils.createConection(getBaseContext());
  //       makeRequest(ConnectionUtils.getAllGastos());
 //        new callCheckIn().execute();

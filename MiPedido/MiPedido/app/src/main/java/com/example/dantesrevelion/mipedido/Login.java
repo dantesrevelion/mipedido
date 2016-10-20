@@ -24,6 +24,7 @@ import com.example.dantesrevelion.mipedido.Utils.ConectionTask;
 import com.example.dantesrevelion.mipedido.Utils.ConnectionUtils;
 import com.example.dantesrevelion.mipedido.Utils.MyAnimationUtils;
 import com.example.dantesrevelion.mipedido.Utils.SQLiteHelper;
+import com.example.dantesrevelion.mipedido.Utils.VolleyS;
 
 
 import org.json.JSONArray;
@@ -33,13 +34,14 @@ import java.net.CookieHandler;
 import java.net.CookieManager;
 import java.util.concurrent.ExecutionException;
 
-public class Login extends AppCompatActivity {
+public class Login extends BaseActivity {
 
     LinearLayout layoutUser;
     LinearLayout layoutPass;
     EditText inputTextUser=null;
     EditText inputTextPsw=null;
     NetworkState receiver=null;
+    boolean wasConfigOpen=false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -53,6 +55,8 @@ public class Login extends AppCompatActivity {
         IntentFilter filter = new IntentFilter(ConnectivityManager.CONNECTIVITY_ACTION);
         receiver = new NetworkState(this);
         registerReceiver(receiver, filter);
+        volley = VolleyS.getInstance(this.getApplicationContext());
+        fRequestQueue = volley.getRequestQueue();
 
         /*
         if(ConnectionUtils.conectadoWifi(this) || ConnectionUtils.conectadoRedMovil(this)) {
@@ -81,6 +85,14 @@ public class Login extends AppCompatActivity {
        // ConnectionUtils.consultaSQLite(this,"select * from usuarios");
         MyAnimationUtils.translateAnimation(layoutUser, 800L, 2.0f, 1000, 0, 0, 0);
 
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        if(wasConfigOpen){
+            runUpdate();
+        }
     }
 
     public void nextStep(View view){
@@ -136,6 +148,7 @@ public class Login extends AppCompatActivity {
     public void openConfig(View v){
         Intent intent=new Intent(Login.this,Configuracion.class);
         startActivity(intent);
+        wasConfigOpen=true;
     }
 
     public void rememberUser(String user,String pass){

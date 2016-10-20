@@ -29,7 +29,7 @@ public class Configuracion extends PreferenceActivity {
         ConnectionUtils.createConection(getBaseContext());
         if(ConnectionUtils.conectadoWifi(this) || ConnectionUtils.conectadoRedMovil(this)) {
            // CheckIn.checkInProcess(this.getBaseContext(),this);
-            new callCheckIn().execute();
+           // new callCheckIn().execute();
         }
         super.onDestroy();
     }

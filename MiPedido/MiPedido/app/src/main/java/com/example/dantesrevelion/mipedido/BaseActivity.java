@@ -194,7 +194,7 @@ public class BaseActivity extends AppCompatActivity {
             @Override
             public void onResponse(JSONArray jsonArray) {
                 //  label.setText(jsonArray.toString());
-                debug("------------->Response"+jsonArray.toString());
+                debug("------------->Response "+jsonArray.toString());
                 fRequestQueue.add(requestClose);
 
             }
@@ -321,8 +321,7 @@ public class BaseActivity extends AppCompatActivity {
                 ventas.setIdv(idv);
                 ventas.setId(idventa);
                 listaVentas.add(ventas);
-                //   new CheckIn.InsertIntoVentas().execute(idp, idv, cantidad, monto, fecha, idventa);
-                //     makeRequest(ConnectionUtils.insertVentas(idp,idv,cantidad,monto,fecha));
+
 
             }
             System.out.println("----------->LLENA REQUEST GASTOS");
@@ -343,8 +342,6 @@ public class BaseActivity extends AppCompatActivity {
                 gastos.setSession(ConnectionUtils.getSession());
                 listaGastos.add(gastos);
 
-                //   new CheckIn.InsertIntoGastos().execute(idv, nombre, codigo, monto, fecha, id);
-
             }
 
             System.out.println("----------->INICIA PETICIONES");
@@ -358,11 +355,192 @@ public class BaseActivity extends AppCompatActivity {
             }
 
             System.out.println("----------->INICIA DESCARGA");
-
+            runDownload();
 
         } catch (JSONException e) {
             e.printStackTrace();
         }
+    }
+
+    public void runDownload(){
+        final JsonArrayRequest requestClose=new JsonArrayRequest(ConnectionUtils.cerrarSesion(), new Response.Listener<JSONArray>() {
+            @Override
+            public void onResponse(JSONArray jsonArray) {
+                //  label.setText(jsonArray.toString());
+                debug("------------->Cerrar sesion"+jsonArray.toString());
+
+            }
+        }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                onConnectionFailed(error);
+            }
+
+
+        });
+
+        final JsonArrayRequest requestUsuarios=new JsonArrayRequest(ConnectionUtils.getAllUsuariosParameter(), new Response.Listener<JSONArray>() {
+            @Override
+            public void onResponse(JSONArray jsonArray) {
+                debug("------------->Response Usuarios"+jsonArray.toString());
+
+                SQLiteHelper sqlHelper=new SQLiteHelper(getBaseContext(), "miPedidoLite", null, 1);
+                SQLiteDatabase db = sqlHelper.getWritableDatabase();
+
+                db.execSQL("delete from usuarios");
+                db.execSQL("VACUUM");
+                JSONArray usuarios = jsonArray;
+
+                for (int i = 0; i < usuarios.length(); i++) {
+                    try {
+                        JSONObject obj = usuarios.getJSONObject(i);
+                        db.execSQL("INSERT INTO usuarios (id, usuario, password,correo) " +
+                                "VALUES (" + obj.get("id") + ", '" + obj.get("usuario") + "', '" + obj.get("password") + "','" + obj.get("correo") + "' )");
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
+
+                }
+                db.close();
+                fRequestQueue.add(requestClose);
+            }
+        }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                onConnectionFailed(error);
+            }
+
+
+        });
+        final JsonArrayRequest requestVentas=new JsonArrayRequest(ConnectionUtils.getAllVentasParameter(), new Response.Listener<JSONArray>() {
+            @Override
+            public void onResponse(JSONArray jsonArray) {
+
+                debug("------------->Response Ventas"+jsonArray.toString());
+                SQLiteHelper sqlHelper=new SQLiteHelper(getBaseContext(), "miPedidoLite", null, 1);
+                SQLiteDatabase db = sqlHelper.getWritableDatabase();
+
+                db.execSQL("delete from ventas");
+                db.execSQL("VACUUM");
+                JSONArray ventas = jsonArray;
+
+                for (int i = 0; i < ventas.length(); i++) {
+                    try {
+                        JSONObject obj = ventas.getJSONObject(i);
+                        db.execSQL("INSERT INTO ventas (id_venta, id_producto, id_vendedor,fecha,cantidad,monto) " +
+                                "VALUES (" + obj.get("id_venta") + ", " + obj.get("id_producto") + ", " + obj.get("id_vendedor") + ",'" + obj.get("fecha")
+                                + "'," + obj.get("cantidad") + "," + obj.get("monto") + " )");
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
+
+                }
+                db.close();
+                fRequestQueue.add(requestUsuarios);
+            }
+        }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                onConnectionFailed(error);
+            }
+
+
+        });
+        final JsonArrayRequest requestProductos=new JsonArrayRequest(ConnectionUtils.getAllProdParameter(), new Response.Listener<JSONArray>() {
+            @Override
+            public void onResponse(JSONArray jsonArray) {
+
+                debug("------------->Response Productos"+jsonArray.toString());
+                SQLiteHelper sqlHelper=new SQLiteHelper(getBaseContext(), "miPedidoLite", null, 1);
+                SQLiteDatabase db = sqlHelper.getWritableDatabase();
+
+                db.execSQL("delete from productos");
+                db.execSQL("VACUUM");
+                JSONArray productos = jsonArray;
+
+
+                for (int i = 0; i < productos.length(); i++) {
+                    try {
+                        JSONObject obj = productos.getJSONObject(i);
+                        db.execSQL("INSERT INTO productos (id, nombre, denominacion,costo,marca,img) " +
+                                "VALUES (" + obj.get("id") + ", '" + obj.get("nombre") + "', '" + obj.get("denominacion") + "'," + obj.get("costo") + ",'" +
+                                obj.get("marca") + "','" + obj.get("img") + "')");
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
+
+                }
+                db.close();
+                fRequestQueue.add(requestVentas);
+            }
+        }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                onConnectionFailed(error);
+            }
+
+
+        });
+
+        final JsonArrayRequest requestGastos=new JsonArrayRequest(ConnectionUtils.getAllGastos(), new Response.Listener<JSONArray>() {
+            @Override
+            public void onResponse(JSONArray jsonArray) {
+
+                debug("------------->Response Gastos"+jsonArray.toString());
+                SQLiteHelper sqlHelper=new SQLiteHelper(getBaseContext(), "miPedidoLite", null, 1);
+                SQLiteDatabase db = sqlHelper.getWritableDatabase();
+                db.execSQL("delete from gastos");
+                db.execSQL("VACUUM");
+                JSONArray gastos = jsonArray;
+
+                for (int i = 0; i < gastos.length(); i++) {
+                    try {
+                        JSONObject obj = gastos.getJSONObject(i);
+                        db.execSQL("INSERT INTO `gastos` (`id`, `idvendedor`, `nombre`, `codigo`, `monto`, `fecha`,`estatus`) " +
+                                "VALUES (" + obj.get("id") + ", " + obj.get("idvendedor") + ", '" + obj.get("nombre") + "', '" + obj.get("codigo") + "', " + obj.get("monto") + ", '" + obj.get("fecha") + "','S')");
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
+
+                }
+                db.close();
+                fRequestQueue.add(requestProductos);
+
+            }
+        }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                onConnectionFailed(error);
+            }
+
+
+        });
+
+
+        final JsonArrayRequest requestOpen=new JsonArrayRequest(ConnectionUtils.iniciarSesion(), new Response.Listener<JSONArray>() {
+            @Override
+            public void onResponse(JSONArray jsonArray) {
+
+                debug("------------->Iniciar sesion"+jsonArray.toString());
+
+
+
+                fRequestQueue.add(requestGastos);
+
+            }
+        }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                onConnectionFailed(error);
+            }
+
+
+        });
+
+
+
+        fRequestQueue.add(requestOpen);
+
     }
 
 
