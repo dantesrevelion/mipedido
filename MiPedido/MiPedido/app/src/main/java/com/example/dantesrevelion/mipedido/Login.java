@@ -160,16 +160,7 @@ public class Login extends BaseActivity {
         editor.commit();
     }
 
-    private class Connection extends AsyncTask {
 
-        @Override
-        protected Object doInBackground(Object... param) {
-            runUpdate();
-
-            return true;
-        }
-
-    }
 
     /*
     private class ConnectionUserPass extends AsyncTask {

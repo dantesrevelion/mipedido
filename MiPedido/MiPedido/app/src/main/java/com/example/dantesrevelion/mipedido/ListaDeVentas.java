@@ -177,7 +177,7 @@ public class ListaDeVentas extends BaseActivity {
 
     public void enviarventaClic(View e){
         bt_enviar.setEnabled(false);
-        runUpdate();
+        //runUpdate();
   //      ConnectionUtils.createConection(getBaseContext());
  //       makeRequest(ConnectionUtils.getAllGastos());
 //        new callCheckIn().execute();
