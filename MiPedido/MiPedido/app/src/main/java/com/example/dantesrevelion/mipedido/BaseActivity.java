@@ -302,6 +302,7 @@ public class BaseActivity extends AppCompatActivity {
             return true;
         }
 
+
         public void runUpdate(){
             /**TODO INICIA RUN UPDATE*/
             System.out.println("----------->INICIA RUN UPDATE");
@@ -405,6 +406,7 @@ public class BaseActivity extends AppCompatActivity {
                     db.execSQL("VACUUM");
                     JSONArray usuarios = jsonArray;
 
+                    /*
                     for (int i = 0; i < usuarios.length(); i++) {
                         try {
                             JSONObject obj = usuarios.getJSONObject(i);
@@ -415,6 +417,32 @@ public class BaseActivity extends AppCompatActivity {
                         }
 
                     }
+                    */
+                    db.beginTransaction();
+                    try {
+                        //makeAllInserts();
+                        for(int i = 0; i < usuarios.length(); i++) {
+                            //  myDataBase = db.openDatabase();
+                            JSONObject obj = usuarios.getJSONObject(i);
+                            ContentValues values = new ContentValues();
+                            values.put("id", obj.get("id").toString());
+                            values.put("usuario", obj.get("usuario").toString());
+                            values.put("password", obj.get("password").toString());
+                            values.put("correo", obj.get("correo").toString());
+
+
+                            db.insert("usuarios", "correo", values);
+
+                        }
+                        db.setTransactionSuccessful();
+                        System.out.println("-----SQLite Trasn Succesful ");
+                    }catch (Exception ex){
+                        System.out.println("-----SQLite Trasn Ex "+ex);
+                    }finally {
+                        db.endTransaction();
+                    }
+
+
                     db.close();
                     fRequestQueue.add(requestClose);
                 }
@@ -501,7 +529,7 @@ public class BaseActivity extends AppCompatActivity {
                     db.execSQL("VACUUM");
                     JSONArray productos = jsonArray;
 
-
+                    /*
                     for (int i = 0; i < productos.length(); i++) {
                         try {
                             JSONObject obj = productos.getJSONObject(i);
@@ -513,6 +541,36 @@ public class BaseActivity extends AppCompatActivity {
                         }
 
                     }
+                    */
+
+                    db.beginTransaction();
+                    try {
+                        //makeAllInserts();
+                        for(int i = 0; i < productos.length(); i++) {
+                            //  myDataBase = db.openDatabase();
+                            JSONObject obj = productos.getJSONObject(i);
+                            ContentValues values = new ContentValues();
+                            values.put("id", obj.get("id").toString());
+                            values.put("nombre", obj.get("nombre").toString());
+                            values.put("denominacion", obj.get("denominacion").toString());
+                            values.put("costo", obj.get("costo").toString());
+                            values.put("marca", obj.get("marca").toString());
+                            values.put("img", obj.get("img").toString());
+
+
+                            db.insert("productos", "monto", values);
+
+                        }
+                        db.setTransactionSuccessful();
+                        System.out.println("-----SQLite Trasn Succesful ");
+                    }catch (Exception ex){
+                        System.out.println("-----SQLite Trasn Ex "+ex);
+                    }finally {
+                        db.endTransaction();
+                    }
+
+
+
                     db.close();
                     fRequestQueue.add(requestVentas);
                 }
@@ -536,6 +594,7 @@ public class BaseActivity extends AppCompatActivity {
                     db.execSQL("VACUUM");
                     JSONArray gastos = jsonArray;
 
+                    /*
                     for (int i = 0; i < gastos.length(); i++) {
                         try {
                             JSONObject obj = gastos.getJSONObject(i);
@@ -545,6 +604,34 @@ public class BaseActivity extends AppCompatActivity {
                             e.printStackTrace();
                         }
 
+                    }
+                    */
+
+                    db.beginTransaction();
+                    try {
+                        //makeAllInserts();
+                        for(int i = 0; i < gastos.length(); i++) {
+                            //  myDataBase = db.openDatabase();
+                            JSONObject obj = gastos.getJSONObject(i);
+                            ContentValues values = new ContentValues();
+                            values.put("id", obj.get("id").toString());
+                            values.put("idvendedor", obj.get("nombre").toString());
+                            values.put("nombre", obj.get("denominacion").toString());
+                            values.put("codigo", obj.get("costo").toString());
+                            values.put("monto", obj.get("marca").toString());
+                            values.put("fecha", obj.get("img").toString());
+                            values.put("estatus", obj.get("img").toString());
+
+
+                            db.insert("gastos", "monto", values);
+
+                        }
+                        db.setTransactionSuccessful();
+                        System.out.println("-----SQLite Trasn Succesful ");
+                    }catch (Exception ex){
+                        System.out.println("-----SQLite Trasn Ex "+ex);
+                    }finally {
+                        db.endTransaction();
                     }
                     db.close();
                     fRequestQueue.add(requestProductos);

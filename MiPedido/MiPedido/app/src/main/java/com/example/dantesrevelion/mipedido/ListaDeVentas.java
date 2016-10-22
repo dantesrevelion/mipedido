@@ -1,6 +1,7 @@
 package com.example.dantesrevelion.mipedido;
 
 import android.app.Activity;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
@@ -175,8 +176,16 @@ public class ListaDeVentas extends BaseActivity {
         }
     };
 
+
     public void enviarventaClic(View e){
         bt_enviar.setEnabled(false);
+        Connection c=new Connection();
+        c.execute();
+
+
+
+
+
         //runUpdate();
   //      ConnectionUtils.createConection(getBaseContext());
  //       makeRequest(ConnectionUtils.getAllGastos());
@@ -200,6 +209,10 @@ public class ListaDeVentas extends BaseActivity {
         tv_total.setText("$"+total);
         tv_cantidad.setText(String.valueOf(cantidadTotal));
     }
+
+
+
+
     /*
     private class ConnectionAllUsuarios extends AsyncTask {
 
