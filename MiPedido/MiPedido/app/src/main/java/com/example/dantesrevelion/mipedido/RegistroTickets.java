@@ -1,6 +1,8 @@
 package com.example.dantesrevelion.mipedido;
 
 import android.app.Activity;
+import android.content.ContentValues;
+import android.database.sqlite.SQLiteDatabase;
 import android.os.AsyncTask;
 import android.support.v4.app.DialogFragment;
 import android.support.v7.app.AppCompatActivity;
@@ -17,11 +19,13 @@ import android.widget.Toast;
 import com.example.dantesrevelion.mipedido.Adapters.VysorAdapterRegistroTickets;
 import com.example.dantesrevelion.mipedido.Utils.CheckIn;
 import com.example.dantesrevelion.mipedido.Utils.ConnectionUtils;
+import com.example.dantesrevelion.mipedido.Utils.SQLiteHelper;
 import com.example.dantesrevelion.mipedido.Utils.ViewUtils;
 
 import org.json.JSONArray;
 
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
@@ -96,6 +100,7 @@ public class RegistroTickets extends BaseActivity implements View.OnClickListene
 
             case R.id.registrar_registro:
                 if(!"".equals(inputFecha.getText().toString().trim())) {
+                    /*
                     for (int i = 0; i < n; i++) {
                         EditText ed_nombre = (EditText) ViewUtils.getViewByPosition((i), lista).findViewById(R.id.et_nombre_item_reg);
                         EditText ed_monto = (EditText) ViewUtils.getViewByPosition((i), lista).findViewById(R.id.et_monto_item_reg);
@@ -109,6 +114,54 @@ public class RegistroTickets extends BaseActivity implements View.OnClickListene
                                 "Gastos Registrados", Toast.LENGTH_SHORT);
                         toast1.show();
                     }
+                    */
+
+                    SQLiteHelper sqlHelper=new SQLiteHelper(getBaseContext(), "miPedidoLite", null, 1);
+                    SQLiteDatabase db = sqlHelper.getWritableDatabase();
+                    db.beginTransaction();
+                    try {
+                        for (int i = 0; i < n; i++) {
+                            EditText ed_nombre = (EditText) ViewUtils.getViewByPosition((i), lista).findViewById(R.id.et_nombre_item_reg);
+                            EditText ed_monto = (EditText) ViewUtils.getViewByPosition((i), lista).findViewById(R.id.et_monto_item_reg);
+                            EditText ed_codigo = (EditText) ViewUtils.getViewByPosition((i), lista).findViewById(R.id.et_codigo_item_reg);
+
+                            ContentValues values = new ContentValues();
+
+                            Calendar c = Calendar.getInstance();
+                            int year = c.get(Calendar.YEAR);
+                            int month = c.get(Calendar.MONTH);
+                            int day = c.get(Calendar.DAY_OF_MONTH);
+                            String fecha=year+"-"+(month+1)+"-"+day+" "+c.get(Calendar.HOUR)+":"+c.get(Calendar.MINUTE)+":"+c.get(Calendar.SECOND);
+                            String formated=ConnectionUtils.formatDateGeneral(fecha,"yyyy-MM-dd HH:mm:ss");
+
+                            values.put("idvendedor", idu);
+                            values.put("nombre", ed_nombre.getText().toString());
+                            values.put("codigo", ed_codigo.getText().toString());
+                            values.put("monto", ed_monto.getText().toString());
+                            values.put("fecha", formated);
+                            values.put("estatus", "P");
+
+                            //ContentValues valuesUp = new ContentValues();
+                            //valuesUp.put("estatus","V");
+
+                            //db.update("carritos", valuesUp, "id_venta=" +taskResult.getJSONObject(i).getString("id_venta"), null);
+                            db.insert("gastos", "monto", values);
+
+
+                            //db.update("gastos", values, "id=" + listaGastos.get(i).getId(), null);
+                        }
+                        db.setTransactionSuccessful();
+                        Toast toast1 = Toast.makeText(getApplicationContext(),
+                                "Gastos Registrados", Toast.LENGTH_SHORT);
+                        toast1.show();
+                        System.out.println("-----SQLite Trasn Succesful ");
+                    } catch (Exception ex) {
+                        System.out.println("-----SQLite Trasn Ex " + ex);
+                    } finally {
+                        db.endTransaction();
+                    }
+
+
 
 
                     /*

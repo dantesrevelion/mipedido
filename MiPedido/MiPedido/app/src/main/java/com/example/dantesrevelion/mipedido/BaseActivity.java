@@ -236,10 +236,25 @@ public class BaseActivity extends AppCompatActivity {
             public void onResponse(JSONArray response) {
                // mTextView.setText(response.toString());
                 System.out.println(" -------------->POST RESPONSE"+response);
+                System.out.println(" -------------->ACTUALIZA VENTAS");
+                SQLiteHelper sqlHelper=new SQLiteHelper(getBaseContext(), "miPedidoLite", null, 1);
+                SQLiteDatabase db = sqlHelper.getWritableDatabase();
                 try {
-                    if("ok".equals(response.getJSONObject(0).get("a"))){
-                        for(DatosVenta item: listaVentas){
-                            ConnectionUtils.consultaSQLite(getBaseContext(),ConnectionUtils.updateEstadoVentatoS(item.getId()));
+                    if("ok".equals(response.getJSONObject(0).get("a"))) {
+                        db.beginTransaction();
+                        try {
+                            //makeAllInserts();
+                            for (int i = 0; i < listaVentas.size(); i++) {
+                                ContentValues values = new ContentValues();
+                                values.put("estatus", "S");
+                                db.update("carrito", values, "id_venta=" + listaVentas.get(i).getId(), null);
+                            }
+                            db.setTransactionSuccessful();
+                            System.out.println("-----SQLite Trasn Succesful ");
+                        } catch (Exception ex) {
+                            System.out.println("-----SQLite Trasn Ex " + ex);
+                        } finally {
+                            db.endTransaction();
                         }
                     }
                 } catch (JSONException e) {
@@ -262,11 +277,39 @@ public class BaseActivity extends AppCompatActivity {
             @Override
             public void onResponse(JSONArray response) {
                 // mTextView.setText(response.toString());
+                /*
                 System.out.println(" -------------->POST RESPONSE"+response);
                 try {
                     if("ok".equals(response.getJSONObject(0).get("a"))){
                         for(DatosGastos item: listaGastos){
                             ConnectionUtils.consultaSQLite(getBaseContext(),ConnectionUtils.updateEstadoGastosS(item.getId()));
+                        }
+                    }
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+                */
+
+                System.out.println(" -------------->POST RESPONSE"+response);
+                System.out.println(" -------------->ACTUALIZA GASTOS");
+                SQLiteHelper sqlHelper=new SQLiteHelper(getBaseContext(), "miPedidoLite", null, 1);
+                SQLiteDatabase db = sqlHelper.getWritableDatabase();
+                try {
+                    if("ok".equals(response.getJSONObject(0).get("a"))) {
+                        db.beginTransaction();
+                        try {
+                            //makeAllInserts();
+                            for (int i = 0; i < listaGastos.size(); i++) {
+                                ContentValues values = new ContentValues();
+                                values.put("estatus", "S");
+                                db.update("gastos", values, "id=" + listaGastos.get(i).getId(), null);
+                            }
+                            db.setTransactionSuccessful();
+                            System.out.println("-----SQLite Trasn Succesful ");
+                        } catch (Exception ex) {
+                            System.out.println("-----SQLite Trasn Ex " + ex);
+                        } finally {
+                            db.endTransaction();
                         }
                     }
                 } catch (JSONException e) {
@@ -615,12 +658,12 @@ public class BaseActivity extends AppCompatActivity {
                             JSONObject obj = gastos.getJSONObject(i);
                             ContentValues values = new ContentValues();
                             values.put("id", obj.get("id").toString());
-                            values.put("idvendedor", obj.get("nombre").toString());
-                            values.put("nombre", obj.get("denominacion").toString());
-                            values.put("codigo", obj.get("costo").toString());
-                            values.put("monto", obj.get("marca").toString());
-                            values.put("fecha", obj.get("img").toString());
-                            values.put("estatus", obj.get("img").toString());
+                            values.put("idvendedor", obj.get("idvendedor").toString());
+                            values.put("nombre", obj.get("nombre").toString());
+                            values.put("codigo", obj.get("codigo").toString());
+                            values.put("monto", obj.get("monto").toString());
+                            values.put("fecha", obj.get("fecha").toString());
+                            values.put("estatus", "S");
 
 
                             db.insert("gastos", "monto", values);

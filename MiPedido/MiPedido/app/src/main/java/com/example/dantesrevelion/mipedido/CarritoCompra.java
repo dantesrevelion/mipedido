@@ -4,7 +4,9 @@ import android.app.Activity;
 import android.app.FragmentManager;
 import android.app.FragmentTransaction;
 import android.bluetooth.BluetoothAdapter;
+import android.content.ContentValues;
 import android.content.Intent;
+import android.database.sqlite.SQLiteDatabase;
 import android.os.AsyncTask;
 import android.os.Handler;
 import android.os.Bundle;
@@ -20,9 +22,12 @@ import com.example.dantesrevelion.mipedido.Adapters.VysorAdapterCarrito;
 import com.example.dantesrevelion.mipedido.Utils.BluetoothUtils;
 import com.example.dantesrevelion.mipedido.Utils.CheckIn;
 import com.example.dantesrevelion.mipedido.Utils.ConnectionUtils;
+import com.example.dantesrevelion.mipedido.Utils.SQLiteHelper;
 
 import org.json.JSONArray;
 import org.json.JSONException;
+
+import java.util.Calendar;
 
 public class CarritoCompra extends BaseActivity {
 
@@ -149,6 +154,7 @@ public class CarritoCompra extends BaseActivity {
 
 
         System.out.println("GENERAR VENTA------------->");
+        /*
         for(int i=0;i<taskResult.length();i++){
             ConnectionUtils.consultaSQLite(getBaseContext(),ConnectionUtils.updateEstadoVentatoP(taskResult.getJSONObject(i).getString("id_venta")));
             String idp=taskResult.getJSONObject(i).getString("id_producto");
@@ -157,23 +163,41 @@ public class CarritoCompra extends BaseActivity {
             String monto=taskResult.getJSONObject(i).getString("monto");
             ConnectionUtils.consultaSQLite(getBaseContext(),ConnectionUtils.insertVenta(idp,idv,cant,monto));
         }
-
+*/
+        SQLiteHelper sqlHelper=new SQLiteHelper(getBaseContext(), "miPedidoLite", null, 1);
+        SQLiteDatabase db = sqlHelper.getWritableDatabase();
+        db.beginTransaction();
+        try {
+            //makeAllInserts();
+            //id_producto, id_vendedor,fecha,cantidad,monto
+            for (int i = 0; i < taskResult.length(); i++) {
+                Calendar c = Calendar.getInstance();
+                int year = c.get(Calendar.YEAR);
+                int month = c.get(Calendar.MONTH);
+                int day = c.get(Calendar.DAY_OF_MONTH);
+                String fecha=year+"-"+(month+1)+"-"+day+" "+c.get(Calendar.HOUR)+":"+c.get(Calendar.MINUTE)+":"+c.get(Calendar.SECOND);
+                String formated=ConnectionUtils.formatDateGeneral(fecha,"yyyy-MM-dd HH:mm:ss");
+                ContentValues values = new ContentValues();
+                values.put("id_producto", taskResult.getJSONObject(i).getString("id_producto"));
+                values.put("id_vendedor", taskResult.getJSONObject(i).getString("id_vendedor"));
+                values.put("cantidad", taskResult.getJSONObject(i).getString("cantidad"));
+                values.put("monto", taskResult.getJSONObject(i).getString("monto"));
+                values.put("fecha", formated);
+                ContentValues valuesUp = new ContentValues();
+                valuesUp.put("estatus","V");
+                db.update("carrito", valuesUp, "id_venta=" +taskResult.getJSONObject(i).getString("id_venta"), null);
+                db.insert("ventas", "monto", values);
+                //db.update("gastos", values, "id=" + listaGastos.get(i).getId(), null);
+            }
+            db.setTransactionSuccessful();
+            System.out.println("-----SQLite Trasn Succesful ");
+        } catch (Exception ex) {
+            System.out.println("-----SQLite Trasn Ex " + ex);
+        } finally {
+            db.endTransaction();
+        }
         consultaCarrito();
 
-
-        /*
-        if(ConnectionUtils.conectadoWifi(this) || ConnectionUtils.conectadoRedMovil(this)) {
-
-         //   CheckIn.checkInProcess(this);
-            new callCheckIn().execute();
-
-        }else{
-            Toast toast1 = Toast.makeText(getApplicationContext(),
-                    "Venta offline", Toast.LENGTH_SHORT);
-            toast1.show();
-        }
-
-        */
 
     }
 
