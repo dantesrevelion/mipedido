@@ -33,7 +33,6 @@ public class ListaDeVentas extends BaseActivity {
     JSONArray taskResult2=null;
     TextView tv_total=null;
     TextView tv_cantidad=null;
-    Button bt_enviar=null;
 
     Activity actividad;
     @Override
@@ -45,7 +44,6 @@ public class ListaDeVentas extends BaseActivity {
         setSupportActionBar(toolbar);
         tv_total=(TextView)findViewById(R.id.total_lista_ventas);
         tv_cantidad=(TextView)findViewById(R.id.cantidad_lista_ventas);
-        bt_enviar=(Button) findViewById(R.id.bt_enviar_venta);
         actividad=this;
         volley = VolleyS.getInstance(this.getApplicationContext());
         fRequestQueue = volley.getRequestQueue();
