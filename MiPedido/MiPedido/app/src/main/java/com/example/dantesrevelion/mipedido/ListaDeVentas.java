@@ -178,18 +178,11 @@ public class ListaDeVentas extends BaseActivity {
 
 
     public void enviarventaClic(View e){
-        bt_enviar.setEnabled(false);
-        Connection c=new Connection();
-        c.execute();
+       // bt_enviar.setEnabled(false);
+       // Connection c=new Connection();
+       // c.execute();
 
 
-
-
-
-        //runUpdate();
-  //      ConnectionUtils.createConection(getBaseContext());
- //       makeRequest(ConnectionUtils.getAllGastos());
-//        new callCheckIn().execute();
 
     }
     public void calculaTotal(){

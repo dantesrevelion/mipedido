@@ -6,6 +6,9 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.database.sqlite.SQLiteDatabase;
+import android.graphics.Color;
+import android.graphics.PorterDuff;
+import android.graphics.drawable.Drawable;
 import android.net.ConnectivityManager;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -52,6 +55,7 @@ public class BaseActivity extends AppCompatActivity {
     public static RequestQueue fRequestQueue;
     List<DatosGastos> listaGastos;
     List<DatosVenta> listaVentas;
+    MenuItem btnUpdate;
 
 
     @Override
@@ -90,6 +94,9 @@ public class BaseActivity extends AppCompatActivity {
             Intent intent=new Intent(BaseActivity.this,Configuracion.class);
             startActivity(intent);
         }else if(id==R.id.update){
+            btnUpdate=item;
+            disableBtnUpdate();
+            new Connection().execute();
 
           //  System.out.println("------------------update>");
           //  new callCheckIn().execute();
@@ -124,6 +131,13 @@ public class BaseActivity extends AppCompatActivity {
         debug("ERROR VOLLEY----->"+error);
         debug("CODE "+error.getCause());
         Toast.makeText(this, error.toString(), Toast.LENGTH_SHORT).show();
+    }
+    public void showToast(String text) {
+        try {
+            Toast.makeText(Login.context, text, Toast.LENGTH_SHORT).show();
+        }catch (Exception ex){
+
+        }
     }
 
     public void makeRequestFirst(JsonArrayRequest request){
@@ -271,6 +285,22 @@ public class BaseActivity extends AppCompatActivity {
         }) ;
         fRequestQueue.add(jsonArrayRequest);
     }
+
+    public void disableBtnUpdate(){
+        btnUpdate.setEnabled(false);
+        Drawable resIcon = getResources().getDrawable(R.drawable.update);
+        //resIcon.mutate().setColorFilter(Color.argb(80,45,45,45), PorterDuff.Mode.SRC_IN);
+        resIcon.setAlpha(80);
+        btnUpdate.setIcon(resIcon);
+    }
+    public void enableBtnUpdate(){
+        if(btnUpdate!=null) {
+            btnUpdate.setEnabled(true);
+            Drawable resIcon = getResources().getDrawable(R.drawable.update);
+            resIcon.setAlpha(255);
+            btnUpdate.setIcon(resIcon);
+        }
+    }
     public void makePostGastosRequest(String url,JSONArray params){
 
         JsonArrayRequest jsonArrayRequest = new JsonArrayRequest(Request.Method.POST, url, params, new Response.Listener<JSONArray>() {
@@ -417,6 +447,7 @@ public class BaseActivity extends AppCompatActivity {
 
             } catch (JSONException e) {
                 e.printStackTrace();
+                enableBtnUpdate();
             }
         }
 
@@ -426,12 +457,14 @@ public class BaseActivity extends AppCompatActivity {
                 public void onResponse(JSONArray jsonArray) {
                     //  label.setText(jsonArray.toString());
                     debug("------------->Cerrar sesion"+jsonArray.toString());
-
+                    enableBtnUpdate();
+                    showToast("Base de Datos Actualizada");
                 }
             }, new Response.ErrorListener() {
                 @Override
                 public void onErrorResponse(VolleyError error) {
                     onConnectionFailed(error);
+                    enableBtnUpdate();
                 }
 
 
@@ -493,6 +526,7 @@ public class BaseActivity extends AppCompatActivity {
                 @Override
                 public void onErrorResponse(VolleyError error) {
                     onConnectionFailed(error);
+                    enableBtnUpdate();
                 }
 
 
@@ -556,6 +590,7 @@ public class BaseActivity extends AppCompatActivity {
                 @Override
                 public void onErrorResponse(VolleyError error) {
                     onConnectionFailed(error);
+                    enableBtnUpdate();
                 }
 
 
@@ -621,6 +656,7 @@ public class BaseActivity extends AppCompatActivity {
                 @Override
                 public void onErrorResponse(VolleyError error) {
                     onConnectionFailed(error);
+                    enableBtnUpdate();
                 }
 
 
@@ -684,6 +720,7 @@ public class BaseActivity extends AppCompatActivity {
                 @Override
                 public void onErrorResponse(VolleyError error) {
                     onConnectionFailed(error);
+                    enableBtnUpdate();
                 }
 
 
@@ -705,6 +742,7 @@ public class BaseActivity extends AppCompatActivity {
                 @Override
                 public void onErrorResponse(VolleyError error) {
                     onConnectionFailed(error);
+                    enableBtnUpdate();
                 }
 
 

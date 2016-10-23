@@ -42,13 +42,14 @@ public class Login extends BaseActivity {
     EditText inputTextPsw=null;
     NetworkState receiver=null;
     boolean wasConfigOpen=false;
+    public static Context context;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
 
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
-
+        context=this;
 
 
 
