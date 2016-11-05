@@ -1,10 +1,18 @@
 package com.example.dantesrevelion.mipedido;
 
+import android.Manifest;
 import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
 
 import android.content.IntentFilter;
+import android.content.pm.PackageManager;
+import android.location.Location;
+import android.location.LocationListener;
+import android.location.LocationManager;
 import android.net.ConnectivityManager;
+import android.os.Handler;
+import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
@@ -12,12 +20,28 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ListView;
+import android.widget.Toast;
 
 import com.example.dantesrevelion.mipedido.Utils.ConnectionUtils;
 import com.example.dantesrevelion.mipedido.Utils.VolleyS;
+import com.example.dantesrevelion.mipedido.orm.PositionData;
+
+import org.json.JSONArray;
+
+import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.List;
 
 public class Menu extends BaseActivity {
   //  JSONArray jsonArray;
+
+    LocationManager mlocManager;
+    MyLocationListener mlocListener;
+    Location currentLocation;
+    Handler handlerStart;
+    Handler handlerStop;
+    Runnable runStart;
+    boolean running=false;
 
     public static Activity activity;
     @Override
@@ -66,6 +90,85 @@ public class Menu extends BaseActivity {
 
             }
         });
+
+
+        mlocManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
+        mlocListener = new MyLocationListener();
+
+
+
+        handlerStop = new Handler();
+        final Runnable runStop = new Runnable() {
+            public void run() {
+                stopUpdate();
+                handlerStart.postDelayed(runStart,10000);
+            }
+        };
+
+
+        handlerStart = new Handler();
+
+        runStart = new Runnable() {
+            public void run() {
+                requestUpdate();
+                running=true;
+                handlerStop.postDelayed(runStop, 3000);
+            }
+        };
+
+        if(!running) {
+            handlerStart.postDelayed(runStart, 10000);
+        }
+
+
+
+
+
+
+    }
+
+    private void requestUpdate(){
+
+        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+            System.out.println("resquest");
+        }
+        mlocManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 0, 0, (LocationListener) mlocListener);
+       // System.out.println(" LAT LONG " + MyLocationListener.getLocation());
+        if (MyLocationListener.getLocation() != null) {
+            System.out.println(" LAT LONG " + MyLocationListener.getLocation());
+            currentLocation= MyLocationListener.getLocation();
+            //Toast toast = Toast.makeText(getBaseContext(), "> "+MyLocationListener.getLocation(), Toast.LENGTH_SHORT);
+            //toast.show();
+            sendLocation(String.valueOf(currentLocation.getLatitude()),String.valueOf(currentLocation.getLongitude()));
+        }
+    }
+    private void stopUpdate(){
+        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+
+            return;
+        }
+        mlocManager.removeUpdates(mlocListener);
+    }
+
+    private void sendLocation(String lat,String longt){
+        ConnectionUtils.createConection(getBaseContext());
+        List<PositionData> listaLocation=new ArrayList<>();
+        PositionData positionData=new PositionData();
+        positionData.setIdUsuario(getIntent().getExtras().getString("id"));
+        positionData.setLatitude(lat);
+        positionData.setLongitude(longt);
+        Calendar c = Calendar.getInstance();
+        int year = c.get(Calendar.YEAR);
+        int month = c.get(Calendar.MONTH);
+        int day = c.get(Calendar.DAY_OF_MONTH);
+        String fecha=year+"-"+(month+1)+"-"+day+" "+c.get(Calendar.HOUR)+":"+c.get(Calendar.MINUTE)+":"+c.get(Calendar.SECOND);
+        String formated=ConnectionUtils.formatDateGeneral(fecha,"yyyy-MM-dd HH:mm:ss");
+        positionData.setFecha(formated);
+        positionData.setSession(ConnectionUtils.getSession());
+        listaLocation.add(positionData);
+
+        JSONArray requestLocation=ConnectionUtils.parseBeantoJsonArray(listaLocation);
+        makePostLocation(ConnectionUtils.getLocationURL(),requestLocation);
     }
 
     @Override
@@ -73,7 +176,11 @@ public class Menu extends BaseActivity {
 
     }
 
-
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        stopUpdate();
+    }
     /*
     @Override
     public boolean onCreateOptionsMenu(android.view.Menu menu) {

@@ -286,6 +286,23 @@ public class BaseActivity extends AppCompatActivity {
         fRequestQueue.add(jsonArrayRequest);
     }
 
+    public void makePostLocation(String url,JSONArray params){
+
+        JsonArrayRequest jsonArrayRequest = new JsonArrayRequest(Request.Method.POST, url, params, new Response.Listener<JSONArray>() {
+            @Override
+            public void onResponse(JSONArray response) {
+
+
+            }
+        }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                //  mTextView.setText(error.toString());
+                System.out.println("------------->POST ERROR "+error.toString());
+            }
+        }) ;
+        fRequestQueue.add(jsonArrayRequest);
+    }
     public void disableBtnUpdate(){
         btnUpdate.setEnabled(false);
         Drawable resIcon = getResources().getDrawable(R.drawable.update);

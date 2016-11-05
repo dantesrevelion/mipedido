@@ -45,6 +45,9 @@ public class Perfil extends BaseActivity {
 
             System.out.println(" LAT LONG " + MyLocationListener.getLocation());
             Location myloc = MyLocationListener.getLocation();
+
+
+
             Geocoder geocoder;
             List<Address> addresses;
             geocoder = new Geocoder(this, Locale.getDefault());

@@ -125,6 +125,12 @@ public class ConnectionUtils {
         String ALL_PROD="http://"+ getDOMAIN() +"/mipedido/res/allGastos.php";
         return ALL_PROD;
     }
+    //http://mipedidoapp.esy.es/mipedido/res/api/saveLocation.php
+    public static String getLocationURL(){
+        String ALL_PROD="http://"+ getDOMAIN() +"/mipedido/res/api/saveLocation.php";
+        return ALL_PROD;
+    }
+
     public static String getAllVentasParameter(){
         String ALL_VENTAS="http://"+ getDOMAIN() +"/mipedido/res/allventas.php";
         return ALL_VENTAS;
