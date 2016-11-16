@@ -54,8 +54,8 @@ public class SearchList extends Fragment {
         lista.setAdapter(adapter);
         lista.setOnItemClickListener(itemclick);
     }
-    public void setDevices(List<BluetoothDevice> list){
-        this.devices=list;
+    public void setDevices(BluetoothDevice device){
+        this.devices.add(device);
     }
 
     AdapterView.OnItemClickListener itemclick=new AdapterView.OnItemClickListener() {
@@ -77,15 +77,25 @@ public class SearchList extends Fragment {
            // adapter = new VysorAdapterSearchList(activity, R.layout.item_search_list, items,adress);
            // lista.setAdapter(adapter);
 
+
         }
     };
     public void addToSearchList(String nombre,String adress){
-        if(null!=nombre) {
+        if(items!=null && adapter!=null) {
+            if(nombre==null ){
+                nombre="Desconocido";
+            }
+            if(adress==null){
+                adress="";
+            }
             items.add(nombre);
             this.adress.add(adress);
             adapter = new VysorAdapterSearchList(context, R.layout.item_search_list, items,this.adress);
             lista.setAdapter(adapter);
+        }else{
+//            throw new NullPointerException();
         }
+
 
     }
 

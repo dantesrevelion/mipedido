@@ -51,13 +51,13 @@ public class BluetoothUtils {
             } else if (BluetoothDevice.ACTION_FOUND.equals(action)) {
                 //bluetooth device found
                 BluetoothDevice device = (BluetoothDevice) intent.getParcelableExtra(BluetoothDevice.EXTRA_DEVICE);
-                searchResult.add(device);
+                //searchResult.add(device);
                 System.out.println("--------->Device "+device.getName());
 
                 SearchList search=new SearchList();
 
                 search.addToSearchList(device.getName(),device.getAddress());
-                search.setDevices(searchResult);
+                search.setDevices(device);
 
             }
 

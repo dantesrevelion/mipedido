@@ -5,25 +5,19 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 
-import android.content.IntentFilter;
 import android.content.pm.PackageManager;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
-import android.net.ConnectivityManager;
 import android.os.Handler;
 import android.support.v4.app.ActivityCompat;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
-import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ListView;
-import android.widget.Toast;
 
 import com.example.dantesrevelion.mipedido.Utils.ConnectionUtils;
-import com.example.dantesrevelion.mipedido.Utils.VolleyS;
 import com.example.dantesrevelion.mipedido.orm.PositionData;
 
 import org.json.JSONArray;
@@ -42,6 +36,7 @@ public class Menu extends BaseActivity {
     Handler handlerStop;
     Runnable runStart;
     boolean running=false;
+    final public static int MY_PERMISSIONS_REQUEST_LOCATION =423;
 
     public static Activity activity;
     @Override
@@ -101,7 +96,7 @@ public class Menu extends BaseActivity {
         final Runnable runStop = new Runnable() {
             public void run() {
                 stopUpdate();
-                handlerStart.postDelayed(runStart,10000);
+                handlerStart.postDelayed(runStart,5*1000*60);
             }
         };
 
@@ -112,12 +107,23 @@ public class Menu extends BaseActivity {
             public void run() {
                 requestUpdate();
                 running=true;
-                handlerStop.postDelayed(runStop, 3000);
+                handlerStop.postDelayed(runStop, 5000);
             }
         };
 
         if(!running) {
-            handlerStart.postDelayed(runStart, 10000);
+            boolean test1=ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED;
+            boolean test2=ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED;
+            if (test1 && test2) {
+                ActivityCompat.requestPermissions(this,
+                        new String[]{Manifest.permission.ACCESS_COARSE_LOCATION},
+                        MY_PERMISSIONS_REQUEST_LOCATION);
+
+            }else{
+                handlerStart.postDelayed(runStart, 5000);
+            }
+
+            //
         }
 
 
@@ -125,6 +131,29 @@ public class Menu extends BaseActivity {
 
 
 
+    }
+    @Override
+    public void onRequestPermissionsResult(int requestCode,
+                                           String permissions[], int[] grantResults) {
+        switch (requestCode) {
+            case MY_PERMISSIONS_REQUEST_LOCATION: {
+                // If request is cancelled, the result arrays are empty.
+                if (grantResults.length > 0
+                        && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+
+                    handlerStart.postDelayed(runStart, 5000);
+
+                } else {
+
+                    // permission denied, boo! Disable the
+                    // functionality that depends on this permission.
+                }
+                return;
+            }
+
+            // other 'case' lines to check for other
+            // permissions this app might request
+        }
     }
 
     private void requestUpdate(){
