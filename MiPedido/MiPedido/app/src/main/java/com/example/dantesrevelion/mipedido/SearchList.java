@@ -55,7 +55,9 @@ public class SearchList extends Fragment {
         lista.setOnItemClickListener(itemclick);
     }
     public void setDevices(BluetoothDevice device){
-        this.devices.add(device);
+        if(devices!=null) {
+            this.devices.add(device);
+        }
     }
 
     AdapterView.OnItemClickListener itemclick=new AdapterView.OnItemClickListener() {
@@ -63,6 +65,7 @@ public class SearchList extends Fragment {
         public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
             System.out.println("----------> Click on item device"+position+" name "+devices.get(position).getName());
            // BluetoothUtils util=new BluetoothUtils(activity);
+            BluetoothUtils.setMmDevice(devices.get(position));
             BluetoothUtils.pairDevice(devices.get(position));
 
            // CarritoCompra c=new CarritoCompra();
@@ -99,4 +102,9 @@ public class SearchList extends Fragment {
 
     }
 
+    @Override
+    public void onStop() {
+        super.onStop();
+
+    }
 }

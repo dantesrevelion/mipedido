@@ -27,6 +27,7 @@ import com.example.dantesrevelion.mipedido.Utils.SQLiteHelper;
 import org.json.JSONArray;
 import org.json.JSONException;
 
+import java.io.IOException;
 import java.util.Calendar;
 
 public class CarritoCompra extends BaseActivity {
@@ -238,7 +239,13 @@ public class CarritoCompra extends BaseActivity {
         System.out.println("--------->Inicia proceso de impresion");
         if(utils.bluetoothIsOn(this)){
             if(utils.isPaired()){
-
+                try {
+                    utils.openBT();
+                    utils.sendData("");
+                } catch (IOException e) {
+                    Toast toast=new Toast(getBaseContext());
+                    toast.setText("no se pudo imprimir");
+                }
             }else{
                 utils.searchDevices();
                 showSearchList();
@@ -273,6 +280,11 @@ public class CarritoCompra extends BaseActivity {
         if(searchIsVisible){
             hideSearchList();
             utils.stopSearch();
+            try {
+                utils.closeBT();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
         }else{
             super.onBackPressed();
         }
