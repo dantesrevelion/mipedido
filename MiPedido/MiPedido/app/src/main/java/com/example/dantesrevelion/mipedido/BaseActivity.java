@@ -1,18 +1,24 @@
 package com.example.dantesrevelion.mipedido;
 
+import android.Manifest;
 import android.app.Activity;
 import android.content.ContentValues;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.content.pm.PackageManager;
 import android.database.sqlite.SQLiteDatabase;
 import android.graphics.Color;
 import android.graphics.PorterDuff;
 import android.graphics.drawable.Drawable;
+import android.location.Location;
+import android.location.LocationListener;
+import android.location.LocationManager;
 import android.net.ConnectivityManager;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.PersistableBundle;
+import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.PopupMenu;
 import android.support.v7.widget.Toolbar;
@@ -57,6 +63,10 @@ public class BaseActivity extends AppCompatActivity {
     List<DatosVenta> listaVentas;
     MenuItem btnUpdate;
 
+    LocationManager mlocManager;
+    MyLocationListener mlocListener;
+    public static Location currentLocation;
+
 
     @Override
     public void onCreate(Bundle savedInstanceState, PersistableBundle persistentState) {
@@ -67,8 +77,38 @@ public class BaseActivity extends AppCompatActivity {
         volley = VolleyS.getInstance(this.getApplicationContext());
         fRequestQueue = volley.getRequestQueue();
 
+        /*
+        mlocManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
+        mlocListener = new MyLocationListener();
+        requestUpdate();
+        */
 
     }
+
+    public void requestUpdate() {
+        if (mlocListener!=null && mlocManager!=null){
+                if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+                    System.out.println("resquest");
+                }
+            mlocManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 0, 0, (LocationListener) mlocListener);
+            // System.out.println(" LAT LONG " + MyLocationListener.getLocation());
+            if (MyLocationListener.getLocation() != null) {
+                System.out.println(" LAT LONG " + MyLocationListener.getLocation());
+                currentLocation = MyLocationListener.getLocation();
+
+            }
+        }
+    }
+    public void stopUpdate(){
+        if (mlocListener!=null && mlocListener!=null) {
+            if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+
+                return;
+            }
+            mlocManager.removeUpdates(mlocListener);
+        }
+    }
+
     @Override
     public boolean onCreateOptionsMenu(android.view.Menu menu) {
         System.out.println("ON CREATE OPTION MENU");
@@ -283,6 +323,9 @@ public class BaseActivity extends AppCompatActivity {
                 System.out.println("------------->POST ERROR "+error.toString());
             }
         }) ;
+        jsonArrayRequest.setRetryPolicy(new DefaultRetryPolicy(20*1000,
+                0,
+                1f));
         fRequestQueue.add(jsonArrayRequest);
     }
 
@@ -371,6 +414,9 @@ public class BaseActivity extends AppCompatActivity {
                 System.out.println("------------->POST ERROR "+error.toString());
             }
         }) ;
+        jsonArrayRequest.setRetryPolicy(new DefaultRetryPolicy(20*1000,
+                0,
+                1f));
         fRequestQueue.add(jsonArrayRequest);
     }
 
@@ -425,6 +471,10 @@ public class BaseActivity extends AppCompatActivity {
                     ventas.setIdp(idp);
                     ventas.setIdv(idv);
                     ventas.setId(idventa);
+
+                    /**TODO guardar directamente en base de datos local*/
+                    ventas.setLatitude(String.valueOf(currentLocation.getLatitude()));
+                    ventas.setLongitude(String.valueOf(currentLocation.getLongitude()));
                     listaVentas.add(ventas);
 
 
@@ -552,7 +602,7 @@ public class BaseActivity extends AppCompatActivity {
                 @Override
                 public void onResponse(JSONArray jsonArray) {
 
-                    debug("------------->Response Ventas"+jsonArray.toString());
+//                    debug("------------->Response Ventas"+jsonArray.toString());
                     SQLiteHelper sqlHelper=new SQLiteHelper(getBaseContext(), "miPedidoLite", null, 1);
                     SQLiteDatabase db = sqlHelper.getWritableDatabase();
 

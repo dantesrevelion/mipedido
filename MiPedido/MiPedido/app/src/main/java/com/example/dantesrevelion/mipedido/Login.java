@@ -8,6 +8,7 @@ import android.content.IntentFilter;
 import android.content.SharedPreferences;
 import android.database.sqlite.SQLiteDatabase;
 import android.graphics.drawable.BitmapDrawable;
+import android.location.LocationManager;
 import android.net.ConnectivityManager;
 import android.os.AsyncTask;
 import android.preference.PreferenceManager;
@@ -86,6 +87,15 @@ public class Login extends BaseActivity {
        // ConnectionUtils.consultaSQLite(this,"select * from usuarios");
         MyAnimationUtils.translateAnimation(layoutUser, 800L, 2.0f, 1000, 0, 0, 0);
 
+        mlocManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
+        mlocListener = new MyLocationListener();
+        requestUpdate();
+
+    }
+    @Override
+    protected void onStop() {
+        super.onStop();
+        stopUpdate();
     }
 
     @Override

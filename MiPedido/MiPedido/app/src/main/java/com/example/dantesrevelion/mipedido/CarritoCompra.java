@@ -5,8 +5,10 @@ import android.app.FragmentManager;
 import android.app.FragmentTransaction;
 import android.bluetooth.BluetoothAdapter;
 import android.content.ContentValues;
+import android.content.Context;
 import android.content.Intent;
 import android.database.sqlite.SQLiteDatabase;
+import android.location.LocationManager;
 import android.os.AsyncTask;
 import android.os.Handler;
 import android.os.Bundle;
@@ -116,7 +118,16 @@ public class CarritoCompra extends BaseActivity {
         consultaCarrito();
         utils= new BluetoothUtils(getBaseContext());
 
+        mlocManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
+        mlocListener = new MyLocationListener();
+        requestUpdate();
 
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+        stopUpdate();
     }
 
     public void consultaCarrito(){

@@ -95,7 +95,7 @@ public class Menu extends BaseActivity {
         handlerStop = new Handler();
         final Runnable runStop = new Runnable() {
             public void run() {
-                stopUpdate();
+                //stopUpdate();
                 handlerStart.postDelayed(runStart,5*1000*60);
             }
         };
@@ -120,7 +120,7 @@ public class Menu extends BaseActivity {
                         MY_PERMISSIONS_REQUEST_LOCATION);
 
             }else{
-                handlerStart.postDelayed(runStart, 5000);
+              //  handlerStart.postDelayed(runStart, 5000);
             }
 
             //
@@ -156,6 +156,7 @@ public class Menu extends BaseActivity {
         }
     }
 
+    /*
     private void requestUpdate(){
 
         if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
@@ -171,6 +172,8 @@ public class Menu extends BaseActivity {
             sendLocation(String.valueOf(currentLocation.getLatitude()),String.valueOf(currentLocation.getLongitude()));
         }
     }
+    */
+    /*
     private void stopUpdate(){
         if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
 
@@ -178,6 +181,7 @@ public class Menu extends BaseActivity {
         }
         mlocManager.removeUpdates(mlocListener);
     }
+    */
 
     private void sendLocation(String lat,String longt){
         ConnectionUtils.createConection(getBaseContext());

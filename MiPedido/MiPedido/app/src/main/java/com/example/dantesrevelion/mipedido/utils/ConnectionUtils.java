@@ -81,6 +81,7 @@ public class ConnectionUtils {
 
         /**TODO remove hardcode*/
             domain="mipedidoapp.esy.es";host="mysql.hostinger.mx";user="u152348074_ma12m";pass="mipedido123";bd="u152348074_mpdb";
+         /*   domain="mipedido.com";host="mysql.hostinger.mx";user="u197154406_mpadm";pass="20jhaKe63J";bd="u197154406_mpdb";*/
         /***/
         System.out.println("DATOS DE CONFIGURACION: "+domain+" "+host+" "+user+" "+pass+" "+bd);
         setDOMAIN(domain);
