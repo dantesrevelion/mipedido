@@ -29,9 +29,9 @@ import java.util.List;
 public class Menu extends BaseActivity {
   //  JSONArray jsonArray;
 
-    LocationManager mlocManager;
-    MyLocationListener mlocListener;
-    Location currentLocation;
+   // LocationManager mlocManager;
+   // MyLocationListener mlocListener;
+  //  Location currentLocation;
     Handler handlerStart;
     Handler handlerStop;
     Runnable runStart;
@@ -89,14 +89,17 @@ public class Menu extends BaseActivity {
 
         mlocManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
         mlocListener = new MyLocationListener();
+        requestUpdate();
 
 
 
         handlerStop = new Handler();
         final Runnable runStop = new Runnable() {
             public void run() {
-                //stopUpdate();
-                handlerStart.postDelayed(runStart,5*1000*60);
+                stopUpdate();
+                if(currentLocation==null) {
+                    handlerStart.postDelayed(runStart, 2000);
+                }
             }
         };
 
@@ -120,11 +123,14 @@ public class Menu extends BaseActivity {
                         MY_PERMISSIONS_REQUEST_LOCATION);
 
             }else{
-              //  handlerStart.postDelayed(runStart, 5000);
+                handlerStart.postDelayed(runStart, 1000);
             }
 
             //
         }
+
+
+        //requestUpdate();
 
 
 

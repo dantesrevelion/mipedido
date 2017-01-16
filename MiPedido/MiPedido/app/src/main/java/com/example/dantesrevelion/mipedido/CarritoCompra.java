@@ -129,8 +129,9 @@ public class CarritoCompra extends BaseActivity {
         super.onStop();
         stopUpdate();
     }
-
+    Handler handlerStart;
     public void consultaCarrito(){
+
         taskResult= ConnectionUtils.consultaSQLite(getBaseContext(),ConnectionUtils.queryCarrito());
 
         lista= (ListView) findViewById(R.id.listaCarrito);
@@ -164,6 +165,21 @@ public class CarritoCompra extends BaseActivity {
       //  handler.postDelayed(r,1000);
       //  thread.start();
 
+        requestUpdate();
+
+
+        final Handler handler = new Handler();
+        final Runnable run = new Runnable() {
+            public void run() {
+                //stopUpdate();
+
+                if(currentLocation==null){
+                    stopUpdate();
+                    requestUpdate();
+                    handler.postDelayed(this,2000);
+                }else{
+
+
 
         System.out.println("GENERAR VENTA------------->");
         /*
@@ -195,8 +211,13 @@ public class CarritoCompra extends BaseActivity {
                 values.put("cantidad", taskResult.getJSONObject(i).getString("cantidad"));
                 values.put("monto", taskResult.getJSONObject(i).getString("monto"));
                 values.put("fecha", formated);
+                values.put("latitude",currentLocation.getLatitude());
+                values.put("longitude",currentLocation.getLongitude());
                 ContentValues valuesUp = new ContentValues();
                 valuesUp.put("estatus","V");
+                valuesUp.put("latitude",currentLocation.getLatitude());
+                valuesUp.put("longitude",currentLocation.getLongitude());
+
                 db.update("carrito", valuesUp, "id_venta=" +taskResult.getJSONObject(i).getString("id_venta"), null);
                 db.insert("ventas", "monto", values);
                 //db.update("gastos", values, "id=" + listaGastos.get(i).getId(), null);
@@ -210,7 +231,10 @@ public class CarritoCompra extends BaseActivity {
         }
         consultaCarrito();
 
-
+                }
+            }
+        };
+        handler.postDelayed(run,2000);
     }
 
 

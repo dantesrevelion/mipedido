@@ -35,7 +35,9 @@ public class SQLiteHelper extends SQLiteOpenHelper {
                 "  `id_vendedor` int(11) NOT NULL," +
                 "  `fecha` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP," +
                 "  `cantidad` int(11) NOT NULL," +
-                "  `monto` double NOT NULL" +
+                "  `monto` double NOT NULL," +
+                "  `latitude` varchar(30)," +
+                "  `longitude` varchar(30)" +
                 ");");
 
 
@@ -47,7 +49,9 @@ public class SQLiteHelper extends SQLiteOpenHelper {
                 "  `fecha` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP," +
                 "  `cantidad` int(11) NOT NULL," +
                 "  `monto` double NOT NULL," +
-                "  `estatus` varchar(1) NOT NULL"+
+                "  `estatus` varchar(1) NOT NULL,"+
+                "  `latitude` varchar(30)," +
+                "  `longitude` varchar(30)" +
                 ");");
 
         sqLiteDatabase.execSQL("CREATE TABLE IF NOT EXISTS `gastos` (" +

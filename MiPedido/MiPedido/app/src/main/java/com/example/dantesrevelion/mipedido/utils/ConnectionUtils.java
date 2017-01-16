@@ -136,6 +136,15 @@ public class ConnectionUtils {
         String ALL_VENTAS="http://"+ getDOMAIN() +"/mipedido/res/allventas.php";
         return ALL_VENTAS;
     }
+    //ftp://u152348074@185.28.21.237/public_html/mipedido/res/api/getVentasUsuario.php
+    public static String getVentasUsuarioParameter(){
+        String ALL_VENTAS="http://"+ getDOMAIN() +"/mipedido/res/api/getVentasUsuario.php";
+        return ALL_VENTAS;
+    }
+    public static String getGastosUsuarioParameter(){
+        String ALL_VENTAS="http://"+ getDOMAIN() +"/mipedido/res/api/getGastosUsuario.php";
+        return ALL_VENTAS;
+    }
     public static String getVentaByfechaParameter(String ini,String fin){
         String VENTA_BYFECHA="http://"+ getDOMAIN() +"/mipedido/res/ventabydaterange.php?di="+ini+"&df="+fin;
         return VENTA_BYFECHA;

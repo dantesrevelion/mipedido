@@ -17,6 +17,7 @@ import android.location.LocationManager;
 import android.net.ConnectivityManager;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.os.Handler;
 import android.os.PersistableBundle;
 import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.AppCompatActivity;
@@ -41,6 +42,7 @@ import com.example.dantesrevelion.mipedido.Utils.SQLiteHelper;
 import com.example.dantesrevelion.mipedido.Utils.VolleyS;
 import com.example.dantesrevelion.mipedido.orm.DatosGastos;
 import com.example.dantesrevelion.mipedido.orm.DatosVenta;
+import com.example.dantesrevelion.mipedido.orm.Usuario;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -66,6 +68,8 @@ public class BaseActivity extends AppCompatActivity {
     LocationManager mlocManager;
     MyLocationListener mlocListener;
     public static Location currentLocation;
+    public static String idUsuarioBase;
+    boolean sendVentas=false,sendGastos=false;
 
 
     @Override
@@ -138,8 +142,7 @@ public class BaseActivity extends AppCompatActivity {
             disableBtnUpdate();
             new Connection().execute();
 
-          //  System.out.println("------------------update>");
-          //  new callCheckIn().execute();
+
         }
 
         return super.onOptionsItemSelected(item);
@@ -309,6 +312,7 @@ public class BaseActivity extends AppCompatActivity {
                             System.out.println("-----SQLite Trasn Ex " + ex);
                         } finally {
                             db.endTransaction();
+                            sendVentas=true;
                         }
                     }
                 } catch (JSONException e) {
@@ -329,6 +333,116 @@ public class BaseActivity extends AppCompatActivity {
         fRequestQueue.add(jsonArrayRequest);
     }
 
+    public void makePostVentasUsuario(String url, final JSONArray params){
+
+        JsonArrayRequest jsonArrayRequest = new JsonArrayRequest(Request.Method.POST, url, params, new Response.Listener<JSONArray>() {
+            @Override
+            public void onResponse(JSONArray ventas) {
+
+                SQLiteHelper sqlHelper=new SQLiteHelper(getBaseContext(), "miPedidoLite", null, 1);
+                SQLiteDatabase db = sqlHelper.getWritableDatabase();
+
+                db.execSQL("delete from ventas");
+                db.execSQL("VACUUM");
+                //JSONArray ventas = jsonArray;
+
+                db.beginTransaction();
+                try {
+                    //makeAllInserts();
+                    for(int i = 0; i < ventas.length(); i++) {
+                        //  myDataBase = db.openDatabase();
+                        JSONObject obj = ventas.getJSONObject(i);
+                        ContentValues values = new ContentValues();
+                        values.put("id_venta", obj.get("id_venta").toString());
+                        values.put("id_producto", obj.get("id_producto").toString());
+                        values.put("id_vendedor", obj.get("id_vendedor").toString());
+                        values.put("fecha", obj.get("fecha").toString());
+                        values.put("cantidad", obj.get("cantidad").toString());
+                        values.put("monto", obj.get("monto").toString());
+
+
+                        db.insert("ventas", "monto", values);
+
+                    }
+                    db.setTransactionSuccessful();
+                    System.out.println("-----SQLite Trasn Succesful ");
+                }catch (Exception ex){
+                    System.out.println("-----SQLite Trasn Ex "+ex);
+                }finally {
+                    db.endTransaction();
+                }
+
+                db.close();
+
+            }
+        }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                //  mTextView.setText(error.toString());
+                System.out.println("------------->POST ERROR "+error.toString());
+                enableBtnUpdate();
+            }
+        }) ;
+        jsonArrayRequest.setRetryPolicy(new DefaultRetryPolicy(20*1000,
+                0,
+                1f));
+        fRequestQueue.add(jsonArrayRequest);
+    }
+    public void makepostGastosUsuario(String url,JSONArray params){
+        JsonArrayRequest jsonArrayRequest = new JsonArrayRequest(Request.Method.POST, url, params, new Response.Listener<JSONArray>() {
+            @Override
+            public void onResponse(JSONArray jsonArray) {
+
+
+                SQLiteHelper sqlHelper=new SQLiteHelper(getBaseContext(), "miPedidoLite", null, 1);
+                SQLiteDatabase db = sqlHelper.getWritableDatabase();
+                db.execSQL("delete from gastos");
+                db.execSQL("VACUUM");
+                JSONArray gastos = jsonArray;
+
+                db.beginTransaction();
+                try {
+                    //makeAllInserts();
+                    for(int i = 0; i < gastos.length(); i++) {
+                        //  myDataBase = db.openDatabase();
+                        JSONObject obj = gastos.getJSONObject(i);
+                        ContentValues values = new ContentValues();
+                        values.put("id", obj.get("id").toString());
+                        values.put("idvendedor", obj.get("idvendedor").toString());
+                        values.put("nombre", obj.get("nombre").toString());
+                        values.put("codigo", obj.get("codigo").toString());
+                        values.put("monto", obj.get("monto").toString());
+                        values.put("fecha", obj.get("fecha").toString());
+                        values.put("estatus", "S");
+
+
+                        db.insert("gastos", "monto", values);
+
+                    }
+                    db.setTransactionSuccessful();
+                    System.out.println("-----SQLite Trasn Succesful ");
+                }catch (Exception ex){
+                    System.out.println("-----SQLite Trasn Ex "+ex);
+                }finally {
+                    db.endTransaction();
+                    enableBtnUpdate();
+                }
+                db.close();
+
+            }
+        }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                //  mTextView.setText(error.toString());
+                System.out.println("------------->POST ERROR "+error.toString());
+                enableBtnUpdate();
+            }
+        }) ;
+        jsonArrayRequest.setRetryPolicy(new DefaultRetryPolicy(20*1000,
+                0,
+                1f));
+        fRequestQueue.add(jsonArrayRequest);
+    }
     public void makePostLocation(String url,JSONArray params){
 
         JsonArrayRequest jsonArrayRequest = new JsonArrayRequest(Request.Method.POST, url, params, new Response.Listener<JSONArray>() {
@@ -360,6 +474,22 @@ public class BaseActivity extends AppCompatActivity {
             resIcon.setAlpha(255);
             btnUpdate.setIcon(resIcon);
         }
+    }
+    public void actualizaVentasGastos(String idusr){
+        List<Usuario> listaUsuario=new ArrayList<>();
+        Usuario usr=new Usuario();
+        usr.setIdUsuario(idusr);
+        usr.setSession(ConnectionUtils.getSession());
+        listaUsuario.add(usr);
+
+        JSONArray requestUsr=ConnectionUtils.parseBeantoJsonArray(listaUsuario);
+        makePostVentasUsuario(ConnectionUtils.getVentasUsuarioParameter(),requestUsr);
+        makepostGastosUsuario(ConnectionUtils.getGastosUsuarioParameter(),requestUsr);
+
+
+
+
+
     }
     public void makePostGastosRequest(String url,JSONArray params){
 
@@ -400,6 +530,7 @@ public class BaseActivity extends AppCompatActivity {
                             System.out.println("-----SQLite Trasn Ex " + ex);
                         } finally {
                             db.endTransaction();
+                            sendGastos=true;
                         }
                     }
                 } catch (JSONException e) {
@@ -420,11 +551,203 @@ public class BaseActivity extends AppCompatActivity {
         fRequestQueue.add(jsonArrayRequest);
     }
 
+    final Handler handler = new Handler();
+    final Runnable run = new Runnable() {
+        public void run() {
+
+            if(sendGastos && sendVentas) {
+                runDownload();
+            }else {
+                handler.postDelayed(this,2000);
+
+
+            }
+        }
+
+    };
 
     public void debug(String s){
         System.out.println(s);
     }
 
+    public void runDownload(){
+        final JsonArrayRequest requestClose=new JsonArrayRequest(ConnectionUtils.cerrarSesion(), new Response.Listener<JSONArray>() {
+            @Override
+            public void onResponse(JSONArray jsonArray) {
+                //  label.setText(jsonArray.toString());
+                debug("------------->Cerrar sesion"+jsonArray.toString());
+               // enableBtnUpdate();
+                actualizaVentasGastos(idUsuarioBase);
+                showToast("Base de Datos Actualizada");
+            }
+        }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                onConnectionFailed(error);
+                enableBtnUpdate();
+            }
+
+
+        });
+
+        final JsonArrayRequest requestUsuarios=new JsonArrayRequest(ConnectionUtils.getAllUsuariosParameter(), new Response.Listener<JSONArray>() {
+            @Override
+            public void onResponse(JSONArray jsonArray) {
+                debug("------------->Response Usuarios"+jsonArray.toString());
+
+                SQLiteHelper sqlHelper=new SQLiteHelper(getBaseContext(), "miPedidoLite", null, 1);
+                SQLiteDatabase db = sqlHelper.getWritableDatabase();
+
+                db.execSQL("delete from usuarios");
+                db.execSQL("VACUUM");
+                JSONArray usuarios = jsonArray;
+
+                    /*
+                    for (int i = 0; i < usuarios.length(); i++) {
+                        try {
+                            JSONObject obj = usuarios.getJSONObject(i);
+                            db.execSQL("INSERT INTO usuarios (id, usuario, password,correo) " +
+                                    "VALUES (" + obj.get("id") + ", '" + obj.get("usuario") + "', '" + obj.get("password") + "','" + obj.get("correo") + "' )");
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                        }
+
+                    }
+                    */
+                db.beginTransaction();
+                try {
+                    //makeAllInserts();
+                    for(int i = 0; i < usuarios.length(); i++) {
+                        //  myDataBase = db.openDatabase();
+                        JSONObject obj = usuarios.getJSONObject(i);
+                        ContentValues values = new ContentValues();
+                        values.put("id", obj.get("id").toString());
+                        values.put("usuario", obj.get("usuario").toString());
+                        values.put("password", obj.get("password").toString());
+                        values.put("correo", obj.get("correo").toString());
+
+
+                        db.insert("usuarios", "correo", values);
+
+                    }
+                    db.setTransactionSuccessful();
+                    System.out.println("-----SQLite Trasn Succesful ");
+                }catch (Exception ex){
+                    System.out.println("-----SQLite Trasn Ex "+ex);
+                }finally {
+                    db.endTransaction();
+                }
+
+
+                db.close();
+                fRequestQueue.add(requestClose);
+            }
+        }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                onConnectionFailed(error);
+                enableBtnUpdate();
+            }
+
+
+        });
+
+        final JsonArrayRequest requestProductos=new JsonArrayRequest(ConnectionUtils.getAllProdParameter(), new Response.Listener<JSONArray>() {
+            @Override
+            public void onResponse(JSONArray jsonArray) {
+
+                debug("------------->Response Productos"+jsonArray.toString());
+                SQLiteHelper sqlHelper=new SQLiteHelper(getBaseContext(), "miPedidoLite", null, 1);
+                SQLiteDatabase db = sqlHelper.getWritableDatabase();
+
+                db.execSQL("delete from productos");
+                db.execSQL("VACUUM");
+                JSONArray productos = jsonArray;
+
+                    /*
+                    for (int i = 0; i < productos.length(); i++) {
+                        try {
+                            JSONObject obj = productos.getJSONObject(i);
+                            db.execSQL("INSERT INTO productos (id, nombre, denominacion,costo,marca,img) " +
+                                    "VALUES (" + obj.get("id") + ", '" + obj.get("nombre") + "', '" + obj.get("denominacion") + "'," + obj.get("costo") + ",'" +
+                                    obj.get("marca") + "','" + obj.get("img") + "')");
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                        }
+
+                    }
+                    */
+
+                db.beginTransaction();
+                try {
+                    //makeAllInserts();
+                    for(int i = 0; i < productos.length(); i++) {
+                        //  myDataBase = db.openDatabase();
+                        JSONObject obj = productos.getJSONObject(i);
+                        ContentValues values = new ContentValues();
+                        values.put("id", obj.get("id").toString());
+                        values.put("nombre", obj.get("nombre").toString());
+                        values.put("denominacion", obj.get("denominacion").toString());
+                        values.put("costo", obj.get("costo").toString());
+                        values.put("marca", obj.get("marca").toString());
+                        values.put("img", obj.get("img").toString());
+
+
+                        db.insert("productos", "monto", values);
+
+                    }
+                    db.setTransactionSuccessful();
+                    System.out.println("-----SQLite Trasn Succesful ");
+                }catch (Exception ex){
+                    System.out.println("-----SQLite Trasn Ex "+ex);
+                }finally {
+                    db.endTransaction();
+                }
+
+
+
+                db.close();
+                fRequestQueue.add(requestUsuarios);
+            }
+        }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                onConnectionFailed(error);
+                enableBtnUpdate();
+            }
+
+
+        });
+
+
+
+
+        final JsonArrayRequest requestOpen=new JsonArrayRequest(ConnectionUtils.iniciarSesion(), new Response.Listener<JSONArray>() {
+            @Override
+            public void onResponse(JSONArray jsonArray) {
+
+                debug("------------->Iniciar sesion"+jsonArray.toString());
+
+
+
+                fRequestQueue.add(requestProductos);
+
+            }
+        }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                onConnectionFailed(error);
+                enableBtnUpdate();
+            }
+
+
+        });
+
+
+
+        fRequestQueue.add(requestOpen);
+
+    }
 
 
 
@@ -463,6 +786,12 @@ public class BaseActivity extends AppCompatActivity {
                     String monto = taskResult.getJSONObject(i).getString("monto");
                     String fecha = taskResult.getJSONObject(i).getString("fecha");
                     String idventa = taskResult.getJSONObject(i).getString("id_venta");
+
+                 //   String latitude = taskResult.getJSONObject(i).getString("latitude")!=null && !"".equals(taskResult.getJSONObject(i).getString("latitude")) ?taskResult.getJSONObject(i).getString("latitude"):"";
+                  //  String longitude = taskResult.getJSONObject(i).getString("longitude")!=null && !"".equals(taskResult.getJSONObject(i).getString("longitude")) ?taskResult.getJSONObject(i).getString("longitude"):"";
+                    String latitude = taskResult.getJSONObject(i).getString("latitude");
+                    String longitude = taskResult.getJSONObject(i).getString("longitude");
+
                     DatosVenta ventas=new DatosVenta();
                     ventas.setSession(ConnectionUtils.getSession());
                     ventas.setMonto(monto);
@@ -472,9 +801,8 @@ public class BaseActivity extends AppCompatActivity {
                     ventas.setIdv(idv);
                     ventas.setId(idventa);
 
-                    /**TODO guardar directamente en base de datos local*/
-                    ventas.setLatitude(String.valueOf(currentLocation.getLatitude()));
-                    ventas.setLongitude(String.valueOf(currentLocation.getLongitude()));
+                    ventas.setLatitude(latitude);
+                    ventas.setLongitude(longitude);
                     listaVentas.add(ventas);
 
 
@@ -498,19 +826,35 @@ public class BaseActivity extends AppCompatActivity {
                     listaGastos.add(gastos);
 
                 }
+                sendGastos=false;
+                sendVentas=false;
+
+
 
                 System.out.println("----------->INICIA PETICIONES");
                 if(listaVentas.size()>0){
                     JSONArray requestVentas=ConnectionUtils.parseBeantoJsonArray(listaVentas);
                     makePostVentasRequest(ConnectionUtils.insertVentasPost(),requestVentas);
+                }else{
+                    sendVentas=true;
                 }
+
                 if(listaGastos.size()>0){
                     JSONArray requestGastos=ConnectionUtils.parseBeantoJsonArray(listaGastos);
                     makePostGastosRequest(ConnectionUtils.insertGastosPost(),requestGastos);
+                }else {
+                    sendGastos=true;
+                }
+
+                if(!listaGastos.isEmpty() || !listaVentas.isEmpty()){
+                    handler.postDelayed(run,1000);
+                }else{
+                    runDownload();
+                    //actualizaVentasGastos(idUsuarioBase);
                 }
 
                 System.out.println("----------->INICIA DESCARGA");
-                runDownload();
+
 
             } catch (JSONException e) {
                 e.printStackTrace();
@@ -518,308 +862,7 @@ public class BaseActivity extends AppCompatActivity {
             }
         }
 
-        public void runDownload(){
-            final JsonArrayRequest requestClose=new JsonArrayRequest(ConnectionUtils.cerrarSesion(), new Response.Listener<JSONArray>() {
-                @Override
-                public void onResponse(JSONArray jsonArray) {
-                    //  label.setText(jsonArray.toString());
-                    debug("------------->Cerrar sesion"+jsonArray.toString());
-                    enableBtnUpdate();
-                    showToast("Base de Datos Actualizada");
-                }
-            }, new Response.ErrorListener() {
-                @Override
-                public void onErrorResponse(VolleyError error) {
-                    onConnectionFailed(error);
-                    enableBtnUpdate();
-                }
 
-
-            });
-
-            final JsonArrayRequest requestUsuarios=new JsonArrayRequest(ConnectionUtils.getAllUsuariosParameter(), new Response.Listener<JSONArray>() {
-                @Override
-                public void onResponse(JSONArray jsonArray) {
-                    debug("------------->Response Usuarios"+jsonArray.toString());
-
-                    SQLiteHelper sqlHelper=new SQLiteHelper(getBaseContext(), "miPedidoLite", null, 1);
-                    SQLiteDatabase db = sqlHelper.getWritableDatabase();
-
-                    db.execSQL("delete from usuarios");
-                    db.execSQL("VACUUM");
-                    JSONArray usuarios = jsonArray;
-
-                    /*
-                    for (int i = 0; i < usuarios.length(); i++) {
-                        try {
-                            JSONObject obj = usuarios.getJSONObject(i);
-                            db.execSQL("INSERT INTO usuarios (id, usuario, password,correo) " +
-                                    "VALUES (" + obj.get("id") + ", '" + obj.get("usuario") + "', '" + obj.get("password") + "','" + obj.get("correo") + "' )");
-                        } catch (JSONException e) {
-                            e.printStackTrace();
-                        }
-
-                    }
-                    */
-                    db.beginTransaction();
-                    try {
-                        //makeAllInserts();
-                        for(int i = 0; i < usuarios.length(); i++) {
-                            //  myDataBase = db.openDatabase();
-                            JSONObject obj = usuarios.getJSONObject(i);
-                            ContentValues values = new ContentValues();
-                            values.put("id", obj.get("id").toString());
-                            values.put("usuario", obj.get("usuario").toString());
-                            values.put("password", obj.get("password").toString());
-                            values.put("correo", obj.get("correo").toString());
-
-
-                            db.insert("usuarios", "correo", values);
-
-                        }
-                        db.setTransactionSuccessful();
-                        System.out.println("-----SQLite Trasn Succesful ");
-                    }catch (Exception ex){
-                        System.out.println("-----SQLite Trasn Ex "+ex);
-                    }finally {
-                        db.endTransaction();
-                    }
-
-
-                    db.close();
-                    fRequestQueue.add(requestClose);
-                }
-            }, new Response.ErrorListener() {
-                @Override
-                public void onErrorResponse(VolleyError error) {
-                    onConnectionFailed(error);
-                    enableBtnUpdate();
-                }
-
-
-            });
-            final JsonArrayRequest requestVentas=new JsonArrayRequest(ConnectionUtils.getAllVentasParameter(), new Response.Listener<JSONArray>() {
-                @Override
-                public void onResponse(JSONArray jsonArray) {
-
-//                    debug("------------->Response Ventas"+jsonArray.toString());
-                    SQLiteHelper sqlHelper=new SQLiteHelper(getBaseContext(), "miPedidoLite", null, 1);
-                    SQLiteDatabase db = sqlHelper.getWritableDatabase();
-
-                    db.execSQL("delete from ventas");
-                    db.execSQL("VACUUM");
-                    JSONArray ventas = jsonArray;
-
-                    /*
-                    for (int i = 0; i < ventas.length(); i++) {
-                        try {
-                            JSONObject obj = ventas.getJSONObject(i);
-                            db.execSQL("INSERT INTO ventas (id_venta, id_producto, id_vendedor,fecha,cantidad,monto) " +
-                                    "VALUES (" + obj.get("id_venta") + ", " + obj.get("id_producto") + ", " + obj.get("id_vendedor") + ",'" + obj.get("fecha")
-                                    + "'," + obj.get("cantidad") + "," + obj.get("monto") + " )");
-                        } catch (JSONException e) {
-                            e.printStackTrace();
-                        }
-
-                    }
-                    */
-
-                    db.beginTransaction();
-                    try {
-                        //makeAllInserts();
-                        for(int i = 0; i < ventas.length(); i++) {
-                          //  myDataBase = db.openDatabase();
-                            JSONObject obj = ventas.getJSONObject(i);
-                            ContentValues values = new ContentValues();
-                            values.put("id_venta", obj.get("id_venta").toString());
-                            values.put("id_producto", obj.get("id_producto").toString());
-                            values.put("id_vendedor", obj.get("id_vendedor").toString());
-                            values.put("fecha", obj.get("fecha").toString());
-                            values.put("cantidad", obj.get("cantidad").toString());
-                            values.put("monto", obj.get("monto").toString());
-
-
-                            db.insert("ventas", "monto", values);
-
-                        }
-                        db.setTransactionSuccessful();
-                        System.out.println("-----SQLite Trasn Succesful ");
-                    }catch (Exception ex){
-                        System.out.println("-----SQLite Trasn Ex "+ex);
-                    }finally {
-                        db.endTransaction();
-                    }
-
-                    db.close();
-                    fRequestQueue.add(requestUsuarios);
-                }
-            }, new Response.ErrorListener() {
-                @Override
-                public void onErrorResponse(VolleyError error) {
-                    onConnectionFailed(error);
-                    enableBtnUpdate();
-                }
-
-
-            });
-            final JsonArrayRequest requestProductos=new JsonArrayRequest(ConnectionUtils.getAllProdParameter(), new Response.Listener<JSONArray>() {
-                @Override
-                public void onResponse(JSONArray jsonArray) {
-
-                    debug("------------->Response Productos"+jsonArray.toString());
-                    SQLiteHelper sqlHelper=new SQLiteHelper(getBaseContext(), "miPedidoLite", null, 1);
-                    SQLiteDatabase db = sqlHelper.getWritableDatabase();
-
-                    db.execSQL("delete from productos");
-                    db.execSQL("VACUUM");
-                    JSONArray productos = jsonArray;
-
-                    /*
-                    for (int i = 0; i < productos.length(); i++) {
-                        try {
-                            JSONObject obj = productos.getJSONObject(i);
-                            db.execSQL("INSERT INTO productos (id, nombre, denominacion,costo,marca,img) " +
-                                    "VALUES (" + obj.get("id") + ", '" + obj.get("nombre") + "', '" + obj.get("denominacion") + "'," + obj.get("costo") + ",'" +
-                                    obj.get("marca") + "','" + obj.get("img") + "')");
-                        } catch (JSONException e) {
-                            e.printStackTrace();
-                        }
-
-                    }
-                    */
-
-                    db.beginTransaction();
-                    try {
-                        //makeAllInserts();
-                        for(int i = 0; i < productos.length(); i++) {
-                            //  myDataBase = db.openDatabase();
-                            JSONObject obj = productos.getJSONObject(i);
-                            ContentValues values = new ContentValues();
-                            values.put("id", obj.get("id").toString());
-                            values.put("nombre", obj.get("nombre").toString());
-                            values.put("denominacion", obj.get("denominacion").toString());
-                            values.put("costo", obj.get("costo").toString());
-                            values.put("marca", obj.get("marca").toString());
-                            values.put("img", obj.get("img").toString());
-
-
-                            db.insert("productos", "monto", values);
-
-                        }
-                        db.setTransactionSuccessful();
-                        System.out.println("-----SQLite Trasn Succesful ");
-                    }catch (Exception ex){
-                        System.out.println("-----SQLite Trasn Ex "+ex);
-                    }finally {
-                        db.endTransaction();
-                    }
-
-
-
-                    db.close();
-                    fRequestQueue.add(requestVentas);
-                }
-            }, new Response.ErrorListener() {
-                @Override
-                public void onErrorResponse(VolleyError error) {
-                    onConnectionFailed(error);
-                    enableBtnUpdate();
-                }
-
-
-            });
-
-            final JsonArrayRequest requestGastos=new JsonArrayRequest(ConnectionUtils.getAllGastos(), new Response.Listener<JSONArray>() {
-                @Override
-                public void onResponse(JSONArray jsonArray) {
-
-                    debug("------------->Response Gastos"+jsonArray.toString());
-                    SQLiteHelper sqlHelper=new SQLiteHelper(getBaseContext(), "miPedidoLite", null, 1);
-                    SQLiteDatabase db = sqlHelper.getWritableDatabase();
-                    db.execSQL("delete from gastos");
-                    db.execSQL("VACUUM");
-                    JSONArray gastos = jsonArray;
-
-                    /*
-                    for (int i = 0; i < gastos.length(); i++) {
-                        try {
-                            JSONObject obj = gastos.getJSONObject(i);
-                            db.execSQL("INSERT INTO `gastos` (`id`, `idvendedor`, `nombre`, `codigo`, `monto`, `fecha`,`estatus`) " +
-                                    "VALUES (" + obj.get("id") + ", " + obj.get("idvendedor") + ", '" + obj.get("nombre") + "', '" + obj.get("codigo") + "', " + obj.get("monto") + ", '" + obj.get("fecha") + "','S')");
-                        } catch (JSONException e) {
-                            e.printStackTrace();
-                        }
-
-                    }
-                    */
-
-                    db.beginTransaction();
-                    try {
-                        //makeAllInserts();
-                        for(int i = 0; i < gastos.length(); i++) {
-                            //  myDataBase = db.openDatabase();
-                            JSONObject obj = gastos.getJSONObject(i);
-                            ContentValues values = new ContentValues();
-                            values.put("id", obj.get("id").toString());
-                            values.put("idvendedor", obj.get("idvendedor").toString());
-                            values.put("nombre", obj.get("nombre").toString());
-                            values.put("codigo", obj.get("codigo").toString());
-                            values.put("monto", obj.get("monto").toString());
-                            values.put("fecha", obj.get("fecha").toString());
-                            values.put("estatus", "S");
-
-
-                            db.insert("gastos", "monto", values);
-
-                        }
-                        db.setTransactionSuccessful();
-                        System.out.println("-----SQLite Trasn Succesful ");
-                    }catch (Exception ex){
-                        System.out.println("-----SQLite Trasn Ex "+ex);
-                    }finally {
-                        db.endTransaction();
-                    }
-                    db.close();
-                    fRequestQueue.add(requestProductos);
-
-                }
-            }, new Response.ErrorListener() {
-                @Override
-                public void onErrorResponse(VolleyError error) {
-                    onConnectionFailed(error);
-                    enableBtnUpdate();
-                }
-
-
-            });
-
-
-            final JsonArrayRequest requestOpen=new JsonArrayRequest(ConnectionUtils.iniciarSesion(), new Response.Listener<JSONArray>() {
-                @Override
-                public void onResponse(JSONArray jsonArray) {
-
-                    debug("------------->Iniciar sesion"+jsonArray.toString());
-
-
-
-                    fRequestQueue.add(requestGastos);
-
-                }
-            }, new Response.ErrorListener() {
-                @Override
-                public void onErrorResponse(VolleyError error) {
-                    onConnectionFailed(error);
-                    enableBtnUpdate();
-                }
-
-
-            });
-
-
-
-            fRequestQueue.add(requestOpen);
-
-        }
 
     }
 }

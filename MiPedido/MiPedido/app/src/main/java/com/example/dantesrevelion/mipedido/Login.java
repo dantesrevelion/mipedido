@@ -89,13 +89,13 @@ public class Login extends BaseActivity {
 
         mlocManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
         mlocListener = new MyLocationListener();
-        requestUpdate();
+        //requestUpdate();
 
     }
     @Override
     protected void onStop() {
         super.onStop();
-        stopUpdate();
+
     }
 
     @Override
@@ -145,6 +145,9 @@ public class Login extends BaseActivity {
                         "Contraseña Incorrecta", Toast.LENGTH_SHORT);
                 toast1.show();
             }
+            ConnectionUtils.createConection(getBaseContext());
+            actualizaVentasGastos(taskResult.getJSONObject(0).get("id").toString());
+            idUsuarioBase=taskResult.getJSONObject(0).get("id").toString();
         } catch (JSONException e) {
             e.printStackTrace();
         }
