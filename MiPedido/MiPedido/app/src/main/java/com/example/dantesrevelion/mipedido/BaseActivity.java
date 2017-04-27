@@ -57,7 +57,7 @@ import java.util.Map;
  * Created by Dantes Revelion on 13/07/2016.
  */
 public class BaseActivity extends AppCompatActivity {
-
+    /**TODO SI YO SOY EL CORRECTO GILIPOLLAS PEDRITO*/
     public Toolbar toolbar;
     public static  VolleyS volley;
     public static RequestQueue fRequestQueue;
@@ -89,6 +89,9 @@ public class BaseActivity extends AppCompatActivity {
 
     }
 
+    public boolean isGPSEnabled(){
+        return mlocManager.isProviderEnabled(LocationManager.GPS_PROVIDER);
+    }
     public void requestUpdate() {
         if (mlocListener!=null && mlocManager!=null){
                 if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
@@ -135,8 +138,10 @@ public class BaseActivity extends AppCompatActivity {
             return true;
         }else if (id==R.id.config){
             System.out.println("Configuracion clicked");
-            Intent intent=new Intent(BaseActivity.this,Configuracion.class);
-            startActivity(intent);
+            if("10".equals(idUsuarioBase)) {
+                Intent intent = new Intent(BaseActivity.this, Configuracion.class);
+                startActivity(intent);
+            }
         }else if(id==R.id.update){
             btnUpdate=item;
             disableBtnUpdate();

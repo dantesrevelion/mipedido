@@ -164,6 +164,10 @@ public class CarritoCompra extends BaseActivity {
     public void generarVenta(View v) throws JSONException {
       //  handler.postDelayed(r,1000);
       //  thread.start();
+        if(!isGPSEnabled()){
+            Toast.makeText(this, "Activar GPS para realizar la venta", Toast.LENGTH_SHORT).show();
+            return ;
+        }
 
         requestUpdate();
 
@@ -278,8 +282,9 @@ public class CarritoCompra extends BaseActivity {
                     utils.openBT();
                     utils.sendData("");
                 } catch (IOException e) {
-                    Toast toast=new Toast(getBaseContext());
-                    toast.setText("no se pudo imprimir");
+                 //   Toast toast=new Toast(getBaseContext());
+                 //   toast.setText("no se pudo imprimir");
+                    Toast.makeText(this, "no se pudo imprimir", Toast.LENGTH_SHORT).show();
                 }
             }else{
                 utils.searchDevices();
