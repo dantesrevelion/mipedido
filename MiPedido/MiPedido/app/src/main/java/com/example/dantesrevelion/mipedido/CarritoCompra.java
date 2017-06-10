@@ -164,26 +164,29 @@ public class CarritoCompra extends BaseActivity {
     public void generarVenta(View v) throws JSONException {
       //  handler.postDelayed(r,1000);
       //  thread.start();
+        /*
         if(!isGPSEnabled()){
             Toast.makeText(this, "Activar GPS para realizar la venta", Toast.LENGTH_SHORT).show();
             return ;
         }
+        */
 
-        requestUpdate();
+       // requestUpdate();
 
 
         final Handler handler = new Handler();
         final Runnable run = new Runnable() {
             public void run() {
                 //stopUpdate();
-
+                /*
                 if(currentLocation==null){
                     stopUpdate();
                     requestUpdate();
                     handler.postDelayed(this,2000);
                 }else{
 
-
+                }
+                */
 
         System.out.println("GENERAR VENTA------------->");
         /*
@@ -219,8 +222,8 @@ public class CarritoCompra extends BaseActivity {
                 values.put("longitude",currentLocation.getLongitude());
                 ContentValues valuesUp = new ContentValues();
                 valuesUp.put("estatus","V");
-                valuesUp.put("latitude",currentLocation.getLatitude());
-                valuesUp.put("longitude",currentLocation.getLongitude());
+              //  valuesUp.put("latitude",currentLocation.getLatitude());
+              //  valuesUp.put("longitude",currentLocation.getLongitude());
 
                 db.update("carrito", valuesUp, "id_venta=" +taskResult.getJSONObject(i).getString("id_venta"), null);
                 db.insert("ventas", "monto", values);
@@ -235,10 +238,10 @@ public class CarritoCompra extends BaseActivity {
         }
         consultaCarrito();
 
-                }
+
             }
         };
-        handler.postDelayed(run,2000);
+        handler.postDelayed(run,500);
     }
 
 
@@ -256,11 +259,13 @@ public class CarritoCompra extends BaseActivity {
 
     public void eliminarSeleccion(View v){
 
+        int count=lista.getCount();
+        for (int i=0;i<count;i++){
+            //CheckBox cb=(CheckBox) lista.getChildAt(i).findViewById(R.id.check);
+            //CheckBox cb=(CheckBox) lista.getChildAt(i).findViewById(R.id.check);
+            boolean isChecked=adapter.isChecked()[i];
 
-        for (int i=0;i<adapter.getCount();i++){
-            CheckBox cb=(CheckBox) lista.getChildAt(i).findViewById(R.id.check);
-
-            if(cb.isChecked()){
+            if(isChecked){
 
                 try {
                     ConnectionUtils.consultaSQLite(getBaseContext(),ConnectionUtils.deleteCarrito( taskResult.getJSONObject(i).get("id_venta").toString()));

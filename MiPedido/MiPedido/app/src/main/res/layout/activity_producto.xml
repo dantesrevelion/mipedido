@@ -17,10 +17,6 @@
 
 
 
-
-
-
-
         <LinearLayout
             android:layout_below="@+id/tool_bar_producto"
             android:id="@+id/ly_header_carrito"
@@ -124,7 +120,20 @@
 
 
 
-
+    <RelativeLayout
+        android:id="@+id/layoutLoading"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:clickable="true"
+        android:background="@color/color3_alpha"
+        android:visibility="gone">
+        <ProgressBar
+            android:layout_centerInParent="true"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:visibility="visible"
+            android:layout_centerHorizontal="true" />
+    </RelativeLayout>
 
 
 

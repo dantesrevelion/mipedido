@@ -1,11 +1,15 @@
 package com.example.dantesrevelion.mipedido;
 
+import android.content.Context;
+import android.location.LocationManager;
+import android.os.Handler;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 
 import android.support.v7.widget.Toolbar;
 import android.view.View;
 import android.widget.Button;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -22,6 +26,7 @@ public class Producto extends BaseActivity {
     Button addmore=null;
     int n=1;
     String idu="",idp="",c="";
+    RelativeLayout layoutLoading;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -40,6 +45,12 @@ public class Producto extends BaseActivity {
         System.out.println( "INICIA ON CREATE PRODUCTO");
         minus=(Button) findViewById(R.id.minus);
         addmore=(Button) findViewById(R.id.addmore);
+        layoutLoading=(RelativeLayout) findViewById(R.id.layoutLoading);
+        requestUpdate();
+
+        mlocManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
+        mlocListener = new MyLocationListener();
+        requestUpdate();
 
     }
 
@@ -61,15 +72,52 @@ public class Producto extends BaseActivity {
     //    micontador.setText(n);
     }
 
-    public void addtoCarrito(View v){
+    public void addtoCarritoOLD(View v){
 
         String monto=""+(n*Double.parseDouble(c));
-        JSONArray taskResult= ConnectionUtils.consultaSQLite(this,ConnectionUtils.insertCarrito(idp,idu,""+n,monto,"P"));
+        JSONArray taskResult= ConnectionUtils.consultaSQLite(this,ConnectionUtils.insertCarrito(idp,idu,""+n,monto,"P","",""));
         Toast toast1 = Toast.makeText(getApplicationContext(),
                 "Añadidos al Carrito", Toast.LENGTH_SHORT);
         toast1.show();
         onBackPressed();
     }
+    public void addtoCarrito(View v){
+
+        if(!isGPSEnabled()){
+            Toast.makeText(this, "Activar GPS para realizar la venta", Toast.LENGTH_SHORT).show();
+            return ;
+        }
+        layoutLoading.setVisibility(View.VISIBLE);
+        final Handler handler = new Handler();
+        final Runnable run = new Runnable() {
+            public void run() {
+                //stopUpdate();
+
+                if(currentLocation==null){
+                    stopUpdate();
+                    requestUpdate();
+                    handler.postDelayed(this,2000);
+                }else{
+                    String monto=""+(n*Double.parseDouble(c));
+                    JSONArray taskResult= ConnectionUtils.consultaSQLite(getBaseContext(),ConnectionUtils.insertCarrito(idp,idu,""+n,monto,"P",
+                            String.valueOf(currentLocation.getLatitude()),String.valueOf(currentLocation.getLongitude())));
+                    Toast toast1 = Toast.makeText(getApplicationContext(),
+                            "Añadidos al Carrito", Toast.LENGTH_SHORT);
+                    toast1.show();
+                    layoutLoading.setVisibility(View.GONE);
+                    onBackPressed();
+
+                }
+            }
+        };
+        handler.postDelayed(run,2000);
 
 
+    }
+
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+        stopUpdate();
+    }
 }

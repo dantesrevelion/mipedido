@@ -195,7 +195,7 @@ public class ConnectionUtils {
         return response;
     }
 
-    public static String insertCarrito(String idp,String idv,String cant,String monto,String estatus){
+    public static String insertCarrito(String idp,String idv,String cant,String monto,String estatus,String latitude,String longitude){
         Calendar c = Calendar.getInstance();
         int year = c.get(Calendar.YEAR);
         int month = c.get(Calendar.MONTH);
@@ -203,8 +203,8 @@ public class ConnectionUtils {
         String fecha=year+"-"+(month+1)+"-"+day+" "+c.get(Calendar.HOUR)+":"+c.get(Calendar.MINUTE)+":"+c.get(Calendar.SECOND);
         String formated=ConnectionUtils.formatDateGeneral(fecha,"yyyy-MM-dd HH:mm:ss");
 
-        String response = "INSERT INTO carrito ( id_producto, id_vendedor,fecha,cantidad,monto,estatus)" +
-                "VALUES ("+idp+","+idv+",'"+formated+"',"+cant+","+monto+",'"+estatus+"'); ";
+        String response = "INSERT INTO carrito ( id_producto, id_vendedor,fecha,cantidad,monto,estatus,latitude,longitude)" +
+                "VALUES ("+idp+","+idv+",'"+formated+"',"+cant+","+monto+",'"+estatus+"','"+latitude+"','"+longitude+"'); ";
         return response;
     }
     public static String insertGastos(String idu,String nombre,String codigo,String monto,String estatus){
