@@ -10,6 +10,7 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.os.Handler;
 import android.preference.PreferenceManager;
+import android.util.Log;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -34,7 +35,8 @@ public class BluetoothUtils {
     BluetoothAdapter mBluetoothAdapter;
     public static List<BluetoothDevice> searchResult;
     private static BluetoothDevice mmDevice;
-    BluetoothSocket mmSocket;
+    private static BluetoothSocket mmSocket;
+
     TextView tv_test;
     OutputStream mmOutputStream;
     InputStream mmInputStream;
@@ -52,6 +54,7 @@ public class BluetoothUtils {
         filter.addAction(BluetoothDevice.ACTION_FOUND);
         filter.addAction(BluetoothAdapter.ACTION_DISCOVERY_STARTED);
         filter.addAction(BluetoothAdapter.ACTION_DISCOVERY_FINISHED);
+        filter.addAction(BluetoothDevice.ACTION_BOND_STATE_CHANGED);
         context.registerReceiver(mReceiver, filter);
 
     }
@@ -77,6 +80,22 @@ public class BluetoothUtils {
                 search.setDevices(device);
 
             }
+            if (BluetoothDevice.ACTION_BOND_STATE_CHANGED.equals(action)) {
+                final int state        = intent.getIntExtra(BluetoothDevice.EXTRA_BOND_STATE, BluetoothDevice.ERROR);
+                final int prevState    = intent.getIntExtra(BluetoothDevice.EXTRA_PREVIOUS_BOND_STATE, BluetoothDevice.ERROR);
+
+                if (state == BluetoothDevice.BOND_BONDED && prevState == BluetoothDevice.BOND_BONDING) {
+                    Log.d("BLUETOOTH","----->PAIRED");
+                    try {
+                        openBT(context);
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                } else if (state == BluetoothDevice.BOND_NONE && prevState == BluetoothDevice.BOND_BONDED){
+                    Log.d("BLUETOOTH","----->unPAIRED");
+                }
+
+            }
 
 
         }
@@ -86,15 +105,19 @@ public class BluetoothUtils {
         return mmDevice;
     }
 
-    public static void setMmDevice(BluetoothDevice mmDevice) {
+    public static void setMmDevice(BluetoothDevice mmDevice,Context context) {
         BluetoothUtils.mmDevice = mmDevice;
+        SharedPreferencesUtils.writeSharedPreference(context,"nameDevice",mmDevice.getName());
     }
 
 
     // tries to open a connection to the bluetooth printer device
-    public void openBT() throws IOException {
+    public void openBT(Context context) throws IOException {
         try {
 
+            if(mmDevice==null){
+                mmDevice=getPrinterDevice(context);
+            }
             // Standard SerialPortService ID
             UUID uuid = UUID.fromString("00001101-0000-1000-8000-00805f9b34fb");
             mmSocket = mmDevice.createRfcommSocketToServiceRecord(uuid);
@@ -111,6 +134,13 @@ public class BluetoothUtils {
         }
     }
 
+    public static boolean isOpen(){
+        boolean response=false;
+        if(mmSocket!=null){
+            response = mmSocket.isConnected() ;
+        }
+        return response ;
+    }
     /*
  * after opening a connection to bluetooth printer device,
  * we have to listen and check if a data were sent to be printed.
@@ -120,7 +150,7 @@ public class BluetoothUtils {
             final Handler handler = new Handler();
 
             // this is the ASCII code for a newline character
-            final byte delimiter = 10;
+            final byte delimiter = 50;
 
             stopWorker = false;
             readBufferPosition = 0;
@@ -154,6 +184,7 @@ public class BluetoothUtils {
 
                                         // specify US-ASCII encoding
                                         final String data = new String(encodedBytes, "US-ASCII");
+                                        Log.d("SEND DATA", data);
                                         readBufferPosition = 0;
 
                                         // tell the user data were sent to bluetooth printer device
@@ -188,11 +219,38 @@ public class BluetoothUtils {
     public void sendData(String data) throws IOException {
         try {
 
-            // the text typed by the user
-            String msg = "MI PEDIDO PRUEBA ";
-           // msg += "\n";
+            // 32 caracteres
+            mmOutputStream = mmSocket.getOutputStream();
+            mmInputStream = mmSocket.getInputStream();
+            String[] msg = new String[15];
 
-            mmOutputStream.write(msg.getBytes());
+            msg[0]="                                ";
+            msg[1]="1                              |";
+            msg[2]="2                              |";
+            msg[3]="3                              |";
+            msg[4]="4                              |";
+            msg[5]="5                              |";
+            msg[6]="6                              |";
+            msg[7]="7                              |";
+            msg[8]="8                              |";
+            msg[9]="9                              |";
+            msg[10]="10                             |";
+            msg[11]="11                             |";
+            msg[12]="                                ";
+            msg[13]="                                ";
+            msg[14]="                                ";
+           // msg += "\n";
+            readBufferPosition=0;
+
+            for(int i=0;i<msg.length;i++){
+                mmOutputStream.flush();
+                mmOutputStream.write(msg[i].getBytes());
+
+
+            }
+
+
+
 
             // tell the user data were sent
             //myLabel.setText("Data sent.");
@@ -251,6 +309,7 @@ public class BluetoothUtils {
             Method method = device.getClass().getMethod("removeBond", (Class[]) null);
             method.invoke(device, (Object[]) null);
 
+
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -275,13 +334,23 @@ public class BluetoothUtils {
       //  ArrayList<String> arrayListpaired;
         if(pairedDevice.size()>0) {
             return true;
-         //   for(BluetoothDevice device : pairedDevice){
-        //        arrayListpaired.add(device.getName()+"\n"+device.getAddress());
-        //        arrayListPairedBluetoothDevices.add(device);
-            //}
         }else{
             return false;
         }
+
+    }
+    public  BluetoothDevice getPrinterDevice(Context context){
+        BluetoothDevice response=null;
+        Set<BluetoothDevice> pairedDevice = mBluetoothAdapter.getBondedDevices();
+        for(BluetoothDevice deviceLocal:pairedDevice){
+            String paired=SharedPreferencesUtils.readStringSharedPreference(context,"nameDevice");
+            Log.d("BLUETOOTH DEVICE: ",deviceLocal.getName()+" , "+deviceLocal.getType()+" , "+deviceLocal.getBluetoothClass()+" , "+deviceLocal.getUuids());
+            if(paired.equals(deviceLocal.getName()) || "SPP-R200III".equals(deviceLocal.getName()) ){
+                response= deviceLocal;
+            }
+        }
+
+        return response;
 
     }
 

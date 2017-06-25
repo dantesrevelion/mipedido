@@ -284,7 +284,9 @@ public class CarritoCompra extends BaseActivity {
         if(utils.bluetoothIsOn(this)){
             if(utils.isPaired()){
                 try {
-                    utils.openBT();
+                    if(!utils.isOpen()){
+                       utils.openBT(getBaseContext());
+                    }
                     utils.sendData("");
                 } catch (IOException e) {
                  //   Toast toast=new Toast(getBaseContext());
