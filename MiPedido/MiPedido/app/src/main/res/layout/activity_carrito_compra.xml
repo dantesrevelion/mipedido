@@ -84,6 +84,7 @@
         <Button
             android:layout_toRightOf="@+id/bt_generar_carrito"
             android:layout_toLeftOf="@+id/ly_der_carrito"
+            android:visibility="gone"
             android:id="@+id/bt_eliminar_carrito"
             android:layout_width="match_parent"
             android:layout_height="50dp"
@@ -100,6 +101,7 @@
             android:layout_alignParentRight="true"/>
 
         <Button
+
             android:layout_below="@+id/bt_generar_carrito"
             android:id="@+id/bt_imprimir_carrito"
             android:layout_toRightOf="@+id/ly_izq_carrito"

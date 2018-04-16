@@ -2,6 +2,7 @@ package com.example.dantesrevelion.mipedido;
 
 import android.Manifest;
 import android.app.Activity;
+import android.app.ProgressDialog;
 import android.content.ContentValues;
 import android.content.Context;
 import android.content.Intent;
@@ -11,6 +12,7 @@ import android.database.sqlite.SQLiteDatabase;
 import android.graphics.Color;
 import android.graphics.PorterDuff;
 import android.graphics.drawable.Drawable;
+import android.location.Criteria;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
@@ -18,6 +20,7 @@ import android.net.ConnectivityManager;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
+import android.os.Looper;
 import android.os.PersistableBundle;
 import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.AppCompatActivity;
@@ -25,6 +28,8 @@ import android.support.v7.widget.PopupMenu;
 import android.support.v7.widget.Toolbar;
 import android.view.*;
 import android.view.Menu;
+import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 import android.widget.Toast;
 
 import com.android.volley.AuthFailureError;
@@ -71,6 +76,9 @@ public class BaseActivity extends AppCompatActivity {
     public static String idUsuarioBase;
     boolean sendVentas=false,sendGastos=false;
 
+    Handler handlerUpdate ;
+    Runnable runStart;
+
 
     @Override
     public void onCreate(Bundle savedInstanceState, PersistableBundle persistentState) {
@@ -97,11 +105,31 @@ public class BaseActivity extends AppCompatActivity {
                 if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
                     System.out.println("resquest");
                 }
-            mlocManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 0, 0, (LocationListener) mlocListener);
+
+            Criteria criteria = new Criteria();
+            criteria.setAccuracy(Criteria.ACCURACY_LOW);
+            criteria.setBearingAccuracy(Criteria.ACCURACY_LOW);
+
+            String provider = mlocManager.getBestProvider(criteria, true);
+
+            //mlocManager.requestLocationUpdates(provider, 0, 0, (LocationListener) mlocListener);
+            mlocManager.requestLocationUpdates(provider, 0, 0, (LocationListener) mlocListener);
+
+            //mlocManager.requestSingleUpdate(criteria,mlocListener,lopper);
             // System.out.println(" LAT LONG " + MyLocationListener.getLocation());
+
             if (MyLocationListener.getLocation() != null) {
-                System.out.println(" LAT LONG " + MyLocationListener.getLocation());
-                currentLocation = MyLocationListener.getLocation();
+                System.out.println(" LAT LONG " + MyLocationListener.getLocation() + " ACCURACY: "+MyLocationListener.getLocation().getAccuracy());
+
+                    System.out.println(" ACCURACY: "+MyLocationListener.getLocation().getAccuracy());
+                    //if( MyLocationListener.getLocation().getAccuracy()<15f){
+                        currentLocation = MyLocationListener.getLocation();
+
+                    //}
+
+
+
+
 
             }
         }
@@ -116,6 +144,33 @@ public class BaseActivity extends AppCompatActivity {
         }
     }
 
+    public void startUpdates( final float accuracy,final int timeupdate,final RelativeLayout layoutLoading){
+
+
+        requestUpdate();
+        handlerUpdate = new Handler();
+
+
+
+        runStart = new Runnable() {
+            public void run() {
+
+                if(currentLocation!=null && currentLocation.getAccuracy()<accuracy){
+                    System.out.println("**** ACCURACY OK ****"+currentLocation.getAccuracy());
+                    stopUpdate();
+                    if(layoutLoading!=null){
+                        layoutLoading.setVisibility(View.GONE);
+                    }
+                }else{
+                    handlerUpdate.postDelayed(runStart, timeupdate);
+                    requestUpdate();
+                }
+
+            }
+        };
+
+        handlerUpdate.postDelayed(runStart, 1000);
+    }
     @Override
     public boolean onCreateOptionsMenu(android.view.Menu menu) {
         System.out.println("ON CREATE OPTION MENU");

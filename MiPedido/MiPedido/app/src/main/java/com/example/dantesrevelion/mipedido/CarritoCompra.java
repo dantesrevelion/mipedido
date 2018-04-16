@@ -30,7 +30,9 @@ import org.json.JSONArray;
 import org.json.JSONException;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.List;
 
 public class CarritoCompra extends BaseActivity {
 
@@ -47,6 +49,9 @@ public class CarritoCompra extends BaseActivity {
     public static boolean searchIsVisible=false;
     public static Activity activity;
     public static Handler handler = new Handler();
+
+//    Handler handlerUpdate ;
+//    Runnable runStart;
 
     Thread thread = new Thread() {
         @Override
@@ -117,10 +122,32 @@ public class CarritoCompra extends BaseActivity {
         setSupportActionBar(toolbar);
         consultaCarrito();
         utils= new BluetoothUtils(getBaseContext());
-
         mlocManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
         mlocListener = new MyLocationListener();
+
+        startUpdates(15,1000,null);
+        /*
         requestUpdate();
+        handlerUpdate = new Handler();
+
+
+
+        runStart = new Runnable() {
+            public void run() {
+
+                if(currentLocation.getAccuracy()<15){
+                    System.out.println("**** ACCURACY OK ****"+currentLocation.getAccuracy());
+                    stopUpdate();
+                }else{
+                    handlerUpdate.postDelayed(runStart, 1000);
+                    requestUpdate();
+                }
+
+            }
+        };
+
+        handlerUpdate.postDelayed(runStart, 200);
+        */
 
     }
 
@@ -161,7 +188,7 @@ public class CarritoCompra extends BaseActivity {
         }
         tv_total.setText("$"+String.valueOf(total));
     }
-    public void generarVenta(View v) throws JSONException {
+    public void generarVenta(final View v) throws JSONException {
       //  handler.postDelayed(r,1000);
       //  thread.start();
         /*
@@ -230,7 +257,10 @@ public class CarritoCompra extends BaseActivity {
                 //db.update("gastos", values, "id=" + listaGastos.get(i).getId(), null);
             }
             db.setTransactionSuccessful();
+            //imprimir(v);
+            //BluetoothUtils.testText(getListToPrint());
             System.out.println("-----SQLite Trasn Succesful ");
+            bt_imprimir.setEnabled(true);
         } catch (Exception ex) {
             System.out.println("-----SQLite Trasn Ex " + ex);
         } finally {
@@ -278,27 +308,72 @@ public class CarritoCompra extends BaseActivity {
         consultaCarrito();
         calculaTotal();
     }
+    public static String padRight(String s, int n) {
+        return String.format("%1$-" + n + "s", s);
+    }
+    public  String padLeft(String str, int n) {
+        return String.format("%1$" + n + "s", str);
+    }
+    public List<String> getListToPrint() throws JSONException {
+        List<String> registros=new ArrayList<>();
+        for (int i = 0; i < taskResult.length(); i++) {
 
+            //  valuesUp.put("latitude",currentLocation.getLatitude());
+            //  valuesUp.put("longitude",currentLocation.getLongitude());
+            JSONArray localValue= ConnectionUtils.consultaSQLite(getBaseContext(),"select * from productos where id="+taskResult.getJSONObject(i).getString("id_producto"));
+            //JSONArray localUsuarios= ConnectionUtils.consultaSQLite(getBaseContext(),"select * from usuario where id="+localValue.getJSONObject(i).getString("id_vendedor"));
+            String cant=padRight(taskResult.getJSONObject(i).getString("cantidad"),3);
+            String art=padRight(localValue.getJSONObject(0).getString("nombre"),14);
+            String cu=padLeft(localValue.getJSONObject(0).getString("costo"),7);
+            String totalcu="$"+padLeft(taskResult.getJSONObject(i).getString("monto"),7);
+            String cadena=art+cant+cu+totalcu;
+            //String value = new String(cadena., "UTF-8");
+            registros.add(cadena);
+        }
+        registros.add("                                ");
+        registros.add("                                ");
+        registros.add("       TOTAL            $"+padLeft(String.valueOf(total),7));
+        registros.add("                                ");
+        registros.add("Latitud: "+padRight(String.valueOf(currentLocation.getLatitude()),23));
+        registros.add("Longitud: "+padRight(String.valueOf(currentLocation.getLongitude()),22));
+
+        return registros;
+    }
     public void imprimir(View v){
         System.out.println("--------->Inicia proceso de impresion");
+        bt_imprimir.setEnabled(false);
+
         if(utils.bluetoothIsOn(this)){
             if(utils.isPaired()){
                 try {
                     if(!utils.isOpen()){
                        utils.openBT(getBaseContext());
                     }
-                    utils.sendData("");
+
+
+                    try {
+
+                        utils.sendData(getListToPrint(),ConnectionUtils.getUsuarioApp());
+                        generarVenta(v);
+
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                        bt_imprimir.setEnabled(true);
+                    }
                 } catch (IOException e) {
                  //   Toast toast=new Toast(getBaseContext());
                  //   toast.setText("no se pudo imprimir");
                     Toast.makeText(this, "no se pudo imprimir", Toast.LENGTH_SHORT).show();
+                    bt_imprimir.setEnabled(true);
                 }
             }else{
                 utils.searchDevices();
                 showSearchList();
-
+                bt_imprimir.setEnabled(true);
             }
 
+        }else{
+            bt_imprimir.setEnabled(true);
         }
 
       //  Intent enableBluetooth = new Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE);

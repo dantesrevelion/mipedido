@@ -16,6 +16,7 @@ import android.support.v7.widget.Toolbar;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ListView;
+import android.widget.RelativeLayout;
 
 import com.example.dantesrevelion.mipedido.Utils.ConnectionUtils;
 import com.example.dantesrevelion.mipedido.orm.PositionData;
@@ -36,6 +37,7 @@ public class Menu extends BaseActivity {
     Handler handlerStop;
     Runnable runStart;
     boolean running=false;
+    RelativeLayout layoutLoading;
     final public static int MY_PERMISSIONS_REQUEST_LOCATION =423;
 
     public static Activity activity;
@@ -45,6 +47,8 @@ public class Menu extends BaseActivity {
         setContentView(R.layout.activity_menu);
         toolbar = (Toolbar) findViewById(R.id.tool_bar);
         setSupportActionBar(toolbar);
+        layoutLoading=(RelativeLayout) findViewById(R.id.layoutLoading);
+
         final ListView lista = (ListView) findViewById(R.id.listaMenu);
         final String[] items ={"Productos","Lista de Ventas","Gastos Operativos","Reporte por Fecha","Mi Perfil"};
         VysorAdapterMenu adapter = new VysorAdapterMenu(Menu.this, R.layout.item_list, items);
@@ -89,6 +93,9 @@ public class Menu extends BaseActivity {
 
         mlocManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
         mlocListener = new MyLocationListener();
+        layoutLoading.setVisibility(View.VISIBLE);
+        startUpdates(15,1000,layoutLoading);
+        /*
         requestUpdate();
 
 
@@ -98,7 +105,9 @@ public class Menu extends BaseActivity {
             public void run() {
                 stopUpdate();
                 if(currentLocation==null) {
-                    handlerStart.postDelayed(runStart, 2000);
+                    handlerStart.postDelayed(runStart, 500);
+                }else{
+                    startUpdates(15,1000,layoutLoading);
                 }
             }
         };
@@ -110,7 +119,7 @@ public class Menu extends BaseActivity {
             public void run() {
                 requestUpdate();
                 running=true;
-                handlerStop.postDelayed(runStop, 5000);
+                handlerStop.postDelayed(runStop, 3000);
             }
         };
 
@@ -128,7 +137,7 @@ public class Menu extends BaseActivity {
 
             //
         }
-
+*/
 
         //requestUpdate();
 

@@ -46,11 +46,12 @@ public class Producto extends BaseActivity {
         minus=(Button) findViewById(R.id.minus);
         addmore=(Button) findViewById(R.id.addmore);
         layoutLoading=(RelativeLayout) findViewById(R.id.layoutLoading);
-        requestUpdate();
+       // requestUpdate();
 
         mlocManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
         mlocListener = new MyLocationListener();
-        requestUpdate();
+       // requestUpdate();
+        startUpdates(15,1000,null);
 
     }
 

@@ -23,7 +23,9 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.lang.reflect.Method;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.Set;
 import java.util.UUID;
@@ -215,36 +217,64 @@ public class BluetoothUtils {
             e.printStackTrace();
         }
     }
-    // this will send text data to be printed by the bluetooth printer
-    public void sendData(String data) throws IOException {
-        try {
+    public static void testText(List<String> data,String usuario){
+        SimpleDateFormat s = new SimpleDateFormat("dd-MM-yyyy hh:mm:ss");
+        String format = s.format(new Date());
 
+        Log.d("ticket","            MI PEDIDO           ");
+        Log.d("ticket","                                ");
+        Log.d("ticket","ID:                             ");
+        Log.d("ticket","Nombre:"+CarritoCompra.padRight(usuario,25));
+        Log.d("ticket",format+"             ");
+        Log.d("ticket","                                ");
+        Log.d("ticket","PROD         CTD   PRECIO  TOTAL");
+
+        for(String reg:data){
+            Log.d("ticket",reg);
+        }
+
+        Log.d("ticket","                                ");
+        Log.d("ticket","                                ");
+    }
+
+    // this will send text data to be printed by the bluetooth printer
+    public void sendData(List<String> data,String usuario) throws IOException {
+        try {
+            SimpleDateFormat s = new SimpleDateFormat("dd-MM-yyyy hh:mm:ss");
+            String format = s.format(new Date());
+            testText(data,usuario);
             // 32 caracteres
             mmOutputStream = mmSocket.getOutputStream();
             mmInputStream = mmSocket.getInputStream();
-            String[] msg = new String[15];
+            //String[] msg = new String[15];
+            List<String> msg = new ArrayList<>();
 
-            msg[0]="                                ";
-            msg[1]="1                              |";
-            msg[2]="2                              |";
-            msg[3]="3                              |";
-            msg[4]="4                              |";
-            msg[5]="5                              |";
-            msg[6]="6                              |";
-            msg[7]="7                              |";
-            msg[8]="8                              |";
-            msg[9]="9                              |";
-            msg[10]="10                             |";
-            msg[11]="11                             |";
-            msg[12]="                                ";
-            msg[13]="                                ";
-            msg[14]="                                ";
+            msg.add("                                ");
+            msg.add("                                ");
+            msg.add("                                ");
+            msg.add("            MI PEDIDO           ");
+            msg.add("                                ");
+            msg.add("                                ");
+            msg.add("ID:                             ");
+            msg.add("Nombre:"+CarritoCompra.padRight(usuario,25));
+            msg.add(format+"             ");
+            msg.add("                                ");
+
+            msg.add("PROD         CTD   PRECIO  TOTAL");
+            for(String reg:data){
+                msg.add(reg);
+            }
+            msg.add("                                ");
+            msg.add("                                ");
+            msg.add("      GRACIAS POR SU COMPRA     ");
+            msg.add("                                ");
+            msg.add("                                ");
            // msg += "\n";
             readBufferPosition=0;
 
-            for(int i=0;i<msg.length;i++){
+            for(int i=0;i<msg.size();i++){
                 mmOutputStream.flush();
-                mmOutputStream.write(msg[i].getBytes());
+                mmOutputStream.write(msg.get(i).getBytes("windows-1252"));
 
 
             }
