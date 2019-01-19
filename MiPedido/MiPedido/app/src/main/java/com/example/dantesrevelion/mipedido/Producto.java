@@ -51,7 +51,7 @@ public class Producto extends BaseActivity {
         mlocManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
         mlocListener = new MyLocationListener();
        // requestUpdate();
-        startUpdates(15,1000,null);
+        startUpdates(18,1000,null);
 
     }
 

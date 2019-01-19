@@ -74,6 +74,7 @@
             android:id="@+id/bt_generar_carrito"
             android:layout_width="150dp"
             android:layout_height="50dp"
+            android:visibility="invisible"
             android:text="Generar Venta"
             android:layout_marginRight="5dp"
             android:backgroundTint="@color/color2"

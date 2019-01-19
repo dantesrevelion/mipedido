@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.app.FragmentManager;
 import android.app.FragmentTransaction;
 import android.bluetooth.BluetoothAdapter;
+import android.bluetooth.BluetoothDevice;
 import android.content.ContentValues;
 import android.content.Context;
 import android.content.Intent;
@@ -13,6 +14,7 @@ import android.os.AsyncTask;
 import android.os.Handler;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.*;
 import android.widget.Button;
 import android.widget.CheckBox;
@@ -20,6 +22,9 @@ import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.crashlytics.android.Crashlytics;
+import com.crashlytics.android.answers.Answers;
+import com.crashlytics.android.answers.CustomEvent;
 import com.example.dantesrevelion.mipedido.Adapters.VysorAdapterCarrito;
 import com.example.dantesrevelion.mipedido.Utils.BluetoothUtils;
 import com.example.dantesrevelion.mipedido.Utils.CheckIn;
@@ -41,7 +46,7 @@ public class CarritoCompra extends BaseActivity {
     ListView lista;
     VysorAdapterCarrito adapter;
     Double total=0d;
-    public static BluetoothUtils utils;
+
     TextView tv_total;
     public static Button bt_generar;
     public static Button bt_imprimir;
@@ -121,11 +126,11 @@ public class CarritoCompra extends BaseActivity {
         activity =this;
         setSupportActionBar(toolbar);
         consultaCarrito();
-        utils= new BluetoothUtils(getBaseContext());
+
         mlocManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
         mlocListener = new MyLocationListener();
-
-        startUpdates(15,1000,null);
+        SearchList.flagSerch=true;
+        startUpdates(18,1000,null);
         /*
         requestUpdate();
         handlerUpdate = new Handler();
@@ -259,6 +264,7 @@ public class CarritoCompra extends BaseActivity {
             db.setTransactionSuccessful();
             //imprimir(v);
             //BluetoothUtils.testText(getListToPrint());
+            Answers.getInstance().logCustom(new CustomEvent("Venta Generada"));
             System.out.println("-----SQLite Trasn Succesful ");
             bt_imprimir.setEnabled(true);
         } catch (Exception ex) {
@@ -339,12 +345,72 @@ public class CarritoCompra extends BaseActivity {
 
         return registros;
     }
-    public void imprimir(View v){
+
+    final Handler handlerImprimir = new Handler();
+    int counterTrys=0;
+    public void imprimir(final View v){
+        Answers.getInstance().logCustom(new CustomEvent("Inicia pronceso Imprimir "));
         System.out.println("--------->Inicia proceso de impresion");
         bt_imprimir.setEnabled(false);
-
+        counterTrys=0;
         if(utils.bluetoothIsOn(this)){
-            if(utils.isPaired()){
+            utils.searchDevices();
+
+            handlerImprimir.postDelayed(new Runnable() {
+                @Override
+                public void run() {
+                    boolean flagOK=false;
+
+                    for(BluetoothDevice deviceLocal:BluetoothUtils.devices){
+                        Answers.getInstance().logCustom(new CustomEvent("Bandera de conexion").putCustomAttribute("Conected Flag","Flag: "+BluetoothUtils.printerConected));
+
+                        if(("SPP-R200III".equals(deviceLocal.getName()) || "Bluedio".equals(deviceLocal.getName()))){
+                            Answers.getInstance().logCustom(new CustomEvent("Encontro la impresora").putCustomAttribute("device","device: "+deviceLocal.getAddress()));
+                            Log.d("Printing Progres", ">>>>>>>>>>>>>>Encontro la impresora");
+                            try {
+                                    utils.openBT(getBaseContext());
+                                    utils.sendData(getListToPrint(),ConnectionUtils.getUsuarioApp());
+                                    generarVenta(v);
+                                    Log.d("Printing Progres", ">>>>>>>>>>>>>>Venta Generada");
+                                    flagOK=true;
+                                    break;
+
+
+                            } catch (IOException e) {
+                                Log.d("Printing Progres", ">>>>>>>>>>>>>>No se realizo la conexion");
+                               // Toast.makeText(getBaseContext(), "no se pudo imprimir", Toast.LENGTH_SHORT).show();
+                                e.printStackTrace();
+                                Answers.getInstance().logCustom(new CustomEvent("No se realizo la conexion ").putCustomAttribute("Error",e.getMessage()));
+                                bt_imprimir.setEnabled(true);
+                                break;
+                            } catch (JSONException e) {
+                                Log.d("Printing Progres", ">>>>>>>>>>>>>>No se realizo la conexion");
+                                Answers.getInstance().logCustom(new CustomEvent("No se realizo la conexion ").putCustomAttribute("Error",e.getMessage()));
+                               // Toast.makeText(getBaseContext(), "no se pudo imprimir", Toast.LENGTH_SHORT).show();
+                                e.printStackTrace();
+                                bt_imprimir.setEnabled(true);
+                                break;
+                            }
+
+
+                        }
+                    }
+
+
+                    if(counterTrys<4){
+                        Log.d("Printing Progres", ">>>>>>>>>>>>>>Busca en la lista de nuevo");
+                        handlerImprimir.postDelayed(this,2000);
+                    }else if(!flagOK){
+                        Toast.makeText(getBaseContext(), "Impresora no disponible", Toast.LENGTH_SHORT).show();
+                        bt_imprimir.setEnabled(true);
+                    }
+                    counterTrys++;
+
+                }
+            }, 3000);
+
+            /*
+            if(BluetoothUtils.alreadyConected || utils.isPaired(this)){
                 try {
                     if(!utils.isOpen()){
                        utils.openBT(getBaseContext());
@@ -371,6 +437,7 @@ public class CarritoCompra extends BaseActivity {
                 showSearchList();
                 bt_imprimir.setEnabled(true);
             }
+        */
 
         }else{
             bt_imprimir.setEnabled(true);
@@ -436,18 +503,19 @@ public class CarritoCompra extends BaseActivity {
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        System.out.println("--------->Activity result");
+
         /** si esta on */
         if(101==requestCode){
             BluetoothAdapter mBluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
             if(mBluetoothAdapter.isEnabled()) {
-                if (utils.isPaired()) {
+                /*
+                if (BluetoothUtils.alreadyConected || !utils.isPaired(this)) {
 
-                } else {
                     utils.searchDevices();
                     showSearchList();
 
                 }
+                */
             }
 
         }

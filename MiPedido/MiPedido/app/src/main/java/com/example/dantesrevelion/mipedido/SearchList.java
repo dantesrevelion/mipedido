@@ -31,6 +31,7 @@ public class SearchList extends Fragment {
     public static VysorAdapterSearchList adapter;
     public static Context context;
     public static List<BluetoothDevice> devices;
+    public static boolean flagSerch=false;
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -67,12 +68,18 @@ public class SearchList extends Fragment {
         public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
             System.out.println("----------> Click on item device"+position+" name "+devices.get(position).getName());
            // BluetoothUtils util=new BluetoothUtils(activity);
+
             BluetoothUtils.setMmDevice(devices.get(position),getActivity());
             BluetoothUtils.pairDevice(devices.get(position));
 
             ParcelUuid[] array=devices.get(position).getUuids();
            // CarritoCompra c=new CarritoCompra();
-            CarritoCompra.hideSearchList();
+
+            if(flagSerch) {
+                CarritoCompra.hideSearchList();
+            }else{
+                ListaDeVentas.hideSearchListLista();
+            }
             BluetoothAdapter mBluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
         //    mBluetoothAdapter.cancelDiscovery();
             System.out.println("------------>IS SEARCHING "+mBluetoothAdapter.isDiscovering());

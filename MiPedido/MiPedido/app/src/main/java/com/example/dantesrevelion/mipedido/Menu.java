@@ -2,9 +2,12 @@ package com.example.dantesrevelion.mipedido;
 
 import android.Manifest;
 import android.app.Activity;
+import android.bluetooth.BluetoothAdapter;
+import android.bluetooth.BluetoothDevice;
 import android.content.Context;
 import android.content.Intent;
 
+import android.content.IntentFilter;
 import android.content.pm.PackageManager;
 import android.location.Location;
 import android.location.LocationListener;
@@ -18,6 +21,7 @@ import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.RelativeLayout;
 
+import com.example.dantesrevelion.mipedido.Utils.BluetoothUtils;
 import com.example.dantesrevelion.mipedido.Utils.ConnectionUtils;
 import com.example.dantesrevelion.mipedido.orm.PositionData;
 
@@ -48,7 +52,7 @@ public class Menu extends BaseActivity {
         toolbar = (Toolbar) findViewById(R.id.tool_bar);
         setSupportActionBar(toolbar);
         layoutLoading=(RelativeLayout) findViewById(R.id.layoutLoading);
-
+        utils= new BluetoothUtils(getBaseContext());
         final ListView lista = (ListView) findViewById(R.id.listaMenu);
         final String[] items ={"Productos","Lista de Ventas","Gastos Operativos","Reporte por Fecha","Mi Perfil"};
         VysorAdapterMenu adapter = new VysorAdapterMenu(Menu.this, R.layout.item_list, items);
@@ -90,11 +94,20 @@ public class Menu extends BaseActivity {
             }
         });
 
+        IntentFilter filter = new IntentFilter();
+        filter.addAction(BluetoothDevice.ACTION_FOUND);
+        filter.addAction(BluetoothAdapter.ACTION_DISCOVERY_STARTED);
+        filter.addAction(BluetoothAdapter.ACTION_DISCOVERY_FINISHED);
+        filter.addAction(BluetoothDevice.ACTION_BOND_STATE_CHANGED);
 
+        filter.addAction(BluetoothDevice.ACTION_ACL_CONNECTED);
+        filter.addAction(BluetoothDevice.ACTION_ACL_DISCONNECTED);
+
+        this.registerReceiver(mReceiver, filter);
         mlocManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
         mlocListener = new MyLocationListener();
         layoutLoading.setVisibility(View.VISIBLE);
-        startUpdates(15,1000,layoutLoading);
+        startUpdates(18,1000,layoutLoading);
         /*
         requestUpdate();
 

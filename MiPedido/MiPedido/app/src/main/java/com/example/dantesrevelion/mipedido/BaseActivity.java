@@ -3,6 +3,9 @@ package com.example.dantesrevelion.mipedido;
 import android.Manifest;
 import android.app.Activity;
 import android.app.ProgressDialog;
+import android.bluetooth.BluetoothAdapter;
+import android.bluetooth.BluetoothDevice;
+import android.content.BroadcastReceiver;
 import android.content.ContentValues;
 import android.content.Context;
 import android.content.Intent;
@@ -26,6 +29,7 @@ import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.PopupMenu;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.*;
 import android.view.Menu;
 import android.widget.LinearLayout;
@@ -41,6 +45,7 @@ import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonArrayRequest;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.JsonRequest;
+import com.example.dantesrevelion.mipedido.Utils.BluetoothUtils;
 import com.example.dantesrevelion.mipedido.Utils.CheckIn;
 import com.example.dantesrevelion.mipedido.Utils.ConnectionUtils;
 import com.example.dantesrevelion.mipedido.Utils.SQLiteHelper;
@@ -53,6 +58,7 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -79,6 +85,13 @@ public class BaseActivity extends AppCompatActivity {
     Handler handlerUpdate ;
     Runnable runStart;
 
+    Handler handlerLocation ;
+    Runnable runLocation;
+    int contadorUpdate;
+
+    public static BluetoothUtils utils;
+
+
 
     @Override
     public void onCreate(Bundle savedInstanceState, PersistableBundle persistentState) {
@@ -101,41 +114,52 @@ public class BaseActivity extends AppCompatActivity {
         return mlocManager.isProviderEnabled(LocationManager.GPS_PROVIDER);
     }
     public void requestUpdate() {
-        if (mlocListener!=null && mlocManager!=null){
-                if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-                    System.out.println("resquest");
+        handlerLocation = new Handler();
+        contadorUpdate=0;
+        runLocation = new Runnable() {
+            public void run() {
+                if (mlocListener != null && mlocManager != null) {
+                    if (ActivityCompat.checkSelfPermission(getBaseContext(), Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(getBaseContext(), Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+                        System.out.println("resquest");
+                    }
+
+                    Criteria criteria = new Criteria();
+                    criteria.setAccuracy(Criteria.ACCURACY_LOW);
+                    criteria.setBearingAccuracy(Criteria.ACCURACY_LOW);
+
+                    String provider = mlocManager.getBestProvider(criteria, true);
+
+                    //mlocManager.requestLocationUpdates(provider, 0, 0, (LocationListener) mlocListener);
+                    mlocManager.requestLocationUpdates(provider, 0, 0, (LocationListener) mlocListener);
+                    //mlocManager.requestSingleUpdate(criteria,mlocListener,lopper);
+                    // System.out.println(" LAT LONG " + MyLocationListener.getLocation());
+
+                    //if (MyLocationListener.getLocation() != null) {
+
+
+                    currentLocation = mlocManager.getLastKnownLocation(provider);
+                    if(currentLocation!=null){
+                        debug("Latitud------>" + currentLocation.getLatitude());
+                        debug("Longitud----->" + currentLocation.getLongitude());
+                        debug("Accuracy----->" + currentLocation.getAccuracy());
+                    }
+
+
+
+                    //            }
+                }
+                if(contadorUpdate<3){
+                    contadorUpdate++;
+                    handlerLocation.postDelayed(runLocation, 800);
                 }
 
-            Criteria criteria = new Criteria();
-            criteria.setAccuracy(Criteria.ACCURACY_LOW);
-            criteria.setBearingAccuracy(Criteria.ACCURACY_LOW);
-
-            String provider = mlocManager.getBestProvider(criteria, true);
-
-            //mlocManager.requestLocationUpdates(provider, 0, 0, (LocationListener) mlocListener);
-            mlocManager.requestLocationUpdates(provider, 0, 0, (LocationListener) mlocListener);
-
-            //mlocManager.requestSingleUpdate(criteria,mlocListener,lopper);
-            // System.out.println(" LAT LONG " + MyLocationListener.getLocation());
-
-            if (MyLocationListener.getLocation() != null) {
-                System.out.println(" LAT LONG " + MyLocationListener.getLocation() + " ACCURACY: "+MyLocationListener.getLocation().getAccuracy());
-
-                    System.out.println(" ACCURACY: "+MyLocationListener.getLocation().getAccuracy());
-                    //if( MyLocationListener.getLocation().getAccuracy()<15f){
-                        currentLocation = MyLocationListener.getLocation();
-
-                    //}
-
-
-
-
-
             }
-        }
+        };
+
+        handlerLocation.postDelayed(runLocation, 200);
     }
     public void stopUpdate(){
-        if (mlocListener!=null && mlocListener!=null) {
+        if (mlocListener!=null && mlocManager!=null) {
             if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
 
                 return;
@@ -162,14 +186,15 @@ public class BaseActivity extends AppCompatActivity {
                         layoutLoading.setVisibility(View.GONE);
                     }
                 }else{
-                    handlerUpdate.postDelayed(runStart, timeupdate);
                     requestUpdate();
+                    handlerUpdate.postDelayed(runStart, timeupdate);
+
                 }
 
             }
         };
 
-        handlerUpdate.postDelayed(runStart, 1000);
+        handlerUpdate.postDelayed(runStart, 2200);
     }
     @Override
     public boolean onCreateOptionsMenu(android.view.Menu menu) {
@@ -405,7 +430,7 @@ public class BaseActivity extends AppCompatActivity {
                 db.execSQL("delete from ventas");
                 db.execSQL("VACUUM");
                 //JSONArray ventas = jsonArray;
-
+                JSONArray ventasLocal= ConnectionUtils.consultaSQLite(getBaseContext(),ConnectionUtils.queryCarritoUp());
                 db.beginTransaction();
                 try {
                     //makeAllInserts();
@@ -426,6 +451,24 @@ public class BaseActivity extends AppCompatActivity {
                     }
                     db.setTransactionSuccessful();
                     System.out.println("-----SQLite Trasn Succesful ");
+
+                    // anade a la lista de venta las ventas que estan pendientes por subir
+
+                    for(int i = 0; i < ventasLocal.length(); i++) {
+                        //  myDataBase = db.openDatabase();
+                        JSONObject obj = ventasLocal.getJSONObject(i);
+                        ContentValues values = new ContentValues();
+                        values.put("id_venta", obj.get("id_venta").toString());
+                        values.put("id_producto", obj.get("id_producto").toString());
+                        values.put("id_vendedor", obj.get("id_vendedor").toString());
+                        values.put("fecha", obj.get("fecha").toString());
+                        values.put("cantidad", obj.get("cantidad").toString());
+                        values.put("monto", obj.get("monto").toString());
+
+
+                        db.insert("ventas", "monto", values);
+
+                    }
                 }catch (Exception ex){
                     System.out.println("-----SQLite Trasn Ex "+ex);
                 }finally {
@@ -539,6 +582,7 @@ public class BaseActivity extends AppCompatActivity {
         List<Usuario> listaUsuario=new ArrayList<>();
         Usuario usr=new Usuario();
         usr.setIdUsuario(idusr);
+        usr.setSession(ConnectionUtils.getSession());
         usr.setSession(ConnectionUtils.getSession());
         listaUsuario.add(usr);
 
@@ -925,4 +969,74 @@ public class BaseActivity extends AppCompatActivity {
 
 
     }
+
+    /** Se ejecuta cuando encuentra un dispositivo */
+    public final BroadcastReceiver mReceiver = new BroadcastReceiver() {
+        public void onReceive(Context context, Intent intent) {
+            String action = intent.getAction();
+            BluetoothDevice device = (BluetoothDevice) intent.getParcelableExtra(BluetoothDevice.EXTRA_DEVICE);
+            if (BluetoothAdapter.ACTION_DISCOVERY_STARTED.equals(action)) {
+                //discovery starts, we can show progress dialog or perform other tasks
+            } else if (BluetoothAdapter.ACTION_DISCOVERY_FINISHED.equals(action)) {
+                //discovery finishes, dismis progress dialog
+            } else if (BluetoothDevice.ACTION_FOUND.equals(action)) {
+                //bluetooth device found
+
+                //searchResult.add(device);
+
+                System.out.println("--------->Device "+device.getName());
+                /*
+                SearchList search=new SearchList();
+
+                search.addToSearchList(device.getName(),device.getAddress());
+                search.setDevices(device);
+
+                */
+                if(BluetoothUtils.devices!=null){
+                    BluetoothUtils.devices.add(device);
+                }
+
+
+                if("SPP-R200III".equals(device.getName()) || "Bluedio".equals(device.getName())){
+                    BluetoothUtils.setMmDevice(device,context);
+                    //BluetoothUtils.pairDevice(device);
+                    utils.stopSearch();
+                }
+
+            }
+            if (BluetoothDevice.ACTION_BOND_STATE_CHANGED.equals(action)) {
+                /*
+                final int state        = intent.getIntExtra(BluetoothDevice.EXTRA_BOND_STATE, BluetoothDevice.ERROR);
+                final int prevState    = intent.getIntExtra(BluetoothDevice.EXTRA_PREVIOUS_BOND_STATE, BluetoothDevice.ERROR);
+
+                if (state == BluetoothDevice.BOND_BONDED && prevState == BluetoothDevice.BOND_BONDING) {
+                    Log.d("BLUETOOTH","----->PAIRED");
+                    try {
+                        utils.openBT(context);
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                } else if (state == BluetoothDevice.BOND_NONE && prevState == BluetoothDevice.BOND_BONDED){
+                    Log.d("BLUETOOTH","----->unPAIRED");
+                }
+                */
+
+            }
+            if(BluetoothDevice.ACTION_ACL_CONNECTED.equals(action)){
+                if("SPP-R200III".equals(device.getName()) || "Bluedio".equals(device.getName()) ){
+                    Log.d("BLUETOOTH","CONNECTED: "+device.getName());
+                    BluetoothUtils.printerConected=true;
+                    Toast.makeText(context, "> TRUE", Toast.LENGTH_SHORT).show();
+                }
+            }
+            if(BluetoothDevice.ACTION_ACL_DISCONNECTED.equals(action)){
+                if("SPP-R200III".equals(device.getName()) || "Bluedio".equals(device.getName()) ){
+                    Log.d("BLUETOOTH","DISCONNECTED: "+device.getName());
+                    BluetoothUtils.printerConected=false;
+                    Toast.makeText(context, "> FALSE", Toast.LENGTH_SHORT).show();
+                }
+            }
+
+        }
+    };
 }

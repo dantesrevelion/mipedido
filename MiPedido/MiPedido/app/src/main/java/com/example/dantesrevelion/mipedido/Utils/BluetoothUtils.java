@@ -14,6 +14,8 @@ import android.util.Log;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.crashlytics.android.answers.Answers;
+import com.crashlytics.android.answers.CustomEvent;
 import com.example.dantesrevelion.mipedido.CarritoCompra;
 import com.example.dantesrevelion.mipedido.R;
 import com.example.dantesrevelion.mipedido.SearchList;
@@ -38,70 +40,33 @@ public class BluetoothUtils {
     public static List<BluetoothDevice> searchResult;
     private static BluetoothDevice mmDevice;
     private static BluetoothSocket mmSocket;
+    public static boolean alreadyConected=false;
 
+
+
+    public static boolean printerConected=false;
     TextView tv_test;
     OutputStream mmOutputStream;
     InputStream mmInputStream;
     Thread workerThread;
 
 
+
     byte[] readBuffer;
     int readBufferPosition;
     volatile boolean stopWorker;
 
+    public static List<BluetoothDevice> devices;
+
     public BluetoothUtils(Context context){
         mBluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
         searchResult=new ArrayList<>();
-        IntentFilter filter = new IntentFilter();
-        filter.addAction(BluetoothDevice.ACTION_FOUND);
-        filter.addAction(BluetoothAdapter.ACTION_DISCOVERY_STARTED);
-        filter.addAction(BluetoothAdapter.ACTION_DISCOVERY_FINISHED);
-        filter.addAction(BluetoothDevice.ACTION_BOND_STATE_CHANGED);
-        context.registerReceiver(mReceiver, filter);
+
+
 
     }
 
-    /** Se ejecuta cuando encuentra un dispositivo */
-    private final BroadcastReceiver mReceiver = new BroadcastReceiver() {
-        public void onReceive(Context context, Intent intent) {
-            String action = intent.getAction();
 
-            if (BluetoothAdapter.ACTION_DISCOVERY_STARTED.equals(action)) {
-                //discovery starts, we can show progress dialog or perform other tasks
-            } else if (BluetoothAdapter.ACTION_DISCOVERY_FINISHED.equals(action)) {
-                //discovery finishes, dismis progress dialog
-            } else if (BluetoothDevice.ACTION_FOUND.equals(action)) {
-                //bluetooth device found
-                BluetoothDevice device = (BluetoothDevice) intent.getParcelableExtra(BluetoothDevice.EXTRA_DEVICE);
-                //searchResult.add(device);
-                System.out.println("--------->Device "+device.getName());
-
-                SearchList search=new SearchList();
-
-                search.addToSearchList(device.getName(),device.getAddress());
-                search.setDevices(device);
-
-            }
-            if (BluetoothDevice.ACTION_BOND_STATE_CHANGED.equals(action)) {
-                final int state        = intent.getIntExtra(BluetoothDevice.EXTRA_BOND_STATE, BluetoothDevice.ERROR);
-                final int prevState    = intent.getIntExtra(BluetoothDevice.EXTRA_PREVIOUS_BOND_STATE, BluetoothDevice.ERROR);
-
-                if (state == BluetoothDevice.BOND_BONDED && prevState == BluetoothDevice.BOND_BONDING) {
-                    Log.d("BLUETOOTH","----->PAIRED");
-                    try {
-                        openBT(context);
-                    } catch (IOException e) {
-                        e.printStackTrace();
-                    }
-                } else if (state == BluetoothDevice.BOND_NONE && prevState == BluetoothDevice.BOND_BONDED){
-                    Log.d("BLUETOOTH","----->unPAIRED");
-                }
-
-            }
-
-
-        }
-    };
 
     public static BluetoothDevice getMmDevice() {
         return mmDevice;
@@ -115,11 +80,14 @@ public class BluetoothUtils {
 
     // tries to open a connection to the bluetooth printer device
     public void openBT(Context context) throws IOException {
-        try {
+
+
 
             if(mmDevice==null){
-                mmDevice=getPrinterDevice(context);
+               // mmDevice=getPrinterDevice(context);
+                Answers.getInstance().logCustom(new CustomEvent("openBT mmDevice es null"));
             }
+
             // Standard SerialPortService ID
             UUID uuid = UUID.fromString("00001101-0000-1000-8000-00805f9b34fb");
             mmSocket = mmDevice.createRfcommSocketToServiceRecord(uuid);
@@ -128,12 +96,10 @@ public class BluetoothUtils {
             mmInputStream = mmSocket.getInputStream();
 
             beginListenForData();
-
+            alreadyConected=true;
             //myLabel.setText("Bluetooth Opened");
 
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+
     }
 
     public static boolean isOpen(){
@@ -269,6 +235,9 @@ public class BluetoothUtils {
             msg.add("      GRACIAS POR SU COMPRA     ");
             msg.add("                                ");
             msg.add("                                ");
+            msg.add("                                ");
+            msg.add("                                ");
+            msg.add("                                ");
            // msg += "\n";
             readBufferPosition=0;
 
@@ -287,6 +256,7 @@ public class BluetoothUtils {
 
         } catch (Exception e) {
             e.printStackTrace();
+            Answers.getInstance().logCustom(new CustomEvent("Error al enviar los datos ").putCustomAttribute("Error",e.getMessage()));
         }
     }
 
@@ -304,6 +274,7 @@ public class BluetoothUtils {
         return mBluetoothAdapter.isEnabled();
     }
 
+
     public List<BluetoothDevice> getListDevice(){
         return searchResult;
     }
@@ -311,20 +282,35 @@ public class BluetoothUtils {
         tv_test=tv;
 
     }
-    public void searchDevices(){
-        System.out.println("--------->Inicia busqueda de dispositivos");
-        mBluetoothAdapter.startDiscovery();
 
+    final Handler handlerBT = new Handler();
+
+    public void searchDevices(){
+        Log.d("Printing Progres", ">>>>>>>>>>>>>>Inicia Busqueda");
+        devices=new ArrayList<>();
+        mBluetoothAdapter.startDiscovery();
+        handlerBT.postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                Log.d("Printing Progres", ">>>>>>>>>>>>>>Time out 15");
+                stopSearch();
+
+            }
+        }, 15000);
 
     }
     public void stopSearch(){
         mBluetoothAdapter.cancelDiscovery();
+        Log.d("Printing Progres", ">>>>>>>>>>>>>>Stop serch");
     }
+
+
 
 
     /** enpareja un dispositivo */
     public static void pairDevice(BluetoothDevice device) {
         try {
+
             Method method = device.getClass().getMethod("createBond", (Class[]) null);
 
             method.invoke(device, (Object[]) null);
@@ -334,7 +320,7 @@ public class BluetoothUtils {
         }
     }
     /** desenpareja dispositivo */
-    public void unpairDevice(BluetoothDevice device) {
+    public static void unpairDevice(BluetoothDevice device) {
         try {
             Method method = device.getClass().getMethod("removeBond", (Class[]) null);
             method.invoke(device, (Object[]) null);
@@ -358,24 +344,40 @@ public class BluetoothUtils {
         }
     }
 
-    public boolean isPaired() {
+    public boolean isPaired(Context context) {
+
         System.out.println("--------->Revisa si esta emparejado");
+        /*
         Set<BluetoothDevice> pairedDevice = mBluetoothAdapter.getBondedDevices();
-      //  ArrayList<String> arrayListpaired;
-        if(pairedDevice.size()>0) {
+
+        boolean flag=false;
+        for(BluetoothDevice deviceLocal:pairedDevice){
+
+
+            String paired=SharedPreferencesUtils.readStringSharedPreference(context,"nameDevice");
+            Log.d("BLUETOOTH DEVICE: ",deviceLocal.getName()+" , "+deviceLocal.getType()+" , "+deviceLocal.getBluetoothClass()+" , "+deviceLocal.getAddress());
+            if( "SPP-R200III".equals(deviceLocal.getName()) || "Bluedio".equals(deviceLocal.getName()) ){
+                flag= true;
+                break;
+            }
+        }
+        if(pairedDevice.size()>0 && flag) {
             return true;
         }else{
             return false;
         }
-
+*/
+        return  printerConected;
     }
     public  BluetoothDevice getPrinterDevice(Context context){
         BluetoothDevice response=null;
         Set<BluetoothDevice> pairedDevice = mBluetoothAdapter.getBondedDevices();
+
         for(BluetoothDevice deviceLocal:pairedDevice){
             String paired=SharedPreferencesUtils.readStringSharedPreference(context,"nameDevice");
             Log.d("BLUETOOTH DEVICE: ",deviceLocal.getName()+" , "+deviceLocal.getType()+" , "+deviceLocal.getBluetoothClass()+" , "+deviceLocal.getUuids());
-            if(paired.equals(deviceLocal.getName()) || "SPP-R200III".equals(deviceLocal.getName()) ){
+            if("SPP-R200III".equals(deviceLocal.getName()) || "Bluedio".equals(deviceLocal.getName())){
+                Toast.makeText(context, "> "+deviceLocal.getName(), Toast.LENGTH_SHORT).show();
                 response= deviceLocal;
             }
         }

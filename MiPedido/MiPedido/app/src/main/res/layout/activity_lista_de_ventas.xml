@@ -76,26 +76,27 @@
 
 
 
+
             <TextView
-                android:layout_width="100dp"
+                android:layout_width="80dp"
                 android:layout_height="40dp"
                 android:textSize="16sp"
-                android:gravity="right"
+                android:gravity="right|center"
                 android:textColor="@color/black"
-                android:text=" Cantidad :"/>
+                android:text=" Cant:"/>
             <TextView
                 android:id="@+id/cantidad_lista_ventas"
                 android:layout_width="60dp"
                 android:layout_height="40dp"
                 android:textSize="18sp"
-                android:gravity="right"
+                android:gravity="right|center"
                 android:textColor="@color/black"
                 android:text="0"/>
             <TextView
                 android:layout_width="60dp"
                 android:layout_height="40dp"
                 android:textSize="16sp"
-                android:gravity="right"
+                android:gravity="right|center"
                 android:textColor="@color/black"
                 android:text=" Total :"/>
             <TextView
@@ -103,13 +104,34 @@
                 android:layout_width="90dp"
                 android:layout_height="40dp"
                 android:textSize="18sp"
-                android:gravity="right"
+                android:gravity="right|center"
                 android:textColor="@color/black"
                 android:text="0$"/>
+            <Button
+
+
+                android:id="@+id/bt_imprimir_lista"
+                android:layout_width="50dp"
+                android:layout_height="40dp"
+
+                android:text="#"
+                android:backgroundTint="@color/color2"
+                android:drawableTintMode="multiply"
+                android:textColor="@color/white"
+                android:onClick="imprimir"
+                android:gravity="center"
+                />
 
         </LinearLayout>
 
+    <RelativeLayout
 
+        android:layout_centerInParent="true"
+        android:id="@+id/fragment_container_carrito_lista"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content">
+
+    </RelativeLayout>
 
 
 

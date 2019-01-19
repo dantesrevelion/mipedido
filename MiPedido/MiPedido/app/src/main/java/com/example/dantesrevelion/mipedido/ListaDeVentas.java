@@ -1,6 +1,8 @@
 package com.example.dantesrevelion.mipedido;
 
 import android.app.Activity;
+import android.app.FragmentManager;
+import android.app.FragmentTransaction;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
@@ -11,8 +13,10 @@ import android.widget.Button;
 import android.widget.ListView;
 import android.widget.Spinner;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.example.dantesrevelion.mipedido.Adapters.VysorAdapterVentaUsuario;
+import com.example.dantesrevelion.mipedido.Utils.BluetoothUtils;
 import com.example.dantesrevelion.mipedido.Utils.ConnectionUtils;
 import com.example.dantesrevelion.mipedido.Utils.VolleyS;
 import com.example.dantesrevelion.mipedido.orm.DatosGastos;
@@ -23,6 +27,7 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
@@ -33,7 +38,11 @@ public class ListaDeVentas extends BaseActivity {
     JSONArray taskResult2=null;
     TextView tv_total=null;
     TextView tv_cantidad=null;
+    public static boolean searchIsVisibleLista=false;
+    public static Activity activityLista;
+    static Button imprimitBtn;
 
+    Double totalPrint;
     Activity actividad;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -47,6 +56,10 @@ public class ListaDeVentas extends BaseActivity {
         actividad=this;
         volley = VolleyS.getInstance(this.getApplicationContext());
         fRequestQueue = volley.getRequestQueue();
+
+        imprimitBtn= (Button) findViewById(R.id.bt_imprimir_lista);
+        activityLista =this;
+        SearchList.flagSerch=false;
        // makeRequest();
        // ConnectionUtils cn=new ConnectionUtils();
 
@@ -130,6 +143,114 @@ public class ListaDeVentas extends BaseActivity {
 
     }
 
+    public List<String> getListToPrint() throws JSONException {
+        List<String> registros=new ArrayList<>();
+        for (int i = 0; i < taskResult2.length(); i++) {
+
+            //  valuesUp.put("latitude",currentLocation.getLatitude());
+            //  valuesUp.put("longitude",currentLocation.getLongitude());
+            JSONArray localValue= ConnectionUtils.consultaSQLite(getBaseContext(),"select * from productos where id="+taskResult2.getJSONObject(i).getString("id_producto"));
+            //JSONArray localUsuarios= ConnectionUtils.consultaSQLite(getBaseContext(),"select * from usuario where id="+localValue.getJSONObject(i).getString("id_vendedor"));
+            String cant=padRight(taskResult2.getJSONObject(i).getString("cantidad"),3);
+            String art=padRight(localValue.getJSONObject(0).getString("nombre"),14);
+            String cu=padLeft(localValue.getJSONObject(0).getString("costo"),7);
+            String totalcu="$"+padLeft(taskResult2.getJSONObject(i).getString("monto"),7);
+            String cadena=art+cant+cu+totalcu;
+            //String value = new String(cadena., "UTF-8");
+            registros.add(cadena);
+        }
+        registros.add("                                ");
+        registros.add("                                ");
+        registros.add("       TOTAL            $"+padLeft(String.valueOf(totalPrint),7));
+        registros.add("                                ");
+        registros.add("Latitud: "+padRight(String.valueOf(currentLocation.getLatitude()),23));
+        registros.add("Longitud: "+padRight(String.valueOf(currentLocation.getLongitude()),22));
+
+        return registros;
+    }
+
+    public static String padRight(String s, int n) {
+        return String.format("%1$-" + n + "s", s);
+    }
+    public  String padLeft(String str, int n) {
+        return String.format("%1$" + n + "s", str);
+    }
+
+    public void imprimir(View v){
+        System.out.println("--------->Inicia proceso de impresion");
+            imprimitBtn.setEnabled(false);
+
+        if(utils.bluetoothIsOn(this)){
+            if(utils.isPaired(this)){
+                try {
+                    if(!utils.isOpen()){
+                        utils.openBT(getBaseContext());
+                    }
+
+
+                    try {
+
+                        utils.sendData(getListToPrint(),ConnectionUtils.getUsuarioApp());
+                       // generarVenta(v);
+
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                        imprimitBtn.setEnabled(true);
+                    }
+                } catch (IOException e) {
+                    //   Toast toast=new Toast(getBaseContext());
+                    //   toast.setText("no se pudo imprimir");
+                    Toast.makeText(this, "no se pudo imprimir", Toast.LENGTH_SHORT).show();
+                    imprimitBtn.setEnabled(true);
+                }
+            }else{
+                utils.searchDevices();
+                showSearchListLista();
+                imprimitBtn.setEnabled(true);
+            }
+
+        }else{
+            imprimitBtn.setEnabled(true);
+        }
+        imprimitBtn.setEnabled(true);
+        //  Intent enableBluetooth = new Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE);
+        // startActivityForResult(enableBluetooth, 0);
+    }
+
+    public void showSearchListLista(){
+        System.out.println("--------->Muestra lista de dispositivos");
+       // switchButtons(false);
+        searchIsVisibleLista=true;
+        FragmentManager fragmentManager = getFragmentManager();
+        FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+        SearchList fragment = new SearchList();
+        fragmentTransaction.add(R.id.fragment_container_carrito_lista, fragment, "listSearch");
+        fragmentTransaction.commit();
+
+    }
+
+    public static void hideSearchListLista(){
+        activityLista.getFragmentManager().beginTransaction().remove(activityLista.getFragmentManager().findFragmentById(R.id.fragment_container_carrito_lista)).commit();
+        searchIsVisibleLista=false;
+        imprimitBtn.setEnabled(true);
+        //switchButtons(true);
+        // utils.stopSearch();
+    }
+    @Override
+    public void onBackPressed() {
+        //   super.onBackPressed();
+        if(searchIsVisibleLista){
+            hideSearchListLista();
+            utils.stopSearch();
+            try {
+                utils.closeBT();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }else{
+            super.onBackPressed();
+        }
+    }
     Spinner.OnItemSelectedListener itemselected= new Spinner.OnItemSelectedListener() {
         @Override
         public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
@@ -196,7 +317,7 @@ public class ListaDeVentas extends BaseActivity {
                 e.printStackTrace();
             }
         }
-
+        totalPrint=total;
         tv_total.setText("$"+total);
         tv_cantidad.setText(String.valueOf(cantidadTotal));
     }
