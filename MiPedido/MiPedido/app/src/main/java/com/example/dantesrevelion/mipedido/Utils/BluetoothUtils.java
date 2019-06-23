@@ -79,18 +79,19 @@ public class BluetoothUtils {
 
 
     // tries to open a connection to the bluetooth printer device
-    public void openBT(Context context) throws IOException {
+    public void openBT(Context context,BluetoothDevice deviceLocal) throws IOException {
 
 
 
-            if(mmDevice==null){
+            if(deviceLocal==null){
                // mmDevice=getPrinterDevice(context);
-                Answers.getInstance().logCustom(new CustomEvent("openBT mmDevice es null"));
+                Answers.getInstance().logCustom(new CustomEvent("openBT deviceLocal es null"));
+                return;
             }
 
             // Standard SerialPortService ID
             UUID uuid = UUID.fromString("00001101-0000-1000-8000-00805f9b34fb");
-            mmSocket = mmDevice.createRfcommSocketToServiceRecord(uuid);
+            mmSocket = deviceLocal.createRfcommSocketToServiceRecord(uuid);
             mmSocket.connect();
             mmOutputStream = mmSocket.getOutputStream();
             mmInputStream = mmSocket.getInputStream();
@@ -369,6 +370,8 @@ public class BluetoothUtils {
 */
         return  printerConected;
     }
+
+    /*
     public  BluetoothDevice getPrinterDevice(Context context){
         BluetoothDevice response=null;
         Set<BluetoothDevice> pairedDevice = mBluetoothAdapter.getBondedDevices();
@@ -376,7 +379,7 @@ public class BluetoothUtils {
         for(BluetoothDevice deviceLocal:pairedDevice){
             String paired=SharedPreferencesUtils.readStringSharedPreference(context,"nameDevice");
             Log.d("BLUETOOTH DEVICE: ",deviceLocal.getName()+" , "+deviceLocal.getType()+" , "+deviceLocal.getBluetoothClass()+" , "+deviceLocal.getUuids());
-            if("SPP-R200III".equals(deviceLocal.getName()) || "Bluedio".equals(deviceLocal.getName())){
+            if("SPP-R200III".equals(deviceLocal.getName()) || "Bluedio".equals(deviceLocal.getName()) || "v3".equals(deviceLocal.getName())){
                 Toast.makeText(context, "> "+deviceLocal.getName(), Toast.LENGTH_SHORT).show();
                 response= deviceLocal;
             }
@@ -385,6 +388,7 @@ public class BluetoothUtils {
         return response;
 
     }
+    */
 
 
 }

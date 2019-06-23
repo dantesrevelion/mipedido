@@ -3,14 +3,20 @@ package com.example.dantesrevelion.mipedido;
 import android.app.Activity;
 import android.app.FragmentManager;
 import android.app.FragmentTransaction;
+import android.bluetooth.BluetoothDevice;
+import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.os.Handler;
+import android.preference.PreferenceManager;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.ListView;
+import android.widget.RelativeLayout;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -19,13 +25,13 @@ import com.example.dantesrevelion.mipedido.Adapters.VysorAdapterVentaUsuario;
 import com.example.dantesrevelion.mipedido.Utils.BluetoothUtils;
 import com.example.dantesrevelion.mipedido.Utils.ConnectionUtils;
 import com.example.dantesrevelion.mipedido.Utils.VolleyS;
-import com.example.dantesrevelion.mipedido.orm.DatosGastos;
-import com.example.dantesrevelion.mipedido.orm.DatosVenta;
-import com.example.dantesrevelion.mipedido.orm.Session;
+import com.crashlytics.android.answers.Answers;
+import com.crashlytics.android.answers.CustomEvent;
+
 
 import org.json.JSONArray;
 import org.json.JSONException;
-import org.json.JSONObject;
+
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -33,6 +39,7 @@ import java.util.Calendar;
 import java.util.List;
 
 public class ListaDeVentas extends BaseActivity {
+    RelativeLayout loadingScreen;
     Spinner spinervendedores=null;
     JSONArray taskResult=null;
     JSONArray taskResult2=null;
@@ -53,6 +60,8 @@ public class ListaDeVentas extends BaseActivity {
         setSupportActionBar(toolbar);
         tv_total=(TextView)findViewById(R.id.total_lista_ventas);
         tv_cantidad=(TextView)findViewById(R.id.cantidad_lista_ventas);
+        loadingScreen=(RelativeLayout) findViewById(R.id.layoutLoadingVentas);
+
         actividad=this;
         volley = VolleyS.getInstance(this.getApplicationContext());
         fRequestQueue = volley.getRequestQueue();
@@ -60,48 +69,6 @@ public class ListaDeVentas extends BaseActivity {
         imprimitBtn= (Button) findViewById(R.id.bt_imprimir_lista);
         activityLista =this;
         SearchList.flagSerch=false;
-       // makeRequest();
-       // ConnectionUtils cn=new ConnectionUtils();
-
-
-        /*
-        ConnectionUtils.createConection(getBaseContext());
-        List<DatosGastos> listaGastos=new ArrayList<>();
-        DatosGastos gastos=new DatosGastos();
-        gastos.setCodigo("11111333");
-        gastos.setIdv("22222");
-        gastos.setMonto("555555");
-        gastos.setNombre("Revelion");
-        gastos.setParamFecha("2016-10-05 00:21:47");
-        gastos.setSession(ConnectionUtils.getSession());
-        listaGastos.add(gastos);
-        listaGastos.add(gastos);
-        listaGastos.add(gastos);
-        JSONArray requestGastos=ConnectionUtils.parseBeantoJsonArray(listaGastos);
-        makePostRequest(ConnectionUtils.insertGastosPost(),requestGastos);
-
-        ConnectionUtils.createConection(getBaseContext());
-        List<DatosVenta> listaVentas=new ArrayList<>();
-        DatosVenta ventas=new DatosVenta();
-        ventas.setSession(ConnectionUtils.getSession());
-        ventas.setMonto("123");
-        ventas.setCantidad("223");
-        ventas.setFecha("2016-10-05 00:21:47");
-        ventas.setIdp("333");
-        ventas.setIdv("666");
-        listaVentas.add(ventas);
-        listaVentas.add(ventas);
-        listaVentas.add(ventas);
-        listaVentas.add(ventas);
-        JSONArray requestVentas=ConnectionUtils.parseBeantoJsonArray(listaVentas);
-        makePostRequest(ConnectionUtils.insertVentasPost(),requestVentas);
-        */
-        //ConnectionUtils.createConection(getBaseContext());
-        //makeRequest(ConnectionUtils.getAllVentasParameter());
-
-
-
-
 
 
 
@@ -145,6 +112,9 @@ public class ListaDeVentas extends BaseActivity {
 
     public List<String> getListToPrint() throws JSONException {
         List<String> registros=new ArrayList<>();
+        if(taskResult2.length()==0){
+            return registros;
+        }
         for (int i = 0; i < taskResult2.length(); i++) {
 
             //  valuesUp.put("latitude",currentLocation.getLatitude());
@@ -176,47 +146,96 @@ public class ListaDeVentas extends BaseActivity {
         return String.format("%1$" + n + "s", str);
     }
 
-    public void imprimir(View v){
+
+
+    final Handler handlerImprimir = new Handler();
+    int counterTrys=0;
+    public void imprimir(final View v){
+        Answers.getInstance().logCustom(new CustomEvent("Inicia pronceso Imprimir "));
         System.out.println("--------->Inicia proceso de impresion");
-            imprimitBtn.setEnabled(false);
-
+        imprimitBtn.setEnabled(false);
+        loadingScreen.setVisibility(View.VISIBLE);
+        counterTrys=0;
         if(utils.bluetoothIsOn(this)){
-            if(utils.isPaired(this)){
-                try {
-                    if(!utils.isOpen()){
-                        utils.openBT(getBaseContext());
-                    }
 
-
-                    try {
-
-                        utils.sendData(getListToPrint(),ConnectionUtils.getUsuarioApp());
-                       // generarVenta(v);
-
-                    } catch (JSONException e) {
-                        e.printStackTrace();
-                        imprimitBtn.setEnabled(true);
-                    }
-                } catch (IOException e) {
-                    //   Toast toast=new Toast(getBaseContext());
-                    //   toast.setText("no se pudo imprimir");
-                    Toast.makeText(this, "no se pudo imprimir", Toast.LENGTH_SHORT).show();
-                    imprimitBtn.setEnabled(true);
-                }
-            }else{
+            if(!BluetoothUtils.alreadyConected){
                 utils.searchDevices();
-                showSearchListLista();
-                imprimitBtn.setEnabled(true);
             }
+
+            SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(getBaseContext());
+            final String printerNameConfig=preferences.getString("config_printer","");
+
+            handlerImprimir.postDelayed(new Runnable() {
+                @Override
+                public void run() {
+                    boolean flagOK=false;
+
+                    for(BluetoothDevice deviceLocal:BluetoothUtils.devices){
+                        Answers.getInstance().logCustom(new CustomEvent("Bandera de conexion").putCustomAttribute("Conected Flag","Flag: "+BluetoothUtils.printerConected));
+
+                        if(printerNameConfig.equals(deviceLocal.getName()) ){
+                            Answers.getInstance().logCustom(new CustomEvent("Encontro la impresora").putCustomAttribute("device","device: "+deviceLocal.getAddress()));
+                            Log.d("Printing Progres", ">>>>>>>>>>>>>>Encontro la impresora "+deviceLocal.getName());
+                            try {
+                                if(getListToPrint().size()==0){
+                                    Log.d("Printing Progres", ">>>>>>>>>>>>>>NO HAY ELEMENTOS PARA IMPRIMIR");
+                                    return;
+                                }
+                                utils.openBT(getBaseContext(),deviceLocal);
+                                utils.sendData(getListToPrint(),ConnectionUtils.getUsuarioApp());
+                               // generarVenta(v);
+                                Log.d("Printing Progres", ">>>>>>>>>>>>>>Venta Generada");
+                                flagOK=true;
+                                utils.closeBT();
+                                imprimitBtn.setEnabled(true);
+                                loadingScreen.setVisibility(View.GONE);
+                                break;
+
+
+                            } catch (IOException e) {
+                                Log.d("Printing Progres", ">>>>>>>>>>>>>>No se realizo la conexion");
+                                // Toast.makeText(getBaseContext(), "no se pudo imprimir", Toast.LENGTH_SHORT).show();
+                                e.printStackTrace();
+                                Answers.getInstance().logCustom(new CustomEvent("No se realizo la conexion ").putCustomAttribute("Error",e.getMessage()));
+                                imprimitBtn.setEnabled(true);
+                                loadingScreen.setVisibility(View.GONE);
+                                break;
+                            } catch (JSONException e) {
+                                Log.d("Printing Progres", ">>>>>>>>>>>>>>No se realizo la conexion");
+                                Answers.getInstance().logCustom(new CustomEvent("No se realizo la conexion ").putCustomAttribute("Error",e.getMessage()));
+                                // Toast.makeText(getBaseContext(), "no se pudo imprimir", Toast.LENGTH_SHORT).show();
+                                e.printStackTrace();
+                                imprimitBtn.setEnabled(true);
+                                loadingScreen.setVisibility(View.GONE);
+                                break;
+                            }
+
+
+                        }
+                    }
+
+
+                    if( !flagOK && counterTrys<4){
+                        Log.d("Printing Progres", ">>>>>>>>>>>>>>Busca en la lista de nuevo");
+                        handlerImprimir.postDelayed(this,2000);
+                    }else if(!flagOK){
+                        Toast.makeText(getBaseContext(), "Impresora no disponible", Toast.LENGTH_SHORT).show();
+                        imprimitBtn.setEnabled(true);
+                        loadingScreen.setVisibility(View.GONE);
+                    }
+                    counterTrys++;
+
+                }
+            }, 3000);
+
+
 
         }else{
             imprimitBtn.setEnabled(true);
+            loadingScreen.setVisibility(View.GONE);
         }
-        imprimitBtn.setEnabled(true);
-        //  Intent enableBluetooth = new Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE);
-        // startActivityForResult(enableBluetooth, 0);
-    }
 
+    }
     public void showSearchListLista(){
         System.out.println("--------->Muestra lista de dispositivos");
        // switchButtons(false);
@@ -325,58 +344,5 @@ public class ListaDeVentas extends BaseActivity {
 
 
 
-    /*
-    private class ConnectionAllUsuarios extends AsyncTask {
 
-        @Override
-        protected Object doInBackground(Object... param) {
-
-            JSONArray response=null;
-            ConnectionUtils cn=new ConnectionUtils();
-            response=cn.connect(ConnectionUtils.getAllUsuariosParameter());
-
-            return response;
-        }
-
-    }
-
-    private class ConnectionVentasByUsuario extends AsyncTask {
-
-        @Override
-        protected Object doInBackground(Object... param) {
-
-            JSONArray response=null;
-            ConnectionUtils cn=new ConnectionUtils();
-            response=cn.connect(ConnectionUtils.getVentasByUsuarioParameter( param[0].toString()));
-
-            return response;
-        }
-
-    }
-    */
-
-    /*
-    public class callCheckIn extends AsyncTask {
-
-        //Button bt_enviar=null;
-
-        @Override
-        protected Object doInBackground(Object... param) {
-
-
-            CheckIn.checkInRunnable(actividad.getBaseContext(),actividad);
-
-
-            return true;
-        }
-
-        @Override
-        protected void onPostExecute(Object o) {
-            super.onPostExecute(o);
-
-                    bt_enviar.setEnabled(true);
-
-        }
-    }
-    */
 }

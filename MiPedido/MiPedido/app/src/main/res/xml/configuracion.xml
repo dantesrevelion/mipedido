@@ -16,6 +16,8 @@
             android:title="Password"/>
         <EditTextPreference android:key="config_db"
             android:title="Base de Datos"/>
+        <EditTextPreference android:key="config_printer"
+            android:title="Impresora"/>
 
 
 

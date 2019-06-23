@@ -10,6 +10,7 @@ import android.content.ContentValues;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.database.sqlite.SQLiteDatabase;
 import android.graphics.Color;
@@ -25,6 +26,7 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
 import android.os.PersistableBundle;
+import android.preference.PreferenceManager;
 import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.PopupMenu;
@@ -972,7 +974,11 @@ public class BaseActivity extends AppCompatActivity {
 
     /** Se ejecuta cuando encuentra un dispositivo */
     public final BroadcastReceiver mReceiver = new BroadcastReceiver() {
+
         public void onReceive(Context context, Intent intent) {
+            SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(getBaseContext());
+            String printerNameConfig=preferences.getString("config_printer","");
+
             String action = intent.getAction();
             BluetoothDevice device = (BluetoothDevice) intent.getParcelableExtra(BluetoothDevice.EXTRA_DEVICE);
             if (BluetoothAdapter.ACTION_DISCOVERY_STARTED.equals(action)) {
@@ -997,7 +1003,7 @@ public class BaseActivity extends AppCompatActivity {
                 }
 
 
-                if("SPP-R200III".equals(device.getName()) || "Bluedio".equals(device.getName())){
+                if(printerNameConfig.equals(device.getName())){
                     BluetoothUtils.setMmDevice(device,context);
                     //BluetoothUtils.pairDevice(device);
                     utils.stopSearch();
@@ -1033,6 +1039,7 @@ public class BaseActivity extends AppCompatActivity {
                 if("SPP-R200III".equals(device.getName()) || "Bluedio".equals(device.getName()) ){
                     Log.d("BLUETOOTH","DISCONNECTED: "+device.getName());
                     BluetoothUtils.printerConected=false;
+                    //BluetoothUtils.alreadyConected
                     Toast.makeText(context, "> FALSE", Toast.LENGTH_SHORT).show();
                 }
             }
