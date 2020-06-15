@@ -6,6 +6,8 @@
         <item name="colorPrimary">@color/colorPrimary</item>
         <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
         <item name="colorAccent">@color/colorAccent</item>
+
+        <item name="windowNoTitle">true</item>
     </style>
 
     <style name="AppTheme.NoActionBar">
@@ -16,5 +18,33 @@
     <style name="AppTheme.AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar" />
 
     <style name="AppTheme.PopupOverlay" parent="ThemeOverlay.AppCompat.Light" />
+
+    <style name="configuracion">
+        <item name="android:layout_alignParentBottom">true</item>
+        <item name="android:layout_alignParentRight">true</item>
+    </style>
+
+    <style name="alinea_derecha_listaventa">
+        <item name="android:layout_alignParentRight">true</item>
+    </style>
+    <style name="alinea_izq_listaventa">
+        <item name="android:layout_alignParentLeft">true</item>
+    </style>
+
+    <style name="alinea_abajo_reportefecha">
+        <item name="android:layout_alignParentBottom">true</item>
+
+    </style>
+
+    <style name="alinea_center_reportefecha">
+        <item name="android:layout_centerInParent">true</item>
+    </style>
+
+    <style name="alinea_margin_reportefecha">
+        <item name="android:layout_marginLeft">10dp</item>
+        <item name="android:layout_marginRight">10dp</item>
+        <item name="android:layout_marginBottom">10dp</item>
+    </style>
+
 
 </resources>

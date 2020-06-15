@@ -21,7 +21,7 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Password"
+            android:text="Contraseña"
             android:id="@+id/txtPassword"
             android:layout_gravity="left"
             android:textSize="@dimen/abc_action_button_min_width_overflow_material"
@@ -34,7 +34,8 @@
             android:id="@+id/inputPassword"
             android:layout_gravity="center_horizontal"
             android:textColor="@color/white"
-            android:text="testpass"
+            android:maxLength="30"
+            android:text=""
             android:textSize="30dp"
             android:password="true" />
 
@@ -74,7 +75,7 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Username"
+            android:text="Usuario"
             android:textColor="@color/white"
             android:id="@+id/txtUser"
             android:layout_gravity="left"
@@ -85,7 +86,8 @@
             android:layout_height="wrap_content"
             android:id="@+id/inputUser"
             android:textColor="@color/white"
-            android:text="testuser"
+            android:maxLength="30"
+            android:text=""
             android:textSize="30dp" />
 
         <Space
@@ -101,5 +103,11 @@
             android:onClick="nextStep" />
 
     </LinearLayout>
-
+    <ImageView
+        style="@style/configuracion"
+        android:layout_width="35dp"
+        android:layout_height="30dp"
+        android:onClick="openConfig"
+        android:layout_marginBottom="40dp"
+        android:src="@drawable/settings"/>
 </RelativeLayout>

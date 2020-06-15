@@ -4,15 +4,14 @@ import android.content.Intent;
 import android.os.Handler;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.view.animation.Animation;
-import android.view.animation.AnimationUtils;
-import android.view.animation.AnticipateOvershootInterpolator;
-import android.view.animation.BounceInterpolator;
-import android.view.animation.LinearInterpolator;
-import android.view.animation.TranslateAnimation;
 import android.widget.LinearLayout;
 
-import com.example.dantesrevelion.mipedido.utils.MyAnimationUtils;
+import com.crashlytics.android.Crashlytics;
+import com.example.dantesrevelion.mipedido.Utils.MyAnimationUtils;
+
+import io.fabric.sdk.android.Fabric;
+import java.net.CookieHandler;
+import java.net.CookieManager;
 
 public class MainActivity extends AppCompatActivity {
     private final int SPLASH_DISPLAY_LENGTH = 1800;
@@ -24,6 +23,9 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        Fabric.with(this, new Crashlytics());
+        CookieManager cookieManager = new CookieManager();
+        CookieHandler.setDefault(cookieManager);
         setContentView(R.layout.activity_main);
         layoutLogo=(LinearLayout) findViewById(R.id.layoutLogo);
         MyAnimationUtils.translateAnimation(layoutLogo,1000L,2.0f,0,0,300,0);
@@ -33,6 +35,8 @@ public class MainActivity extends AppCompatActivity {
 
             }
         },SPLASH_DISPLAY_LENGTH);
+
+
         /*
         layoutLogo=(LinearLayout) findViewById(R.id.layoutLogo);
 

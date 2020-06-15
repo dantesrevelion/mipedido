@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
+
+
+
+    <com.example.dantesrevelion.mipedido.Utils.CustomPreference android:title="Configuracion del servidor" />
+
+
+        <EditTextPreference android:key="config_domain"
+            android:title="Dominio" />
+        <EditTextPreference android:key="config_host"
+            android:title="Host de Datos" />
+        <EditTextPreference android:key="config_user"
+            android:title="Usuario"/>
+        <EditTextPreference android:key="config_pass"
+            android:title="Password"/>
+        <EditTextPreference android:key="config_db"
+            android:title="Base de Datos"/>
+        <EditTextPreference android:key="config_printer"
+            android:title="Impresora"/>
+
+
+
+
+
+</PreferenceScreen>

@@ -3,19 +3,22 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:paddingBottom="@dimen/activity_vertical_margin"
-    android:paddingLeft="@dimen/activity_horizontal_margin"
-    android:paddingRight="@dimen/activity_horizontal_margin"
-    android:paddingTop="@dimen/activity_vertical_margin"
-    tools:context="com.example.dantesrevelion.mipedido.ReportePorFecha">
+    tools:context="com.example.dantesrevelion.mipedido.ReportePorFecha"
+    android:background="@color/color4">
 
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:orientation="vertical"
-        android:gravity="top">
+
+        <include
+            android:id="@+id/tool_bar_reporte"
+            layout="@layout/toolbar">
+
+        </include>
+
+
 
         <LinearLayout
+            android:layout_below="@+id/tool_bar_reporte"
+            android:id="@+id/ly_header1_reporte"
+            style="@style/alinea_margin_reportefecha"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:gravity="center"
@@ -37,21 +40,34 @@
                 android:layout_weight="1" />
             <Button
                 android:layout_width="60dp"
-                android:layout_height="match_parent"
+                android:layout_height="40dp"
                 android:onClick="OnClickFillVentas"
+                android:backgroundTint="@color/color5"
+                android:drawableTintMode="multiply"
+                android:textColor="@color/white"
                 android:text="Go"/>
         </LinearLayout>
 
-        <Space
-            android:layout_width="match_parent"
-            android:layout_height="15dp" />
+
+
+
+
+
+
+
+
+
         <LinearLayout
+            android:layout_below="@+id/ly_header1_reporte"
+            android:id="@+id/ly_header2_reporte"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            style="@style/alinea_margin_reportefecha"
             android:gravity="center"
             android:paddingLeft="15dp"
             android:paddingRight="15dp"
             android:background="@color/white">
+
             <ImageView
                 android:layout_width="20dp"
                 android:layout_height="20dp"
@@ -64,7 +80,7 @@
                 android:layout_height="wrap_content"
                 android:paddingLeft="20dp"
                 android:id="@+id/txtInicio"
-                android:textSize="20sp"
+                android:textSize="16sp"
                 android:text="Fecha Inicio"
                 android:textStyle="bold"/>
 
@@ -82,33 +98,30 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:paddingLeft="20dp"
-                android:textSize="20sp"
+                android:textSize="16sp"
                 android:id="@+id/txtFin"
                 android:text="Fecha Fin"
                 android:textStyle="bold"/>
         </LinearLayout>
-
-        <Space
-            android:layout_width="match_parent"
-            android:layout_height="15dp" />
-
 
 
 
 
 
         <LinearLayout
-            android:layout_width="wrap_content"
-            android:layout_height="230dp"
+            android:layout_below="@+id/ly_header2_reporte"
+            android:layout_above="@+id/ly_footer_reporte"
+            android:id="@+id/layout_lista_reporte"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
             android:orientation="vertical"
-
+            android:layout_alignTop="@+id/resultado_total"
+            style="@style/alinea_margin_reportefecha"
             android:background="@color/white">
 
             <ListView
-
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-
                 android:id="@+id/listaVentaPorFecha">
 
             </ListView>
@@ -116,39 +129,46 @@
         </LinearLayout>
 
 
-        <Space
-            android:layout_width="match_parent"
-            android:layout_height="15dp" />
+
         <LinearLayout
+            android:layout_alignParentBottom="true"
+            android:id="@+id/ly_footer_reporte"
+            style="@style/alinea_margin_reportefecha"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="100dp"
             android:orientation="vertical"
             android:paddingLeft="15dp"
             android:paddingRight="15dp"
             android:background="@color/white">
+
             <LinearLayout
+                android:id="@+id/resultado_total"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
+                android:layout_height="50dp"
+
                 android:orientation="horizontal"
                 android:gravity="right"
                 >
                 <TextView
                     android:layout_width="240dp"
-                    android:layout_height="70dp"
-                    android:textSize="25sp"
+                    android:layout_height="40dp"
+                    android:textSize="20dp"
                     android:gravity="right|center"
                     android:textColor="@color/black"
 
-                    android:text="Gasolina :"/>
+                    android:text="Gastos Operativos :"/>
                 <TextView
+                    android:id="@+id/tv_gastos_reportefecha"
                     android:layout_width="100dp"
-                    android:layout_height="match_parent"
-                    android:textSize="27sp"
+                    android:layout_height="40dp"
+                    android:textSize="20dp"
                     android:gravity="right|center"
                     android:textColor="@color/black"
                     android:text="0$"/>
             </LinearLayout>
 
+
+
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -157,21 +177,31 @@
                 >
                 <TextView
                     android:layout_width="240dp"
-                    android:layout_height="50dp"
-                    android:textSize="25sp"
+                    android:layout_height="40dp"
+                    android:textSize="20sp"
                     android:gravity="right"
                     android:textColor="@color/black"
                     android:text="Corte Total :"/>
                 <TextView
+                    android:id="@+id/total_reporte_fecha"
                     android:layout_width="100dp"
-                    android:layout_height="50dp"
-                    android:textSize="27sp"
+                    android:layout_height="40dp"
+                    android:textSize="20sp"
                     android:gravity="right"
                     android:textColor="@color/black"
                     android:text="0$"/>
             </LinearLayout>
-            ¡
+
         </LinearLayout>
-    </LinearLayout>
+
+
+
+
+
+
+
+
+
+
 
 </RelativeLayout>

@@ -4,8 +4,10 @@
 
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
-    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
     <uses-permission android:name="android.permission.ACCESS_LOCATION_EXTRA_COMMANDS" />
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+    <uses-permission android:name="android.permission.BLUETOOTH" />
+    <uses-permission android:name="android.permission.BLUETOOTH_ADMIN" />
     <uses-permission android:name="android.permission.READ_LOGS" />
     <uses-permission android:name="android.permission.INTERNET" />
 
@@ -18,17 +20,22 @@
         <activity
             android:name=".MainActivity"
             android:screenOrientation="portrait"
-            android:theme="@style/Theme.AppCompat.NoActionBar">
+            android:theme="@style/Theme.AppCompat.NoActionBar"
+            >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".Menu" />
-        <activity android:name=".Lista_Producto" />
-        <activity android:name=".Producto" />
-        <activity android:name=".MenuReporte" />
+        <activity android:name=".Menu" android:launchMode="singleTask"
+            android:screenOrientation="portrait"/>
+        <activity android:name=".Lista_Producto" android:launchMode="singleTask"
+            android:screenOrientation="portrait" />
+        <activity android:name=".Producto" android:launchMode="singleTask"
+            android:screenOrientation="portrait"/>
+        <activity android:name=".MenuReporte" android:launchMode="singleTask"
+            android:screenOrientation="portrait"/>
 
         <!--
  ATTENTION: This was auto-generated to add Google Play services to your project for
@@ -42,12 +49,21 @@
             android:name=".Navegacion"
             android:label="@string/title_activity_navegacion"
             android:theme="@style/AppTheme.NoActionBar" />
-        <activity android:name=".Login" />
-        <activity android:name=".ListaVendedor" />
-        <activity android:name=".Vendedor" />
-        <activity android:name=".ReportePorFecha" />
-        <activity android:name=".ListaDeVentas" />
-        <activity android:name=".Perfil"></activity>
+        <activity android:name=".Login" android:launchMode="singleTask" />
+        <activity android:name=".ListaVendedor" android:launchMode="singleTask" />
+        <activity android:name=".Vendedor" android:launchMode="singleTask"/>
+        <activity android:name=".ReportePorFecha" android:launchMode="singleTask" />
+        <activity android:name=".ListaDeVentas" android:launchMode="singleTask"/>
+        <activity android:name=".Perfil" android:launchMode="singleTask"/>
+        <activity android:name=".CarritoCompra" android:launchMode="singleTask" />
+        <activity
+            android:name=".RegistroTickets"
+            android:windowSoftInputMode="adjustPan" android:launchMode="singleTask" />
+        <activity android:name=".Configuracion" android:launchMode="singleTask" />
+
+        <meta-data
+            android:name="io.fabric.ApiKey"
+            android:value="c4288c02c0b7608ca4a56ed6e70647c266da68c4" />
     </application>
 
 </manifest>

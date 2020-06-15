@@ -1,0 +1,168 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".Menu"
+    android:orientation="vertical"
+    android:background="@color/color4">
+    <include
+        android:id="@+id/tool_bar_carrito"
+        layout="@layout/toolbar">
+
+    </include>
+
+
+    <TextView
+        android:layout_below="@+id/tool_bar_carrito"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Lista de Venta"
+        android:id="@+id/titulo_carrito"
+        android:textColor="@color/black"
+        android:paddingLeft="20dp"
+        android:paddingTop="10dp"
+        android:textStyle="bold"
+        android:textSize="22sp"/>
+
+    <LinearLayout
+        android:id="@+id/lista_carrito"
+        android:layout_above="@+id/footer_carrito"
+        android:layout_below="@id/titulo_carrito"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_marginLeft="20dp"
+        android:layout_marginRight="20dp"
+        android:layout_marginTop="20dp"
+        android:background="@color/white"
+        android:orientation="vertical"
+        android:gravity="center">
+
+
+
+        <ListView
+
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:id="@+id/listaCarrito">
+
+        </ListView>
+
+    </LinearLayout>
+
+    <RelativeLayout
+
+        android:id="@+id/footer_carrito"
+        android:layout_alignParentBottom="true"
+        android:layout_width="match_parent"
+        android:layout_height="100dp"
+        android:layout_marginLeft="20dp"
+        android:layout_marginRight="20dp"
+        android:layout_marginTop="20dp"
+        android:layout_marginBottom="20dp"
+        android:background="@color/white"
+        >
+
+        <Space
+            android:id="@+id/ly_izq_carrito"
+            android:layout_width="10dp"
+            android:layout_height="match_parent"
+            android:layout_alignParentLeft="true"/>
+
+
+        <Button
+            android:layout_toRightOf="@+id/ly_izq_carrito"
+            android:id="@+id/bt_generar_carrito"
+            android:layout_width="150dp"
+            android:layout_height="50dp"
+            android:visibility="invisible"
+            android:text="Generar Venta"
+            android:layout_marginRight="5dp"
+            android:backgroundTint="@color/color2"
+            android:drawableTintMode="multiply"
+            android:onClick="generarVenta"
+            android:textColor="@color/white"
+            android:textSize="12sp"/>
+        <Button
+            android:layout_toRightOf="@+id/bt_generar_carrito"
+            android:layout_toLeftOf="@+id/ly_der_carrito"
+            android:visibility="gone"
+            android:id="@+id/bt_eliminar_carrito"
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:backgroundTint="@color/color2"
+            android:drawableTintMode="multiply"
+            android:textColor="@color/white"
+            android:text="Eliminar Seleccion"
+            android:onClick="eliminarSeleccion"
+            android:textSize="12sp"/>
+        <Space
+            android:id="@+id/ly_der_carrito"
+            android:layout_width="10dp"
+            android:layout_height="match_parent"
+            android:layout_alignParentRight="true"/>
+
+        <Button
+
+            android:layout_below="@+id/bt_generar_carrito"
+            android:id="@+id/bt_imprimir_carrito"
+            android:layout_toRightOf="@+id/ly_izq_carrito"
+            android:layout_width="150dp"
+            android:layout_height="50dp"
+            android:text="Imprimir"
+            android:backgroundTint="@color/color2"
+            android:drawableTintMode="multiply"
+            android:textColor="@color/white"
+            android:onClick="imprimir"
+            />
+
+        <TextView
+            android:id="@+id/tv_total_texto"
+            android:layout_alignParentBottom="true"
+            android:layout_toRightOf="@+id/bt_imprimir_carrito"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textStyle="bold"
+            android:layout_marginBottom="15dp"
+            android:layout_marginLeft="10dp"
+            android:textSize="22sp"
+            android:text="Total : "/>
+        <TextView
+            android:layout_alignParentBottom="true"
+            android:layout_marginBottom="15dp"
+            android:layout_toRightOf="@+id/tv_total_texto"
+            android:layout_toLeftOf="@+id/ly_der_carrito"
+            android:gravity="right"
+            android:id="@+id/tv_total_carrito"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textStyle="bold"
+            android:textSize="22sp"
+            android:text="00.0"/>
+
+
+    </RelativeLayout>
+    <RelativeLayout
+
+        android:layout_centerInParent="true"
+        android:id="@+id/fragment_container_carrito"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content">
+
+    </RelativeLayout>
+    <RelativeLayout
+        android:id="@+id/layoutLoadingCompras"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+
+        android:clickable="true"
+        android:background="@color/color3_alpha"
+        android:visibility="gone">
+        <ProgressBar
+            android:layout_centerInParent="true"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:visibility="visible"
+            android:layout_centerHorizontal="true" />
+    </RelativeLayout>
+</RelativeLayout>

@@ -1,4 +1,4 @@
-package com.example.dantesrevelion.mipedido.utils;
+package com.example.dantesrevelion.mipedido.Utils;
 
 import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
@@ -30,15 +30,44 @@ public class SQLiteHelper extends SQLiteOpenHelper {
                 "  `correo` varchar(30) NOT NULL" +
                 ");");
         sqLiteDatabase.execSQL("CREATE TABLE IF NOT EXISTS `ventas` (" +
-                "  `id_venta` int(11) NOT NULL," +
+                "  `id_venta`INTEGER PRIMARY KEY AUTOINCREMENT," +
                 "  `id_producto` int(11) NOT NULL," +
                 "  `id_vendedor` int(11) NOT NULL," +
                 "  `fecha` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP," +
                 "  `cantidad` int(11) NOT NULL," +
-                "  `monto` double NOT NULL" +
+                "  `monto` double NOT NULL," +
+                "  `latitude` varchar(30)," +
+                "  `longitude` varchar(30)" +
                 ");");
 
+
+
+        sqLiteDatabase.execSQL("CREATE TABLE IF NOT EXISTS `carrito` (" +
+                "  `id_venta` INTEGER PRIMARY KEY AUTOINCREMENT," +
+                "  `id_producto` int(11) NOT NULL," +
+                "  `id_vendedor` int(11) NOT NULL," +
+                "  `fecha` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP," +
+                "  `cantidad` int(11) NOT NULL," +
+                "  `monto` double NOT NULL," +
+                "  `estatus` varchar(1) NOT NULL,"+
+                "  `latitude` varchar(30)," +
+                "  `longitude` varchar(30)" +
+                ");");
+
+        sqLiteDatabase.execSQL("CREATE TABLE IF NOT EXISTS `gastos` (" +
+                "  `id` INTEGER PRIMARY KEY AUTOINCREMENT," +
+                "  `idvendedor` int(11) NOT NULL," +
+                "  `nombre` varchar(50) NOT NULL," +
+                "  `codigo` varchar(40) NOT NULL," +
+                "  `monto` double NOT NULL," +
+                "  `fecha` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP, " +
+                "  `estatus` varchar(1) NOT NULL" +
+                ") ;");
+
+
+
         System.out.println("SQLite CREATED-");
+
     }
 
     @Override

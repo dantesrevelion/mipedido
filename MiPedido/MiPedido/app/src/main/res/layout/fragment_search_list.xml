@@ -1,0 +1,41 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/mainfragment_search_list"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+
+    tools:context=".SearchList">
+
+    <!-- TODO: Update blank fragment layout -->
+
+    <RelativeLayout
+        android:background="@color/color3_alpha"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+    <RelativeLayout
+        android:layout_centerInParent="true"
+        android:layout_width="250dp"
+        android:layout_height="400dp"
+        android:background="@color/color5"
+        android:elevation="10dp">
+        <ListView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:id="@+id/lista_search_list"
+            android:dividerHeight="2dp"
+            android:paddingRight="10dp"
+            android:paddingLeft="10dp"
+            android:background="@color/color4">
+
+        </ListView>
+
+       <ProgressBar
+           android:layout_width="50dp"
+           android:layout_height="50dp"
+           android:indeterminateTint="@color/color5"
+           android:indeterminateTintMode="multiply"
+           android:layout_centerInParent="true"
+           android:layout_gravity="center" />
+    </RelativeLayout>
+    </RelativeLayout>
+</RelativeLayout>

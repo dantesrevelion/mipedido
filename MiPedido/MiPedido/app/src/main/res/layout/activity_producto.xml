@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
@@ -9,86 +9,75 @@
     tools:context="com.example.dantesrevelion.mipedido.Producto"
     >
 
-    <LinearLayout
-        android:layout_width="fill_parent"
-        android:layout_height="30dp"
-        android:background="@color/color2"
-        android:gravity="center">
-        <TextView
+    <include
+        android:id="@+id/tool_bar_producto"
+        layout="@layout/toolbar">
+
+    </include>
+
+
+
+        <LinearLayout
+            android:layout_below="@+id/tool_bar_producto"
+            android:id="@+id/ly_header_carrito"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Garrafones"
-            android:textColor="@color/white"
-            android:textStyle="bold"
-            android:textSize="22sp"/>
-    </LinearLayout>
-
-    <ScrollView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:id="@+id/scrollView" >
-
-        <RelativeLayout
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content">
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
             android:orientation="vertical">
 
 
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Epura 20 L"
-            android:id="@+id/txtNombreProd"
-            android:textColor="@color/black"
-            android:paddingLeft="15dp"
-            android:paddingTop="10dp"
-            android:textStyle="bold"
-            android:textSize="22sp"/>
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:id="@+id/txtTipoProd"
-            android:paddingLeft="15dp"
-            android:paddingTop="5dp"
-            android:text="Garrafones"
-            android:textColor="@color/black"
-            android:textStyle="normal"
-            android:textSize="20sp"/>
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:paddingBottom="15dp"
-            android:paddingTop="15dp"
-            android:orientation="vertical"
-            android:gravity="center">
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Epura 20 L"
+                android:id="@+id/txtNombreProd"
+                android:textColor="@color/black"
+                android:paddingLeft="15dp"
+                android:paddingTop="10dp"
+                android:textStyle="bold"
+                android:textSize="22sp"/>
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/txtTipoProd"
+                android:paddingLeft="15dp"
+                android:paddingTop="5dp"
+                android:text="Garrafones"
+                android:textColor="@color/black"
+                android:textStyle="normal"
+                android:textSize="20sp"/>
+        </LinearLayout>
+
+
+
+
             <LinearLayout
-                android:layout_width="350dp"
-                android:layout_height="280dp"
+                android:layout_below="@id/ly_header_carrito"
+                android:layout_above="@+id/ly_footer_producto"
+                android:id="@+id/ly_body_producto"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
                 android:orientation="vertical"
+                android:layout_margin="20dp"
                 android:gravity="center"
                 android:background="@color/white"
                 >
                 <ImageView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:background="@drawable/drink"/>
+                    android:layout_width="180dp"
+                    android:layout_height="180dp"
+                    android:background="@drawable/drink_blak"/>
             </LinearLayout>
-            <RelativeLayout
-                android:layout_width="350dp"
-                android:layout_height="10dp"
 
-                android:background="@color/color4">
 
-            </RelativeLayout>
 
             <LinearLayout
-                android:layout_width="350dp"
+                android:layout_marginLeft="20dp"
+                android:layout_marginRight="20dp"
+                android:layout_marginBottom="20dp"
+                android:layout_alignParentBottom="true"
+                android:layout_width="match_parent"
                 android:layout_height="100dp"
                 android:orientation="horizontal"
-
+                android:id="@+id/ly_footer_producto"
                 android:gravity="center"
                 android:background="@color/white"
                 >
@@ -122,13 +111,30 @@
                     android:layout_width="170dp"
                     android:layout_height="50dp"
                     android:text="AÑADIR AL CARRITO"
+                    android:backgroundTint="@color/color5"
+                    android:onClick="addtoCarrito"
+                    android:drawableTintMode="multiply"
+                    android:textColor="@color/white"
                     android:singleLine="false" />
             </LinearLayout>
 
-        </LinearLayout>
-        </LinearLayout>
 
+
+    <RelativeLayout
+        android:id="@+id/layoutLoading"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:clickable="true"
+        android:background="@color/color3_alpha"
+        android:visibility="gone">
+        <ProgressBar
+            android:layout_centerInParent="true"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:visibility="visible"
+            android:layout_centerHorizontal="true" />
     </RelativeLayout>
-    </ScrollView>
 
-</LinearLayout>
+
+
+</RelativeLayout>

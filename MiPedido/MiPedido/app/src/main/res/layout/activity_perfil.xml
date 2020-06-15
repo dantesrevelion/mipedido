@@ -3,15 +3,26 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-
     tools:context="com.example.dantesrevelion.mipedido.Perfil">
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:orientation="vertical"
+        android:background="@color/color4"
         android:gravity="center">
-
+        <include
+            android:id="@+id/tool_bar"
+            layout="@layout/toolbar">
+        </include>
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical"
+            android:background="@color/white"
+            android:layout_margin="20dp"
+            android:paddingBottom="70dp"
+            android:gravity="center">
         <LinearLayout
             android:layout_width="wrap_content"
             android:paddingLeft="15dp"
@@ -54,6 +65,7 @@
                 android:text="Cerrar Sesión"/>
 
 
+            </LinearLayout>
         </LinearLayout>
     </LinearLayout>
 </RelativeLayout>
